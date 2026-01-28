@@ -2,96 +2,102 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Sharjah Police - QR Generator</title>
+    <title>Vehicle Tracker System</title>
     <style>
         body {
             margin: 0;
-            font-family: Arial, Helvetica, sans-serif;
-            background: linear-gradient(135deg, #0b2c4a, #133e66);
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+            font-family: "Segoe UI", Tahoma, sans-serif;
+            background: linear-gradient(to bottom, #f5efe6, #e6d3b1);
+            color: #3b2f1c;
         }
 
-        .card {
-            background-color: #ffffff;
-            color: #000;
-            width: 420px;
-            padding: 30px;
-            border-radius: 16px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+        .header {
+            background-color: #3b2f1c;
+            padding: 15px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header img {
+            height: 60px;
+        }
+
+        .title {
+            color: #d4af37;
+            font-size: 26px;
+            font-weight: bold;
+            text-align: center;
+            flex: 1;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 80px auto;
+            background: white;
+            padding: 35px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
             text-align: center;
         }
 
-        .card img {
-            width: 90px;
-            margin-bottom: 15px;
-        }
-
-        h1 {
-            font-size: 22px;
-            margin-bottom: 10px;
-            color: #0b2c4a;
-        }
-
-        p {
-            font-size: 14px;
-            color: #555;
+        h2 {
             margin-bottom: 25px;
+            color: #3b2f1c;
         }
 
-        input {
+        input[type="text"] {
             width: 100%;
             padding: 12px;
-            font-size: 15px;
             border-radius: 8px;
-            border: 1px solid #ccc;
+            border: 1px solid #c9b37e;
             margin-bottom: 20px;
+            font-size: 16px;
         }
 
         button {
             width: 100%;
             padding: 12px;
-            font-size: 16px;
-            background-color: #0b2c4a;
-            color: white;
+            background-color: #3b2f1c;
+            color: #d4af37;
             border: none;
             border-radius: 8px;
+            font-size: 17px;
+            font-weight: bold;
             cursor: pointer;
-            transition: 0.3s;
         }
 
         button:hover {
-            background-color: #133e66;
+            background-color: #2a2114;
         }
 
         footer {
-            margin-top: 20px;
-            font-size: 12px;
-            color: #777;
+            margin-top: 60px;
+            text-align: center;
+            font-size: 13px;
+            color: #6b5a3a;
         }
     </style>
 </head>
 <body>
 
-    <div class="card">
-        <!-- إذا عندج شعار حطي مساره هنا -->
-        <!-- <img src="{{ url_for('static', filename='logo.png') }}"> -->
+    <div class="header">
+        <img src="{{ url_for('static', filename='shj-police.png') }}">
+        <div class="title">Vehicle Tracker System</div>
+        <img src="{{ url_for('static', filename='shj-gov.png') }}">
+    </div>
 
-        <h1>Sharjah Police QR System</h1>
-        <p>Generate a secure QR code easily</p>
-
+    <div class="container">
+        <h2>Add Area / Vehicle</h2>
         <form method="POST">
-            <input type="text" name="data" placeholder="Enter text or link" required>
+            <input type="text" name="data" placeholder="Enter Area or Vehicle ID" required>
             <button type="submit">Generate QR Code</button>
         </form>
-
-        <footer>
-            © Sharjah Police
-        </footer>
     </div>
+
+    <footer>
+        © Sharjah Government – Vehicle Tracking System
+    </footer>
 
 </body>
 </html>
