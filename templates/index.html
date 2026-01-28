@@ -5,7 +5,23 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h1>Vehicle Tracker System</h1>
-    <p>System is working ✅</p>
+
+<h1>Vehicle Tracker System</h1>
+
+<form method="POST">
+    <input type="text" name="region" placeholder="Enter region name" required>
+    <button type="submit">Add Region</button>
+</form>
+
+<ul>
+    {% for region in regions %}
+        <li>
+            <a href="{{ url_for('region_details', name=region) }}">
+                {{ region }}
+            </a>
+        </li>
+    {% endfor %}
+</ul>
+
 </body>
 </html>
