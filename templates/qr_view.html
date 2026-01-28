@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>QR Result</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: linear-gradient(135deg, #0b2c4a, #133e66);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            width: 420px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+        }
+
+        h2 {
+            color: #0b2c4a;
+            margin-bottom: 20px;
+        }
+
+        img {
+            width: 220px;
+            margin-bottom: 20px;
+        }
+
+        a {
+            display: inline-block;
+            text-decoration: none;
+            background: #0b2c4a;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+
+        a:hover {
+            background: #133e66;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h2>Your QR Code</h2>
+        <img src="{{ qr_code }}" alt="QR Code">
+        <br>
+        <a href="/">Generate Another</a>
+    </div>
+
+</body>
+</html>
