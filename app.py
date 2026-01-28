@@ -1,6 +1,8 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, send_file
 import sqlite3
 import os
+import qrcode
+from io import BytesIO
 
 app = Flask(__name__)
 DB_NAME = "database.db"
@@ -91,6 +93,21 @@ def region_details(region_id):
         region=region,
         records=records
     )
+
+@app.route("/region/<int:region_id>/qr")
+def region_qr(region_id):
+    qr_url = url_for(
+        "region_details",
+        region_id=region_id,
+        _external=True
+    )
+
+    img = qrcode.make(qr_url)
+    buf = BytesIO()
+    img.save(buf)
+    buf.seek(0)
+
+    return send_file(buf, mimetype="image/png")
 
 if __name__ == "__main__":
     app.run(debug=True)

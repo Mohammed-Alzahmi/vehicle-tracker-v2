@@ -7,6 +7,9 @@
 
 <h2>Region: {{ region.name }}</h2>
 
+<p>Scan QR Code:</p>
+<img src="{{ url_for('region_qr', region_id=region.id) }}" width="200">
+
 <form method="POST">
     <input type="text" name="note" placeholder="Enter record note" required>
     <button type="submit">Add Record</button>
