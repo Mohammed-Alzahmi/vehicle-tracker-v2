@@ -3,7 +3,6 @@ import sqlite3
 import os
 
 app = Flask(__name__)
-
 DB_NAME = "database.db"
 
 # ---------- Database ----------
@@ -51,19 +50,35 @@ def index():
                 conn.commit()
             except:
                 pass
+        conn.close()
         return redirect(url_for("index"))
 
     regions = conn.execute("SELECT * FROM regions").fetchall()
     conn.close()
     return render_template("index.html", regions=regions)
 
-@app.route("/region/<int:region_id>")
+@app.route("/region/<int:region_id>", methods=["GET", "POST"])
 def region_details(region_id):
     conn = get_db_connection()
+
     region = conn.execute(
         "SELECT * FROM regions WHERE id = ?",
         (region_id,)
     ).fetchone()
+
+    if not region:
+        conn.close()
+        return "Region not found", 404
+
+    if request.method == "POST":
+        note = request.form.get("note")
+        if note:
+            conn.execute(
+                "INSERT INTO records (region_id, note) VALUES (?, ?)",
+                (region_id, note)
+            )
+            conn.commit()
+        return redirect(url_for("region_details", region_id=region_id))
 
     records = conn.execute(
         "SELECT * FROM records WHERE region_id = ? ORDER BY created_at DESC",

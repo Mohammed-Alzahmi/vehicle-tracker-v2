@@ -16,8 +16,8 @@
 <ul>
     {% for region in regions %}
         <li>
-            <a href="{{ url_for('region_details', name=region) }}">
-                {{ region }}
+            <a href="{{ url_for('region_details', region_id=region.id) }}">
+                {{ region.name }}
             </a>
         </li>
     {% endfor %}
