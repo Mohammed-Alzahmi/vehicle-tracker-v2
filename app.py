@@ -1,113 +1,77 @@
-from flask import Flask, render_template, request, redirect, url_for, send_file
-import sqlite3
-import os
-import qrcode
-from io import BytesIO
+from flask import Flask, render_template, request, redirect, url_for
+from datetime import datetime
 
 app = Flask(__name__)
-DB_NAME = "database.db"
 
-# ---------- Database ----------
-def get_db_connection():
-    conn = sqlite3.connect(DB_NAME)
-    conn.row_factory = sqlite3.Row
-    return conn
+# -----------------------------
+# Data Storage (Temporary)
+# -----------------------------
+regions = []
+logs = {}
 
-def init_db():
-    if not os.path.exists(DB_NAME):
-        conn = get_db_connection()
-        conn.execute("""
-            CREATE TABLE regions (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                name TEXT NOT NULL UNIQUE
-            )
-        """)
-        conn.execute("""
-            CREATE TABLE records (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                region_id INTEGER,
-                note TEXT,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                FOREIGN KEY (region_id) REFERENCES regions (id)
-            )
-        """)
-        conn.commit()
-        conn.close()
-
-init_db()
-
-# ---------- Routes ----------
+# -----------------------------
+# Dashboard (Home Page)
+# -----------------------------
 @app.route("/", methods=["GET", "POST"])
-def index():
-    conn = get_db_connection()
-
+def home():
     if request.method == "POST":
-        region_name = request.form.get("region")
-        if region_name:
-            try:
-                conn.execute(
-                    "INSERT INTO regions (name) VALUES (?)",
-                    (region_name,)
-                )
-                conn.commit()
-            except:
-                pass
-        conn.close()
-        return redirect(url_for("index"))
+        data = request.form.get("data")
+        if data and data not in regions:
+            regions.append(data)
+            logs[data] = []
+    return render_template("home.html", regions=regions)
 
-    regions = conn.execute("SELECT * FROM regions").fetchall()
-    conn.close()
-    return render_template("index.html", regions=regions)
 
-@app.route("/region/<int:region_id>", methods=["GET", "POST"])
-def region_details(region_id):
-    conn = get_db_connection()
+# -----------------------------
+# Delete Region
+# -----------------------------
+@app.route("/delete/<region>")
+def delete_region(region):
+    if region in regions:
+        regions.remove(region)
+        logs.pop(region, None)
+    return redirect(url_for("home"))
 
-    region = conn.execute(
-        "SELECT * FROM regions WHERE id = ?",
-        (region_id,)
-    ).fetchone()
 
-    if not region:
-        conn.close()
-        return "Region not found", 404
+# -----------------------------
+# Region Details (QR + Logs)
+# -----------------------------
+@app.route("/view/<region>")
+def view_region(region):
+    if region not in regions:
+        return redirect(url_for("home"))
 
-    if request.method == "POST":
-        note = request.form.get("note")
-        if note:
-            conn.execute(
-                "INSERT INTO records (region_id, note) VALUES (?, ?)",
-                (region_id, note)
-            )
-            conn.commit()
-        return redirect(url_for("region_details", region_id=region_id))
-
-    records = conn.execute(
-        "SELECT * FROM records WHERE region_id = ? ORDER BY created_at DESC",
-        (region_id,)
-    ).fetchall()
-
-    conn.close()
+    qr_filename = "qr.png"  # placeholder (if you generate dynamically later)
     return render_template(
-        "region_details.html",
+        "qr_view.html",
         region=region,
-        records=records
+        logs=logs.get(region, []),
+        qr_filename=qr_filename
     )
 
-@app.route("/region/<int:region_id>/qr")
-def region_qr(region_id):
-    qr_url = url_for(
-        "region_details",
-        region_id=region_id,
-        _external=True
-    )
 
-    img = qrcode.make(qr_url)
-    buf = BytesIO()
-    img.save(buf)
-    buf.seek(0)
+# -----------------------------
+# Registration Page (Employee Entry)
+# -----------------------------
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    success = False
+    if request.method == "POST":
+        employee = request.form.get("employee")
+        region = request.args.get("region")
 
-    return send_file(buf, mimetype="image/png")
+        if employee and region and region in logs:
+            logs[region].append({
+                "name": employee,
+                "time": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            })
+            success = True
 
+    return render_template("index.html", success=success)
+
+
+# -----------------------------
+# Run App
+# -----------------------------
 if __name__ == "__main__":
     app.run(debug=True)
