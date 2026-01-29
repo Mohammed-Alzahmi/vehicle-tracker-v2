@@ -1,86 +1,108 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>QR Code</title>
+    <title>Region Details</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
     <style>
         body {
-            margin: 0;
             font-family: "Segoe UI", Tahoma, sans-serif;
-            background: linear-gradient(to bottom, #f5efe6, #e6d3b1);
+            background: #f4efe6;
+            margin: 0;
             color: #3b2f1c;
         }
 
-        .header {
-            background-color: #3b2f1c;
-            padding: 15px 40px;
+        header {
+            background: #2f2416;
+            padding: 15px 30px;
             display: flex;
-            align-items: center;
             justify-content: space-between;
+            align-items: center;
         }
 
-        .header img {
-            height: 60px;
-        }
-
-        .title {
+        header h1 {
             color: #d4af37;
-            font-size: 26px;
-            font-weight: bold;
-            text-align: center;
-            flex: 1;
+            margin: 0;
         }
 
         .container {
-            max-width: 500px;
-            margin: 80px auto;
+            padding: 30px;
+            max-width: 1100px;
+            margin: auto;
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 25px;
+        }
+
+        .box {
             background: white;
-            padding: 35px;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            padding: 25px;
+            border-radius: 14px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+        }
+
+        img {
+            width: 100%;
+            max-width: 250px;
+            display: block;
+            margin: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
             text-align: center;
         }
 
-        img.qr {
-            margin-top: 20px;
-            width: 260px;
+        th {
+            background: #f1e6c9;
         }
 
-        a {
-            display: inline-block;
-            margin-top: 25px;
-            text-decoration: none;
-            color: #d4af37;
-            font-weight: bold;
-        }
-
-        footer {
-            margin-top: 60px;
-            text-align: center;
-            font-size: 13px;
-            color: #6b5a3a;
+        @media(max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
+
 <body>
 
-    <div class="header">
-        <img src="{{ url_for('static', filename='shj-police.png') }}">
-        <div class="title">Vehicle Tracker System</div>
-        <img src="{{ url_for('static', filename='shj-gov.png') }}">
+<header>
+    <h1>تفاصيل المنطقة</h1>
+</header>
+
+<div class="container">
+
+    <div class="box">
+        <h3><i class="fa fa-qrcode"></i> QR Code</h3>
+        <img src="{{ url_for('static', filename=qr_filename) }}">
     </div>
 
-    <div class="container">
-        <h2>Generated QR Code</h2>
-        <p><strong>{{ data }}</strong></p>
-        <img class="qr" src="{{ url_for('static', filename=qr_filename) }}">
-        <br>
-        <a href="/">← Back to Home</a>
+    <div class="box">
+        <h3><i class="fa fa-list"></i> السجلات</h3>
+        <table>
+            <tr>
+                <th>الوقت</th>
+                <th>الموظف</th>
+            </tr>
+            {% for log in logs %}
+            <tr>
+                <td>{{ log.time }}</td>
+                <td>{{ log.name }}</td>
+            </tr>
+            {% endfor %}
+        </table>
     </div>
 
-    <footer>
-        © Sharjah Government – Vehicle Tracking System
-    </footer>
+</div>
 
 </body>
 </html>

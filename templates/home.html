@@ -1,74 +1,103 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>Vehicle Tracker System</title>
+    <title>Vehicle Tracker | Dashboard</title>
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
     <style>
         body {
             margin: 0;
             font-family: "Segoe UI", Tahoma, sans-serif;
-            background: linear-gradient(to bottom, #f5efe6, #e6d3b1);
+            background: #f4efe6;
             color: #3b2f1c;
         }
 
-        .header {
-            background-color: #3b2f1c;
-            padding: 15px 40px;
+        header {
+            background: #2f2416;
+            padding: 15px 30px;
             display: flex;
-            align-items: center;
             justify-content: space-between;
+            align-items: center;
         }
 
-        .header img {
-            height: 60px;
+        header img {
+            height: 55px;
         }
 
-        .title {
+        header h1 {
             color: #d4af37;
-            font-size: 26px;
-            font-weight: bold;
-            text-align: center;
-            flex: 1;
+            margin: 0;
+            font-size: 24px;
         }
 
         .container {
-            max-width: 500px;
-            margin: 80px auto;
+            padding: 40px;
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        .add-box {
             background: white;
-            padding: 35px;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-            text-align: center;
+            padding: 25px;
+            border-radius: 14px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+            margin-bottom: 40px;
         }
 
-        h2 {
-            margin-bottom: 25px;
-            color: #3b2f1c;
-        }
-
-        input[type="text"] {
-            width: 100%;
-            padding: 12px;
-            border-radius: 8px;
-            border: 1px solid #c9b37e;
-            margin-bottom: 20px;
+        .add-box input {
+            width: 70%;
+            padding: 14px;
             font-size: 16px;
+            border-radius: 10px;
+            border: 1px solid #c9b37e;
         }
 
-        button {
-            width: 100%;
-            padding: 12px;
-            background-color: #3b2f1c;
+        .add-box button {
+            padding: 14px 22px;
+            background: #2f2416;
             color: #d4af37;
             border: none;
-            border-radius: 8px;
-            font-size: 17px;
+            border-radius: 10px;
             font-weight: bold;
             cursor: pointer;
         }
 
-        button:hover {
-            background-color: #2a2114;
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 30px;
+        }
+
+        .card {
+            background: white;
+            padding: 28px;
+            border-radius: 16px;
+            box-shadow: 0 12px 35px rgba(0,0,0,0.18);
+            position: relative;
+        }
+
+        .card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: #d4af37;
+            border-radius: 16px 16px 0 0;
+        }
+
+        .card h3 {
+            margin-bottom: 25px;
+        }
+
+        .actions a {
+            margin-left: 15px;
+            font-size: 20px;
+            color: #2f2416;
         }
 
         footer {
@@ -79,25 +108,43 @@
         }
     </style>
 </head>
+
 <body>
 
-    <div class="header">
-        <img src="{{ url_for('static', filename='shj-police.png') }}">
-        <div class="title">Vehicle Tracker System</div>
-        <img src="{{ url_for('static', filename='shj-gov.png') }}">
-    </div>
+<header>
+    <img src="{{ url_for('static', filename='shj-police.png') }}">
+    <h1>Vehicle Tracker System</h1>
+    <img src="{{ url_for('static', filename='shj-gov.png') }}">
+</header>
 
-    <div class="container">
-        <h2>Add Area / Vehicle</h2>
+<div class="container">
+
+    <div class="add-box">
         <form method="POST">
-            <input type="text" name="data" placeholder="Enter Area or Vehicle ID" required>
-            <button type="submit">Generate QR Code</button>
+            <input type="text" name="data" placeholder="إضافة منطقة جديدة" required>
+            <button type="submit">
+                <i class="fa fa-plus"></i> إضافة
+            </button>
         </form>
     </div>
 
-    <footer>
-        © Sharjah Government – Vehicle Tracking System
-    </footer>
+    <div class="cards">
+        {% for region in regions %}
+        <div class="card">
+            <h3><i class="fa fa-map-location-dot"></i> {{ region }}</h3>
+            <div class="actions">
+                <a href="/view/{{ region }}"><i class="fa fa-eye"></i></a>
+                <a href="/delete/{{ region }}"><i class="fa fa-trash"></i></a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+
+<footer>
+    © Sharjah Government – Vehicle Tracking System
+</footer>
 
 </body>
 </html>

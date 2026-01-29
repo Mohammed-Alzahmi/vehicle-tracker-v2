@@ -1,27 +1,91 @@
 <!DOCTYPE html>
-<html>
+<html lang="ar" dir="rtl">
 <head>
-    <title>Vehicle Tracker</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta charset="UTF-8">
+    <title>Vehicle Entry</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Tahoma, sans-serif;
+            background: #f4efe6;
+        }
+
+        header {
+            background: #2f2416;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header img {
+            height: 45px;
+        }
+
+        .box {
+            max-width: 420px;
+            margin: 60px auto;
+            background: white;
+            padding: 35px 30px;
+            border-radius: 18px;
+            box-shadow: 0 12px 35px rgba(0,0,0,0.18);
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 25px;
+            color: #2f2416;
+        }
+
+        input {
+            width: 100%;
+            padding: 16px;
+            font-size: 18px;
+            border-radius: 10px;
+            border: 1px solid #c9b37e;
+            margin-bottom: 18px;
+        }
+
+        button {
+            width: 100%;
+            padding: 16px;
+            background: #000;
+            color: #fff;
+            font-size: 20px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .success {
+            margin-top: 25px;
+            font-size: 70px;
+            color: green;
+        }
+    </style>
 </head>
+
 <body>
 
-<h1>Vehicle Tracker System</h1>
+<header>
+    <img src="{{ url_for('static', filename='shj-police.png') }}">
+    <img src="{{ url_for('static', filename='shj-gov.png') }}">
+</header>
 
-<form method="POST">
-    <input type="text" name="region" placeholder="Enter region name" required>
-    <button type="submit">Add Region</button>
-</form>
+<div class="box">
+    <h2>تسجيل دخول مركبة</h2>
 
-<ul>
-    {% for region in regions %}
-        <li>
-            <a href="{{ url_for('region_details', region_id=region.id) }}">
-                {{ region.name }}
-            </a>
-        </li>
-    {% endfor %}
-</ul>
+    <form method="POST">
+        <input type="text" name="employee" placeholder="اسم الموظف" required>
+        <button type="submit">تسجيل</button>
+    </form>
+
+    {% if success %}
+        <div class="success">✅</div>
+        <p>تم التسجيل بنجاح</p>
+    {% endif %}
+</div>
 
 </body>
 </html>
