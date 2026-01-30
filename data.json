@@ -1,0 +1,8 @@
+{
+  "regions": ["Gate A", "Gate B"],
+  "logs": {
+    "Gate A": [
+      {"name": "Ali", "time": "2026-01-30 09:00"}
+    ]
+  }
+}
