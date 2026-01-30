@@ -1,52 +1,112 @@
 body {
     font-family: Arial, sans-serif;
-    background: #f4f6f8;
     margin: 0;
-    padding: 20px;
+    background: #f5f1e6;
+    color: #3b2f1e;
 }
 
-h1, h2, h3 {
-    color: #1f2933;
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #2f2416;
+    color: #d4af37;
+    padding: 15px 30px;
 }
 
-form {
-    margin-bottom: 20px;
+header img {
+    height: 60px;
 }
 
-input {
-    padding: 8px;
-    width: 220px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+.container {
+    padding: 30px;
 }
 
-button {
-    padding: 8px 14px;
-    background: #0f4c81;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
+.add-form {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 30px;
 }
 
-button:hover {
-    background: #0c3a63;
-}
-
-ul {
-    list-style: none;
-    padding: 0;
-}
-
-li {
-    background: white;
-    margin-bottom: 8px;
+.add-form input {
+    flex: 1;
     padding: 10px;
-    border-radius: 6px;
 }
 
-a {
+.add-form button {
+    background: #2f2416;
+    color: #d4af37;
+    border: none;
+    padding: 10px 20px;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+.card {
+    background: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.card a {
+    display: block;
+    margin-top: 10px;
     text-decoration: none;
-    color: #0f4c81;
+    color: #2f2416;
     font-weight: bold;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+}
+
+th, td {
+    padding: 12px;
+    border-bottom: 1px solid #ccc;
+    text-align: center;
+}
+
+.mobile {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.qr-box {
+    background: #fff;
+    padding: 25px;
+    width: 90%;
+    max-width: 400px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.qr-box input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 10px;
+}
+
+.qr-box button {
+    width: 100%;
+    padding: 12px;
+    background: #000;
+    color: #fff;
+    border: none;
+    font-size: 16px;
+}
+
+.success {
+    display: none;
+    margin-top: 15px;
+    color: green;
+    font-size: 18px;
 }

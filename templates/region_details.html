@@ -1,32 +1,33 @@
 <!DOCTYPE html>
-<html>
+<html lang="ar" dir="rtl">
 <head>
-    <title>{{ region.name }}</title>
+    <meta charset="UTF-8">
+    <title>سجل المنطقة</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 
-<h2>Region: {{ region.name }}</h2>
+<header>
+    <h2>📍 {{ region_name }}</h2>
+    <a href="/">⬅ رجوع</a>
+</header>
 
-<p>Scan QR Code:</p>
-<img src="{{ url_for('region_qr', region_id=region.id) }}" width="200">
-
-<form method="POST">
-    <input type="text" name="note" placeholder="Enter record note" required>
-    <button type="submit">Add Record</button>
-</form>
-
-<h3>Records</h3>
-<ul>
-    {% for record in records %}
-        <li>
-            {{ record.note }} <small>({{ record.created_at }})</small>
-        </li>
-    {% else %}
-        <li>No records yet</li>
-    {% endfor %}
-</ul>
-
-<a href="/">⬅ Back</a>
+<section class="container">
+    <table>
+        <tr>
+            <th>الموظف</th>
+            <th>المركبة</th>
+            <th>الوقت</th>
+        </tr>
+        {% for log in logs %}
+        <tr>
+            <td>{{ log.employee }}</td>
+            <td>{{ log.vehicle }}</td>
+            <td>{{ log.time }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</section>
 
 </body>
 </html>
