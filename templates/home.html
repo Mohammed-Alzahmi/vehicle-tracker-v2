@@ -3,37 +3,56 @@
 <head>
 <meta charset="UTF-8">
 <title>Vehicle Tracker</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<style>
+body {
+    font-family: Arial;
+    background: #f5efe6;
+    margin: 0;
+}
+header {
+    background: white;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+header img {
+    height: 50px;
+}
+.container {
+    padding: 20px;
+}
+.region {
+    background: #fff;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+}
+</style>
 </head>
-
 <body>
 
 <header>
-    <img src="{{ url_for('static', filename='shj-police.png') }}" class="logo dark">
-    <h1>Vehicle Tracker System</h1>
-    <img src="{{ url_for('static', filename='shj-gov.png') }}" class="logo dark">
+    <img src="/static/shj-police.png">
+    <strong>Vehicle Tracker System</strong>
+    <img src="/static/shj-gov.png">
 </header>
 
 <div class="container">
-
-<form method="POST" action="/add_region" class="add-form">
+<form method="POST" action="/add_region">
     <input name="region" placeholder="اسم المنطقة" required>
     <button>إضافة</button>
 </form>
 
-<div class="list">
-{% for r in regions %}
-<div class="region-item">
-    <span>{{ r }}</span>
+<hr>
 
-    <div class="menu">
-        <a href="/region/{{ r }}">📄 السجلات</a>
-        <a href="/qr?region={{ r }}">🔳 QR</a>
-    </div>
+{% for region in regions %}
+<div class="region">
+    <strong>{{ region }}</strong><br>
+    <a href="/records/{{ region }}">عرض السجلات</a> |
+    <a href="/register/{{ region }}">تسجيل جديد</a>
 </div>
 {% endfor %}
-</div>
-
 </div>
 
 </body>

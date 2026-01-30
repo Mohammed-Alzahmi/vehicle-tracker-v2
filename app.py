@@ -1,80 +1,78 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify
-from datetime import datetime, timedelta
+from flask import Flask, render_template, request, redirect, url_for
 import json
 import os
+import qrcode
+from datetime import datetime
+import pytz
 
 app = Flask(__name__)
-DATA_FILE = "data.json"
 
-# ---------- Data ----------
+DATA_FILE = "data.json"
+QR_FOLDER = "static/qr"
+UAE_TZ = pytz.timezone("Asia/Dubai")
+
+os.makedirs(QR_FOLDER, exist_ok=True)
+
 def load_data():
     if not os.path.exists(DATA_FILE):
-        with open(DATA_FILE, "w", encoding="utf-8") as f:
-            json.dump({"regions": {}}, f, ensure_ascii=False, indent=4)
-
+        return {"regions": {}}
     with open(DATA_FILE, "r", encoding="utf-8") as f:
         return json.load(f)
 
-
 def save_data(data):
     with open(DATA_FILE, "w", encoding="utf-8") as f:
-        json.dump(data, f, ensure_ascii=False, indent=4)
+        json.dump(data, f, indent=4, ensure_ascii=False)
 
-# ---------- Routes ----------
 @app.route("/")
 def home():
     data = load_data()
     return render_template("home.html", regions=data["regions"])
 
-
 @app.route("/add_region", methods=["POST"])
 def add_region():
-    name = request.form["region"].strip()
+    region = request.form["region"]
     data = load_data()
-
-    if name and name not in data["regions"]:
-        data["regions"][name] = {"logs": []}
+    if region not in data["regions"]:
+        data["regions"][region] = []
         save_data(data)
-
     return redirect(url_for("home"))
 
-
-@app.route("/region/<name>")
-def region_details(name):
+@app.route("/records/<region>")
+def records(region):
     data = load_data()
     return render_template(
-        "region_details.html",
-        region=name,
-        logs=data["regions"][name]["logs"]
+        "records.html",
+        region=region,
+        records=data["regions"].get(region, [])
     )
 
+@app.route("/register/<region>", methods=["GET", "POST"])
+def register(region):
+    if request.method == "POST":
+        name = request.form["name"]
+        vehicle = request.form["vehicle"]
 
-@app.route("/qr")
-def qr_view():
-    return render_template("qr_view.html", region=request.args.get("region"))
+        now = datetime.now(UAE_TZ).strftime("%H:%M")
 
+        qr_data = f"Region: {region}\nName: {name}\nVehicle: {vehicle}\nTime: {now}"
+        qr_img = qrcode.make(qr_data)
 
-@app.route("/register", methods=["POST"])
-def register():
-    data = load_data()
+        qr_name = f"{region}_{len(os.listdir(QR_FOLDER))}.png"
+        qr_path = os.path.join(QR_FOLDER, qr_name)
+        qr_img.save(qr_path)
 
-    region = request.form["region"]
-    employee = request.form["employee"]
-    vehicle = request.form["vehicle"]
+        data = load_data()
+        data["regions"][region].append({
+            "name": name,
+            "vehicle": vehicle,
+            "time": now,
+            "qr": qr_name
+        })
+        save_data(data)
 
-    # UAE Time (UTC +4)
-    uae_time = datetime.utcnow() + timedelta(hours=4)
-    time_str = uae_time.strftime("%Y-%m-%d %H:%M")  # 24-hour
+        return redirect(url_for("records", region=region))
 
-    data["regions"][region]["logs"].append({
-        "employee": employee,
-        "vehicle": vehicle,
-        "time": time_str
-    })
-
-    save_data(data)
-    return jsonify({"ok": True})
-
+    return render_template("register.html", region=region)
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)
