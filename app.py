@@ -1,36 +1,26 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify
-from datetime import datetime
+from datetime import datetime, timedelta
 import json
 import os
 
 app = Flask(__name__)
-
 DATA_FILE = "data.json"
 
-# ======================
-# Data helpers (SAFE)
-# ======================
+# ---------- Data ----------
 def load_data():
     if not os.path.exists(DATA_FILE):
-        data = {"regions": {}}
         with open(DATA_FILE, "w", encoding="utf-8") as f:
-            json.dump(data, f, ensure_ascii=False, indent=4)
-        return data
+            json.dump({"regions": {}}, f, ensure_ascii=False, indent=4)
 
-    try:
-        with open(DATA_FILE, "r", encoding="utf-8") as f:
-            return json.load(f)
-    except json.JSONDecodeError:
-        return {"regions": {}}
+    with open(DATA_FILE, "r", encoding="utf-8") as f:
+        return json.load(f)
 
 
 def save_data(data):
     with open(DATA_FILE, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=4)
 
-# ======================
-# Routes
-# ======================
+# ---------- Routes ----------
 @app.route("/")
 def home():
     data = load_data()
@@ -39,60 +29,52 @@ def home():
 
 @app.route("/add_region", methods=["POST"])
 def add_region():
-    region_name = request.form["region"].strip()
+    name = request.form["region"].strip()
     data = load_data()
 
-    if region_name and region_name not in data["regions"]:
-        data["regions"][region_name] = {"logs": []}
+    if name and name not in data["regions"]:
+        data["regions"][name] = {"logs": []}
         save_data(data)
 
     return redirect(url_for("home"))
 
 
-@app.route("/region/<region_name>")
-def region_details(region_name):
+@app.route("/region/<name>")
+def region_details(name):
     data = load_data()
-
-    if region_name not in data["regions"]:
-        return "Region not found", 404
-
     return render_template(
         "region_details.html",
-        region_name=region_name,
-        logs=data["regions"][region_name]["logs"]
+        region=name,
+        logs=data["regions"][name]["logs"]
     )
 
 
 @app.route("/qr")
 def qr_view():
-    region_name = request.args.get("region")
-    return render_template("qr_view.html", region_name=region_name)
+    return render_template("qr_view.html", region=request.args.get("region"))
 
 
 @app.route("/register", methods=["POST"])
 def register():
-    region_name = request.form["region"]
+    data = load_data()
+
+    region = request.form["region"]
     employee = request.form["employee"]
     vehicle = request.form["vehicle"]
 
-    data = load_data()
+    # UAE Time (UTC +4)
+    uae_time = datetime.utcnow() + timedelta(hours=4)
+    time_str = uae_time.strftime("%Y-%m-%d %H:%M")  # 24-hour
 
-    if region_name not in data["regions"]:
-        return jsonify({"status": "error"}), 400
-
-    now = datetime.now().strftime("%Y-%m-%d %H:%M")
-
-    log = {
+    data["regions"][region]["logs"].append({
         "employee": employee,
         "vehicle": vehicle,
-        "time": now
-    }
+        "time": time_str
+    })
 
-    data["regions"][region_name]["logs"].append(log)
     save_data(data)
-
-    return jsonify({"status": "success"})
+    return jsonify({"ok": True})
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()

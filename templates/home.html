@@ -1,33 +1,39 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <title>Vehicle Tracker System</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<meta charset="UTF-8">
+<title>Vehicle Tracker</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
+
 <body>
 
 <header>
-    <img src="{{ url_for('static', filename='shj-police.png') }}">
+    <img src="{{ url_for('static', filename='shj-police.png') }}" class="logo dark">
     <h1>Vehicle Tracker System</h1>
-    <img src="{{ url_for('static', filename='shj-gov.png') }}">
+    <img src="{{ url_for('static', filename='shj-gov.png') }}" class="logo dark">
 </header>
 
 <div class="container">
-    <form method="POST" action="/add_region" class="add-form">
-        <input type="text" name="region" placeholder="اسم المنطقة" required>
-        <button type="submit">➕ إضافة</button>
-    </form>
 
-    <div class="cards">
-        {% for region in regions %}
-        <div class="card">
-            <h3>{{ region }}</h3>
-            <a href="/region/{{ region }}">📄 السجلات</a>
-            <a href="/qr?region={{ region }}">🔳 QR</a>
-        </div>
-        {% endfor %}
+<form method="POST" action="/add_region" class="add-form">
+    <input name="region" placeholder="اسم المنطقة" required>
+    <button>إضافة</button>
+</form>
+
+<div class="list">
+{% for r in regions %}
+<div class="region-item">
+    <span>{{ r }}</span>
+
+    <div class="menu">
+        <a href="/region/{{ r }}">📄 السجلات</a>
+        <a href="/qr?region={{ r }}">🔳 QR</a>
     </div>
+</div>
+{% endfor %}
+</div>
+
 </div>
 
 </body>

@@ -1,108 +1,80 @@
-body {
-    margin: 0;
-    font-family: Arial;
-    background: #f4efe6;
-    color: #3b2f1e;
+body{
+    margin:0;
+    font-family:Tahoma;
+    background:#f7f5ef;
+    color:#3b2f1e;
 }
 
-header {
-    background: #2f2416;
-    color: #d4af37;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 30px;
+header{
+    background:#3b2f1e;
+    color:#d4af37;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:15px 30px;
 }
 
-header img {
-    height: 60px;
+.logo{
+    height:60px;
+    filter:brightness(0) invert(1);
 }
 
-.container {
-    padding: 30px;
+.container{
+    padding:30px;
 }
 
-.add-form {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 25px;
+.add-form{
+    display:flex;
+    gap:10px;
 }
 
-.add-form input {
-    flex: 1;
-    padding: 10px;
+.add-form input{
+    flex:1;
+    padding:10px;
 }
 
-.add-form button {
-    background: #2f2416;
-    color: #d4af37;
-    border: none;
-    padding: 10px 20px;
+.add-form button{
+    background:#3b2f1e;
+    color:#d4af37;
+    border:none;
+    padding:10px 20px;
 }
 
-.cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 20px;
+.list{
+    margin-top:25px;
 }
 
-.card {
-    background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+.region-item{
+    background:#fff;
+    padding:15px;
+    margin-bottom:10px;
+    border-radius:8px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
 }
 
-.card a {
-    display: block;
-    margin-top: 10px;
-    text-decoration: none;
-    font-weight: bold;
-    color: #2f2416;
+.menu a{
+    margin-left:15px;
+    text-decoration:none;
+    color:#3b2f1e;
+    font-weight:bold;
 }
 
-table {
-    width: 100%;
-    background: #fff;
-    border-collapse: collapse;
+.center{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
 }
 
-th, td {
-    padding: 12px;
-    border-bottom: 1px solid #ccc;
-    text-align: center;
+.qr-card{
+    background:#fff;
+    padding:25px;
+    border-radius:10px;
+    text-align:center;
 }
 
-.mobile {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-}
-
-.qr-box {
-    background: #fff;
-    padding: 25px;
-    width: 90%;
-    max-width: 400px;
-    border-radius: 10px;
-}
-
-.qr-box input, .qr-box button {
-    width: 100%;
-    padding: 12px;
-    margin-bottom: 10px;
-}
-
-.qr-box button {
-    background: black;
-    color: white;
-    border: none;
-}
-
-.success {
-    display: none;
-    color: green;
-    font-size: 18px;
-    text-align: center;
+.hidden{
+    display:none;
 }

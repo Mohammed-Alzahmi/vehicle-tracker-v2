@@ -1,39 +1,33 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <title>تسجيل دخول</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<meta charset="UTF-8">
+<title>QR</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body class="mobile">
 
-<div class="qr-box">
-    <h2>تسجيل دخول مركبة</h2>
+<body class="center">
 
-    <form id="regForm">
-        <input type="hidden" name="region" value="{{ region_name }}">
+<div class="qr-card">
+<h3>{{ region }}</h3>
 
-        <input type="text" name="employee" placeholder="اسم الموظف" required>
-        <input type="text" name="vehicle" placeholder="رقم المركبة" required>
+<button onclick="showQR()">عرض QR</button>
 
-        <button type="submit">تسجيل</button>
-    </form>
-
-    <div id="success" class="success">✅ تم التسجيل بنجاح</div>
+<div id="qrBox" class="hidden">
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data={{ request.url_root }}qr?region={{ region }}">
+    <input value="{{ request.url_root }}qr?region={{ region }}" readonly>
+    <button onclick="copy()">نسخ الرابط</button>
+</div>
 </div>
 
 <script>
-document.getElementById("regForm").onsubmit = async function(e){
-    e.preventDefault();
-    const data = new FormData(this);
+function showQR(){
+    document.getElementById("qrBox").classList.remove("hidden")
+}
 
-    await fetch("/register", {
-        method: "POST",
-        body: data
-    });
-
-    document.getElementById("success").style.display = "block";
-    this.reset();
+function copy(){
+    navigator.clipboard.writeText(document.querySelector("input").value)
+    alert("تم النسخ ✅")
 }
 </script>
 
