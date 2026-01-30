@@ -1,80 +1,57 @@
-body{
-    margin:0;
-    font-family:Tahoma;
-    background:#f7f5ef;
-    color:#3b2f1e;
+body {
+    font-family: Arial;
+    background: #f4efe8;
+    margin: 0;
 }
 
-header{
-    background:#3b2f1e;
-    color:#d4af37;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:15px 30px;
+.top-header {
+    background: white;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    gap: 40px;
 }
 
-.logo{
-    height:60px;
-    filter:brightness(0) invert(1);
+.top-header img {
+    height: 60px;
 }
 
-.container{
-    padding:30px;
+.container {
+    padding: 30px;
 }
 
-.add-form{
-    display:flex;
-    gap:10px;
+form input, button {
+    padding: 10px;
+    margin: 5px;
 }
 
-.add-form input{
-    flex:1;
-    padding:10px;
+button {
+    background: #3b2f1c;
+    color: white;
+    border: none;
+    cursor: pointer;
 }
 
-.add-form button{
-    background:#3b2f1e;
-    color:#d4af37;
-    border:none;
-    padding:10px 20px;
+.regions {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
 }
 
-.list{
-    margin-top:25px;
+.region-card {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 5px 10px rgba(0,0,0,.1);
 }
 
-.region-item{
-    background:#fff;
-    padding:15px;
-    margin-bottom:10px;
-    border-radius:8px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
+.records-table {
+    width: 100%;
+    border-collapse: collapse;
 }
 
-.menu a{
-    margin-left:15px;
-    text-decoration:none;
-    color:#3b2f1e;
-    font-weight:bold;
-}
-
-.center{
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    height:100vh;
-}
-
-.qr-card{
-    background:#fff;
-    padding:25px;
-    border-radius:10px;
-    text-align:center;
-}
-
-.hidden{
-    display:none;
+.records-table th, .records-table td {
+    border: 1px solid #8b6f3d;
+    padding: 10px;
+    text-align: center;
 }

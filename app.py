@@ -1,27 +1,21 @@
 from flask import Flask, render_template, request, redirect, url_for
+from datetime import datetime
 import json
 import os
-import qrcode
-from datetime import datetime
-import pytz
 
 app = Flask(__name__)
 
 DATA_FILE = "data.json"
-QR_FOLDER = "static/qr"
-UAE_TZ = pytz.timezone("Asia/Dubai")
-
-os.makedirs(QR_FOLDER, exist_ok=True)
 
 def load_data():
     if not os.path.exists(DATA_FILE):
-        return {"regions": {}}
+        return {"regions": {}, "records": []}
     with open(DATA_FILE, "r", encoding="utf-8") as f:
         return json.load(f)
 
 def save_data(data):
     with open(DATA_FILE, "w", encoding="utf-8") as f:
-        json.dump(data, f, indent=4, ensure_ascii=False)
+        json.dump(data, f, ensure_ascii=False, indent=2)
 
 @app.route("/")
 def home():
@@ -30,49 +24,41 @@ def home():
 
 @app.route("/add_region", methods=["POST"])
 def add_region():
-    region = request.form["region"]
+    name = request.form["region_name"]
     data = load_data()
-    if region not in data["regions"]:
-        data["regions"][region] = []
-        save_data(data)
+    region_id = name.replace(" ", "_")
+    data["regions"][region_id] = name
+    save_data(data)
     return redirect(url_for("home"))
 
-@app.route("/records/<region>")
-def records(region):
+@app.route("/region/<region_id>")
+def region_details(region_id):
     data = load_data()
+    records = [r for r in data["records"] if r["region"] == region_id]
     return render_template(
-        "records.html",
-        region=region,
-        records=data["regions"].get(region, [])
+        "region_details.html",
+        region_name=data["regions"][region_id],
+        region_id=region_id,
+        records=records
     )
 
-@app.route("/register/<region>", methods=["GET", "POST"])
-def register(region):
+@app.route("/qr/<region_id>")
+def qr_view(region_id):
+    return render_template("qr_view.html", region_id=region_id)
+
+@app.route("/register/<region_id>", methods=["GET", "POST"])
+def register(region_id):
     if request.method == "POST":
-        name = request.form["name"]
-        vehicle = request.form["vehicle"]
-
-        now = datetime.now(UAE_TZ).strftime("%H:%M")
-
-        qr_data = f"Region: {region}\nName: {name}\nVehicle: {vehicle}\nTime: {now}"
-        qr_img = qrcode.make(qr_data)
-
-        qr_name = f"{region}_{len(os.listdir(QR_FOLDER))}.png"
-        qr_path = os.path.join(QR_FOLDER, qr_name)
-        qr_img.save(qr_path)
-
         data = load_data()
-        data["regions"][region].append({
-            "name": name,
-            "vehicle": vehicle,
-            "time": now,
-            "qr": qr_name
+        data["records"].append({
+            "region": region_id,
+            "vehicle": request.form["vehicle"],
+            "employee": request.form["employee"],
+            "time": datetime.now().strftime("%H:%M")
         })
         save_data(data)
-
-        return redirect(url_for("records", region=region))
-
-    return render_template("register.html", region=region)
+        return redirect(url_for("register", region_id=region_id))
+    return render_template("index.html", region_id=region_id)
 
 if __name__ == "__main__":
     app.run(debug=True)
