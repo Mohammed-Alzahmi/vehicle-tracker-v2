@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>تسجيل الدخول</title>
+    <title>تسجيل دخول</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body class="mobile">
@@ -16,25 +16,25 @@
         <input type="text" name="employee" placeholder="اسم الموظف" required>
         <input type="text" name="vehicle" placeholder="رقم المركبة" required>
 
-        <button type="submit">✅ تسجيل</button>
+        <button type="submit">تسجيل</button>
     </form>
 
-    <p id="success" class="success">تم التسجيل بنجاح ✅</p>
+    <div id="success" class="success">✅ تم التسجيل بنجاح</div>
 </div>
 
 <script>
-document.getElementById("regForm").onsubmit = async function(e) {
+document.getElementById("regForm").onsubmit = async function(e){
     e.preventDefault();
-    const formData = new FormData(this);
+    const data = new FormData(this);
 
     await fetch("/register", {
         method: "POST",
-        body: formData
+        body: data
     });
 
     document.getElementById("success").style.display = "block";
     this.reset();
-};
+}
 </script>
 
 </body>

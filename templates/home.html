@@ -13,22 +13,22 @@
     <img src="{{ url_for('static', filename='shj-gov.png') }}">
 </header>
 
-<section class="container">
+<div class="container">
     <form method="POST" action="/add_region" class="add-form">
         <input type="text" name="region" placeholder="اسم المنطقة" required>
-        <button type="submit">➕ إضافة منطقة</button>
+        <button type="submit">➕ إضافة</button>
     </form>
 
     <div class="cards">
         {% for region in regions %}
         <div class="card">
             <h3>{{ region }}</h3>
-            <a href="/region/{{ region }}">📄 عرض السجلات</a>
+            <a href="/region/{{ region }}">📄 السجلات</a>
             <a href="/qr?region={{ region }}">🔳 QR</a>
         </div>
         {% endfor %}
     </div>
-</section>
+</div>
 
 </body>
 </html>
