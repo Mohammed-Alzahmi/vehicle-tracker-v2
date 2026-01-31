@@ -1,7 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for
 from datetime import datetime
-import json
-import os
+import json, os
 
 app = Flask(__name__)
 DATA_FILE = "data.json"
@@ -25,32 +24,45 @@ def home():
 def add_region():
     name = request.form["region_name"].strip()
     region_id = name.replace(" ", "_")
-
     data = load_data()
     data["regions"][region_id] = name
     save_data(data)
+    return redirect(url_for("home"))
 
+@app.route("/edit_region/<region_id>", methods=["POST"])
+def edit_region(region_id):
+    data = load_data()
+    new_name = request.form["new_name"].strip()
+    new_id = new_name.replace(" ", "_")
+
+    if region_id in data["regions"]:
+        data["regions"].pop(region_id)
+        data["regions"][new_id] = new_name
+        for r in data["records"]:
+            if r["region"] == region_id:
+                r["region"] = new_id
+
+    save_data(data)
+    return redirect(url_for("home"))
+
+@app.route("/delete_region/<region_id>")
+def delete_region(region_id):
+    data = load_data()
+    data["regions"].pop(region_id, None)
+    data["records"] = [r for r in data["records"] if r["region"] != region_id]
+    save_data(data)
     return redirect(url_for("home"))
 
 @app.route("/region/<region_id>")
 def region_details(region_id):
     data = load_data()
-
-    if region_id not in data["regions"]:
-        return "Region not found", 404
-
     records = [r for r in data["records"] if r["region"] == region_id]
-
     return render_template(
         "region_details.html",
-        region_name=data["regions"][region_id],
         region_id=region_id,
+        region_name=data["regions"].get(region_id, ""),
         records=records
     )
-
-@app.route("/qr/<region_id>")
-def qr_view(region_id):
-    return render_template("qr_view.html", region_id=region_id)
 
 @app.route("/register/<region_id>", methods=["GET", "POST"])
 def register(region_id):
@@ -60,12 +72,12 @@ def register(region_id):
             "region": region_id,
             "vehicle": request.form["vehicle"],
             "employee": request.form["employee"],
-            "time": datetime.now().strftime("%H:%M")  # 24H
+            "time": datetime.now().strftime("%H:%M")
         })
         save_data(data)
-        return redirect(url_for("register", region_id=region_id))
+        return render_template("index.html", success=True)
 
-    return render_template("index.html", region_id=region_id)
+    return render_template("index.html", success=False)
 
 if __name__ == "__main__":
     app.run(debug=True)

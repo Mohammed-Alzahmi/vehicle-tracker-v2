@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <title>Vehicle Tracker</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<meta charset="UTF-8">
+<title>Vehicle Tracker</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<script src="{{ url_for('static', filename='script.js') }}"></script>
 </head>
 <body>
 
@@ -13,22 +14,29 @@
 </header>
 
 <div class="container">
-  <h2>المناطق</h2>
+<h2>المناطق</h2>
 
-  <form method="POST" action="/add_region">
-    <input name="region_name" placeholder="اسم المنطقة" required>
-    <button>إضافة</button>
-  </form>
+<form method="POST" action="/add_region" class="add-form">
+  <input name="region_name" placeholder="اسم المنطقة" required>
+  <button>إضافة</button>
+</form>
 
-  <div class="cards">
-    {% for id, name in regions.items() %}
-    <div class="card">
-      <h3>{{ name }}</h3>
-      <a href="/region/{{ id }}">السجلات</a>
-      <a href="/qr/{{ id }}">QR</a>
+<div class="cards">
+{% for id, name in regions.items() %}
+  <div class="card">
+    <span class="dots" onclick="toggleMenu('{{ id }}')">⋮</span>
+    <h3 onclick="location.href='/region/{{ id }}'">{{ name }}</h3>
+
+    <div class="menu" id="menu-{{ id }}">
+      <form method="POST" action="/edit_region/{{ id }}">
+        <input name="new_name" placeholder="اسم جديد" required>
+        <button>تعديل</button>
+      </form>
+      <a class="delete" href="/delete_region/{{ id }}">حذف</a>
     </div>
-    {% endfor %}
   </div>
+{% endfor %}
+</div>
 </div>
 
 </body>

@@ -1,56 +1,96 @@
 body {
-  margin: 0;
-  font-family: Arial;
-  background: #f3eee6;
+  margin:0;
+  font-family:Arial;
+  background:#f3efe7;
 }
 
 .header {
-  background: white;
-  display: flex;
-  justify-content: center;
-  gap: 40px;
-  padding: 10px;
+  background:white;
+  display:flex;
+  justify-content:center;
+  gap:40px;
+  padding:10px;
 }
 
-.header img {
-  height: 60px;
-}
+.header img { height:60px }
 
-.container {
-  padding: 30px;
-}
+.container { padding:30px }
 
-input, button {
-  padding: 10px;
-  margin: 5px 0;
-  width: 100%;
-}
-
-button {
-  background: #3b2f1c;
-  color: white;
-  border: none;
-}
+.add-form input { width:70% }
 
 .cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px,1fr));
-  gap: 15px;
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  gap:20px;
 }
 
 .card {
-  background: white;
-  padding: 15px;
-  border-radius: 10px;
+  background:white;
+  padding:20px;
+  border-radius:15px;
+  box-shadow:0 8px 20px rgba(0,0,0,.15);
+  position:relative;
 }
 
-.records {
-  width: 100%;
-  border-collapse: collapse;
+.dots {
+  position:absolute;
+  left:10px;
+  top:10px;
+  cursor:pointer;
 }
 
-.records th, .records td {
-  border: 1px solid #8b6f3d;
-  padding: 10px;
-  text-align: center;
+.menu {
+  display:none;
+  margin-top:10px;
+}
+
+.menu button { width:100%; margin-top:5px }
+
+.delete { color:red; display:block; margin-top:5px }
+
+table {
+  width:100%;
+  border-collapse:collapse;
+}
+
+th, td {
+  border:1px solid #8b6f3d;
+  padding:10px;
+  text-align:center;
+}
+
+.qr-btn {
+  background:#3b2f1c;
+  color:white;
+  padding:10px 20px;
+  margin-bottom:15px;
+}
+
+.modal {
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.6);
+}
+
+.modal-content {
+  background:white;
+  margin:10% auto;
+  padding:20px;
+  width:300px;
+  text-align:center;
+}
+
+.register-box {
+  max-width:400px;
+  margin:30px auto;
+  background:white;
+  padding:30px;
+  border-radius:15px;
+}
+
+.success {
+  background:#d4edda;
+  padding:10px;
+  margin-bottom:10px;
 }
