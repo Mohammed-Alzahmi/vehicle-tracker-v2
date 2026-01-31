@@ -1,18 +1,17 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <title>QR Code</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <meta charset="UTF-8">
+  <title>QR</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 
 <div class="container center">
-    <h2>QR Code</h2>
+  <h2>QR Code</h2>
 
-    <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data={{ request.host_url }}register/{{ region_id }}">
-
-    <p>{{ request.host_url }}register/{{ region_id }}</p>
+  <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data={{ request.host_url }}register/{{ region_id }}">
+  <p>{{ request.host_url }}register/{{ region_id }}</p>
 </div>
 
 </body>

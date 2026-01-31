@@ -4,7 +4,6 @@ import json
 import os
 
 app = Flask(__name__)
-
 DATA_FILE = "data.json"
 
 def load_data():
@@ -24,17 +23,24 @@ def home():
 
 @app.route("/add_region", methods=["POST"])
 def add_region():
-    name = request.form["region_name"]
-    data = load_data()
+    name = request.form["region_name"].strip()
     region_id = name.replace(" ", "_")
+
+    data = load_data()
     data["regions"][region_id] = name
     save_data(data)
+
     return redirect(url_for("home"))
 
 @app.route("/region/<region_id>")
 def region_details(region_id):
     data = load_data()
+
+    if region_id not in data["regions"]:
+        return "Region not found", 404
+
     records = [r for r in data["records"] if r["region"] == region_id]
+
     return render_template(
         "region_details.html",
         region_name=data["regions"][region_id],
@@ -54,10 +60,11 @@ def register(region_id):
             "region": region_id,
             "vehicle": request.form["vehicle"],
             "employee": request.form["employee"],
-            "time": datetime.now().strftime("%H:%M")
+            "time": datetime.now().strftime("%H:%M")  # 24H
         })
         save_data(data)
         return redirect(url_for("register", region_id=region_id))
+
     return render_template("index.html", region_id=region_id)
 
 if __name__ == "__main__":
