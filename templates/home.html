@@ -1,31 +1,30 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<link rel="stylesheet" href="/static/style.css">
-<script src="/script.js"></script>
+  <meta charset="UTF-8">
+  <title>Home | Vehicle Tracker</title>
+  <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
 
 <header>
-  <div class="logo"><img src="/static/shj-police.png"></div>
-  <div class="logo"><img src="/static/shj-gov.png"></div>
+  <img src="/static/shj-police.png" alt="Police Logo">
+  <h2>Vehicle Tracker System</h2>
+  <img src="/static/shj-gov.png" alt="Gov Logo">
 </header>
 
-<div class="container">
-<form method="post" action="/add_region">
-  <input name="region" placeholder="اسم المنطقة" required>
-  <button>إضافة منطقة</button>
-</form>
+<div class="home-container">
+  <h1>Welcome 👋</h1>
+  <p>
+    نظام تتبع المركبات –  
+    اختاري المنطقة وابدئي بإدارة السجلات بكل سهولة
+  </p>
 
-{% for id, r in regions.items() %}
-<div class="card">
-  <div class="menu" onclick="toggleMenu('{{id}}')">⋮</div>
-  <div id="{{id}}" class="menu-box">
-    <a href="/region/{{id}}">عرض السجلات</a>
-  </div>
-  <h3>{{ r.name }}</h3>
-</div>
-{% endfor %}
+  <a href="/" class="main-btn">
+    Go to Regions  
+    <br>
+    الانتقال إلى المناطق
+  </a>
 </div>
 
 </body>

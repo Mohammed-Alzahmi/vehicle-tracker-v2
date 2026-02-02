@@ -1,18 +1,27 @@
-function toggleMenu(id) {
-  const menu = document.getElementById(id);
-  menu.style.display = menu.style.display === "block" ? "none" : "block";
+function toggleMenu(region) {
+  document.getElementById("menu-" + region).classList.toggle("show");
 }
 
-function showQR() {
-  document.getElementById("qrModal").style.display = "flex";
+function deleteRegion(name) {
+  fetch("/delete-region", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name })
+  }).then(() => location.reload());
 }
 
-function closeQR() {
-  document.getElementById("qrModal").style.display = "none";
+function editRegion(oldName) {
+  let newName = prompt("New region name:");
+  if (!newName) return;
+
+  fetch("/edit-region", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ old: oldName, new: newName })
+  }).then(() => location.reload());
 }
 
-function copyLink() {
-  const link = document.getElementById("qrLink");
-  navigator.clipboard.writeText(link.innerText);
-  alert("Link copied ✅");
+function openQR(region) {
+  document.getElementById("qrFrame").src = "/qr/" + region;
+  document.getElementById("qrModal").style.display = "block";
 }

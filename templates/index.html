@@ -1,26 +1,36 @@
 <!DOCTYPE html>
 <html>
 <head>
-<link rel="stylesheet" href="/static/style.css">
+  <title>Vehicle Tracker</title>
+  <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
 
 <header>
-<img src="/static/shj-police.png" height="50">
-<img src="/static/shj-gov.png" height="50">
+  <img src="/static/shj-police.png">
+  <h2>Vehicle Tracker</h2>
+  <img src="/static/shj-gov.png">
 </header>
 
-<div class="container">
-{% if success %}
-<h2>✅ تم التسجيل بنجاح</h2>
-{% else %}
-<form method="post">
-<input name="employee" placeholder="اسم الموظف" required>
-<input name="vehicle" placeholder="رقم المركبة" required>
-<button>تسجيل</button>
+<form method="POST" action="/add-region" class="add-box">
+  <input name="region" placeholder="Add Region / إضافة منطقة" required>
+  <button>Add</button>
 </form>
-{% endif %}
+
+<div class="regions">
+  {% for region in regions %}
+  <div class="region-card">
+    <a href="/region/{{ region }}">{{ region }}</a>
+    <span class="dots" onclick="toggleMenu('{{ region }}')">⋮</span>
+
+    <div class="menu" id="menu-{{ region }}">
+      <button onclick="editRegion('{{ region }}')">Edit</button>
+      <button onclick="deleteRegion('{{ region }}')">Delete</button>
+    </div>
+  </div>
+  {% endfor %}
 </div>
 
+<script src="/script.js"></script>
 </body>
 </html>
