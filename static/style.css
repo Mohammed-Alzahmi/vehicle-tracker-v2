@@ -1,86 +1,47 @@
-body {
-  margin: 0;
-  font-family: "Segoe UI", sans-serif;
-  background: #f4f1ec;
-  direction: rtl;
-}
-
+body { font-family: Arial; background:#f4f6f9; margin:0 }
 header {
-  background: white;
-  padding: 10px;
-  display: flex;
-  justify-content: space-between;
-  border-bottom: 3px solid #b08d57;
+  background:#0a2a4a;
+  color:white;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:10px 20px;
 }
+header img { height:40px }
 
-.logo img {
-  height: 60px;
+.region-card {
+  background:white;
+  padding:15px;
+  margin:10px;
+  border-radius:10px;
+  position:relative;
 }
-
-.container {
-  padding: 30px;
-}
-
-.card {
-  background: white;
-  border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 15px;
-  box-shadow: 0 6px 20px rgba(0,0,0,.08);
-  position: relative;
-}
+.dots { cursor:pointer; float:right }
 
 .menu {
-  position: absolute;
-  top: 15px;
-  left: 15px;
-  cursor: pointer;
+  display:none;
+  position:absolute;
+  right:10px;
+  top:40px;
+  background:white;
+  border-radius:8px;
 }
+.menu.show { display:block }
 
-.menu-box {
-  display: none;
-  position: absolute;
-  top: 40px;
-  left: 0;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 5px 15px rgba(0,0,0,.2);
-}
-
-.menu-box a {
-  display: block;
-  padding: 10px;
-  text-decoration: none;
-  color: black;
-}
-
-button {
-  background: #1c1c1c;
-  color: white;
-  padding: 12px;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-}
-
-input {
-  width: 100%;
-  padding: 12px;
-  margin: 10px 0;
-  border-radius: 8px;
-  border: 1px solid #ccc;
+.qr-btn {
+  margin:20px;
+  padding:10px 20px;
 }
 
 .modal {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,.6);
-  justify-content: center;
-  align-items: center;
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.6);
 }
-.modal-content {
-  background: white;
-  padding: 20px;
-  border-radius: 12px;
+.modal iframe {
+  width:300px;
+  height:300px;
+  margin:100px auto;
+  display:block;
 }

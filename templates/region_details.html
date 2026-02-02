@@ -1,38 +1,31 @@
 <!DOCTYPE html>
 <html>
 <head>
-<link rel="stylesheet" href="/static/style.css">
-<script src="/script.js"></script>
+  <title>{{ region }}</title>
+  <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
 
 <header>
-<img src="/static/shj-police.png" height="50">
-<img src="/static/shj-gov.png" height="50">
+  <img src="/static/shj-police.png">
+  <h2>{{ region }} Records</h2>
+  <img src="/static/shj-gov.png">
 </header>
 
-<div class="container">
-<h2>{{ region.name }}</h2>
+<button class="qr-btn" onclick="openQR('{{ region }}')">QR Code</button>
 
-<button onclick="showQR()">عرض QR</button>
-
-{% for r in region.records %}
-<div class="card">
-🚗 {{ r.vehicle }}<br>
-👤 {{ r.employee }}<br>
-🕒 {{ r.time }}
-</div>
-{% endfor %}
-</div>
+<ul class="records">
+  {% for r in records %}
+    <li>{{ r }}</li>
+  {% else %}
+    <li>No records yet</li>
+  {% endfor %}
+</ul>
 
 <div id="qrModal" class="modal">
-  <div class="modal-content">
-    <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data={{ request.url_root }}register/{{ region_id }}">
-    <p id="qrLink">{{ request.url_root }}register/{{ region_id }}</p>
-    <button onclick="copyLink()">نسخ الرابط</button>
-    <button onclick="closeQR()">إغلاق</button>
-  </div>
+  <iframe id="qrFrame"></iframe>
 </div>
 
+<script src="/script.js"></script>
 </body>
 </html>

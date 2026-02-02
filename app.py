@@ -1,74 +1,63 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, jsonify
 import json
 import os
-from datetime import datetime
-import pytz
 
 app = Flask(__name__)
-DATA_FILE = "data.json"
-UAE = pytz.timezone("Asia/Dubai")
 
+DATA_FILE = "data.json"
 
 def load_data():
     if not os.path.exists(DATA_FILE):
         return {"regions": {}}
-    with open(DATA_FILE, "r", encoding="utf-8") as f:
+    with open(DATA_FILE, "r") as f:
         return json.load(f)
 
-
 def save_data(data):
-    with open(DATA_FILE, "w", encoding="utf-8") as f:
-        json.dump(data, f, indent=4, ensure_ascii=False)
-
+    with open(DATA_FILE, "w") as f:
+        json.dump(data, f, indent=4)
 
 @app.route("/")
-def home():
+def index():
     data = load_data()
-    return render_template("home.html", regions=data["regions"])
+    return render_template("index.html", regions=data["regions"])
 
-
-@app.route("/add_region", methods=["POST"])
+@app.route("/add-region", methods=["POST"])
 def add_region():
+    region = request.form["region"]
     data = load_data()
-    name = request.form["region"]
-    region_id = name.replace(" ", "_")
-
-    data["regions"][region_id] = {
-        "name": name,
-        "records": []
-    }
-    save_data(data)
-    return redirect(url_for("home"))
-
-
-@app.route("/region/<region_id>")
-def region_details(region_id):
-    data = load_data()
-    return render_template(
-        "region_details.html",
-        region=data["regions"][region_id],
-        region_id=region_id
-    )
-
-
-@app.route("/register/<region_id>", methods=["GET", "POST"])
-def register(region_id):
-    data = load_data()
-
-    if request.method == "POST":
-        now = datetime.now(UAE).strftime("%H:%M")
-        record = {
-            "employee": request.form["employee"],
-            "vehicle": request.form["vehicle"],
-            "time": now
-        }
-        data["regions"][region_id]["records"].append(record)
+    if region not in data["regions"]:
+        data["regions"][region] = []
         save_data(data)
-        return render_template("index.html", success=True)
+    return redirect(url_for("index"))
 
-    return render_template("index.html", success=False)
+@app.route("/region/<name>")
+def region_details(name):
+    data = load_data()
+    records = data["regions"].get(name, [])
+    return render_template("region_details.html", region=name, records=records)
 
+@app.route("/delete-region", methods=["POST"])
+def delete_region():
+    data = load_data()
+    name = request.json["name"]
+    if name in data["regions"]:
+        del data["regions"][name]
+        save_data(data)
+    return jsonify(success=True)
 
-@app.route("/qr/<region_id>")
-def qr_view(region_id):
-    return render_template("qr_view.html", region_id=region_id)
+@app.route("/edit-region", methods=["POST"])
+def edit_region():
+    data = load_data()
+    old = request.json["old"]
+    new = request.json["new"]
+    if old in data["regions"]:
+        data["regions"][new] = data["regions"].pop(old)
+        save_data(data)
+    return jsonify(success=True)
+
+@app.route("/qr/<region>")
+def qr_view(region):
+    return render_template("qr_view.html", region=region)
+
+if __name__ == "__main__":
+    app.run(debug=True)
