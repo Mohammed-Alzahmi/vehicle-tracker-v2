@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>تسجيل دخول مركبة</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body style="background: white;">
+
+<header>
+  <img src="{{ url_for('static', filename='shj-gov.png') }}" style="height:45px">
+  <div class="header-text">
+    <h3 style="font-size:1.1rem">تسجيل الدخول</h3>
+    <p>{{ region }}</p>
+  </div>
+  <img src="{{ url_for('static', filename='shj-police.png') }}" style="height:45px">
+</header>
+
+<div class="container" style="padding-top:20px; max-width:500px">
+  <form method="POST" class="register-form">
+    
+    <label>الاسم الكامل</label>
+    <input name="name" type="text" placeholder="اكتب الاسم هنا..." required>
+
+    <label>الرقم العسكري</label>
+    <input name="military_id" type="number" placeholder="مثال: 996" required>
+
+    <label>نوع المركبة</label>
+    <select name="car_type" required>
+      <option value="" disabled selected>اختر النوع...</option>
+      {% for car in car_types %}
+        <option value="{{ car }}">{{ car }}</option>
+      {% endfor %}
+    </select>
+
+    <button type="submit" class="btn-save-gold" style="width:100%; margin-top:20px;">تسجيل الدخول ➜</button>
+  </form>
+</div>
+
+</body>
+</html>

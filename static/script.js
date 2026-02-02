@@ -1,74 +1,66 @@
-let currentOldName = "";
-
-function toggleMenu(region) {
-  let menu = document.getElementById("menu-" + region);
-  // سكر أي منيو ثاني مفتوح
-  document.querySelectorAll('.menu').forEach(m => {
-    if(m !== menu) m.classList.remove('show');
-  });
-  menu.classList.toggle("show");
-}
-
-// دالة فتح مودال التعديل
-function openEditModal(oldName) {
-  currentOldName = oldName;
-  document.getElementById("editInput").value = oldName;
-  document.getElementById("editModal").style.display = "flex"; // flex عشان التوسيط
-  document.getElementById("menu-" + oldName).classList.remove("show"); // سكر المنيو
-}
-
-function closeEditModal() {
-  document.getElementById("editModal").style.display = "none";
-}
-
-// دالة الحفظ اليديدة
-function submitEdit() {
-  let newName = document.getElementById("editInput").value;
-  if (!newName || newName === currentOldName) {
-    closeEditModal();
-    return;
+// --- وظائف الـ Checkbox والحذف ---
+function toggleAll(source) {
+  checkboxes = document.querySelectorAll('.record-check');
+  for(var i=0, n=checkboxes.length;i<n;i++) {
+    checkboxes[i].checked = source.checked;
   }
+  checkSelection();
+}
 
-  fetch("/edit-region", {
+function checkSelection() {
+  const anyChecked = document.querySelectorAll('.record-check:checked').length > 0;
+  document.getElementById('deleteBtn').style.display = anyChecked ? 'inline-block' : 'none';
+}
+
+function deleteSelected() {
+  if(!confirm("هل أنت متأكد من حذف السجلات المحددة؟")) return;
+
+  const checkboxes = document.querySelectorAll('.record-check:checked');
+  const ids = Array.from(checkboxes).map(cb => cb.value);
+
+  fetch("/delete-records", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ old: currentOldName, new: newName })
+    body: JSON.stringify({ region: CURRENT_REGION, ids: ids })
   }).then(() => location.reload());
 }
 
-function deleteRegion(name) {
-  if(!confirm("هل أنت متأكد من حذف المنطقة؟")) return;
-  
-  fetch("/delete-region", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ name })
-  }).then(() => location.reload());
+// --- وظائف إدارة السيارات ---
+function openCarModal() {
+  document.getElementById('carModal').style.display = 'flex';
 }
 
+function manageCar(action, value) {
+  fetch("/manage-cars", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ action: action, value: value })
+  }).then(res => {
+    if(action === 'delete') location.reload(); // ريفرش لو حذفنا
+  });
+}
+
+function addCar() {
+  const val = document.getElementById('newCarInput').value;
+  if(val) {
+    manageCar('add', val);
+    location.reload();
+  }
+}
+
+// --- وظائف QR والمنيو ---
 function openQR(region) {
-  // صلحنا الرابط عشان ما يعطي Not Found
-  // الحين بيودي على صفحة المنطقة نفسها
-  let link = window.location.origin + "/region/" + encodeURIComponent(region);
+  // الرابط يودي على صفحة register
+  let link = window.location.origin + "/register/" + encodeURIComponent(region);
   document.getElementById("qrFrame").src = "https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=" + link;
   document.getElementById("qrModal").style.display = "flex";
 }
 
 function closeQR(e) {
-  if(e.target.id === 'qrModal') {
-    document.getElementById("qrModal").style.display = "none";
-  }
+  if(e.target.id === 'qrModal') document.getElementById("qrModal").style.display = "none";
 }
 
-// سكر المنيو لو ضغطت أي مكان برا
-window.onclick = function(event) {
-  if (!event.target.matches('.dots')) {
-    var dropdowns = document.getElementsByClassName("menu");
-    for (var i = 0; i < dropdowns.length; i++) {
-      var openDropdown = dropdowns[i];
-      if (openDropdown.classList.contains('show')) {
-        openDropdown.classList.remove('show');
-      }
-    }
-  }
+function toggleMenu(region) {
+  // (نفس القديم)
+  // ... (تأكدي ان هذا موجود في index.html لو تستخدمينه)
 }
