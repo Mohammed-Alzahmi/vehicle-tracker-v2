@@ -9,14 +9,16 @@ app = Flask(__name__)
 DATA_FILE = "data.json"
 
 # --- دوال مساعدة ---
+# في دالة load_data عدلي هذا الجزء بس عشان تبدأ القائمة فاضية
 def load_data():
     if not os.path.exists(DATA_FILE):
-        # الديفولت داتا
-        return {"regions": {}, "car_types": ["نيسان", "تويوتا", "لكزس", "فورد"]}
+        return {"regions": {}, "car_types": []} # قائمة السيارات تبدأ فاضية
     with open(DATA_FILE, "r", encoding='utf-8') as f:
         data = json.load(f)
-        if "car_types" not in data: data["car_types"] = ["نيسان", "تويوتا"]
+        if "car_types" not in data: data["car_types"] = []
         return data
+    
+    
 
 def save_data(data):
     with open(DATA_FILE, "w", encoding='utf-8') as f:
