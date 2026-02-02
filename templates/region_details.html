@@ -92,6 +92,28 @@
   </div>
 </div>
 
+<div class="action-bar">
+    <button class="btn-main" id="toggleAdminBtn" style="background:var(--accent);" onclick="enableAdminMode()">📑 إدارة السجلات</button>
+    <div id="adminControls" class="admin-only-controls">
+        <button class="btn-main" style="background:#666;" onclick="selectAllRecords()">✅ تحديد الكل</button>
+        <button class="btn-main" style="background:var(--danger);" onclick="deleteSelected()">🗑️ حذف المحدد</button>
+    </div>
+</div>
+
+<div id="qrModal" class="modal">
+  <div class="qr-content" id="printableQR">
+    <h3>رمز QR</h3>
+    <h4 style="color:var(--accent);">منطقة: {{ region }}</h4>
+    <iframe id="qrFrame"></iframe>
+    <div class="qr-link-box" id="qrUrlText"></div>
+    <div style="display:flex; gap:10px;">
+        <button onclick="copyQRLink()">📋 نسخ الرابط</button>
+        <button onclick="printQR()" style="background:green; color:white;">🖨️ طباعة</button>
+    </div>
+    <p onclick="document.getElementById('qrModal').style.display='none'" style="color:red; cursor:pointer; margin-top:15px;">إغلاق</p>
+  </div>
+</div>
+
 <script>
   const CURRENT_REGION = "{{ region }}";
 </script>

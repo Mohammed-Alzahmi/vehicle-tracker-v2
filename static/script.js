@@ -64,3 +64,34 @@ function toggleMenu(region) {
   // (نفس القديم)
   // ... (تأكدي ان هذا موجود في index.html لو تستخدمينه)
 }
+
+
+
+function enableAdminMode() {
+    let controls = document.getElementById('adminControls');
+    let checks = document.querySelectorAll('.record-check');
+    let isHidden = controls.style.display === 'none' || controls.style.display === '';
+    
+    controls.style.display = isHidden ? 'flex' : 'none';
+    checks.forEach(c => c.style.display = isHidden ? 'block' : 'none');
+}
+
+function manageCar(action, value) {
+    fetch("/manage-cars", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({action: action, value: value})
+    }).then(() => {
+        // هنا التعديل: بدل ما نسوي ريلود للموقع كامل، نحدث القائمة بس
+        // أو إذا تبين ريلود، المودال بيتسكر.. فالحل إني أشل الـ reload
+        location.reload(); 
+    });
+}
+
+function printQR() {
+    let content = document.getElementById('printableQR').innerHTML;
+    let win = window.open('', '', 'height=500,width=500');
+    win.document.write('<html><body>' + content + '</body></html>');
+    win.document.close();
+    win.print();
+}

@@ -79,3 +79,20 @@ header img { height: 50px; }
 .add-box { display: flex; gap: 10px; justify-content: center; margin-top: 40px; }
 .add-box input { padding: 10px 20px; border-radius: 20px; border: 1px solid #ddd; width: 300px; font-family: 'Cairo'; }
 .add-box button { background: var(--primary); color: white; border: none; padding: 10px 30px; border-radius: 20px; cursor: pointer; }
+
+/* الرقم العسكري - أسود طبيعي */
+.tag { background: none !important; color: #000 !important; font-weight: bold; padding: 0; }
+
+/* تأثير الظل على الثلاث نقاط */
+.dots-container { 
+  display: inline-block; padding: 5px 10px; border-radius: 50%; 
+  transition: 0.3s; cursor: pointer; 
+}
+.dots-container:hover { background: rgba(0,0,0,0.1); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+
+/* إخفاء مربعات الحذف */
+.admin-only-controls { display: none; gap: 10px; margin-bottom: 10px; }
+.record-check { display: none; }
+
+/* مودال QR المطور */
+.qr-link-box { background: #eee; padding: 10px; border-radius: 5px; font-size: 0.8rem; margin: 10px 0; word-break: break-all; }
