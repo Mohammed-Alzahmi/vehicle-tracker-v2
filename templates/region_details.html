@@ -1,122 +1,84 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <title>السجلات | {{ region }}</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta charset="UTF-8">
+    <title>{{ region }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-
 <header>
-  <img src="{{ url_for('static', filename='shj-gov.png') }}">
-  <div class="header-text">
-    <h2>سجل حركة المركبات</h2>
-    <p>المنطقة: {{ region }}</p>
-  </div>
-  <img src="{{ url_for('static', filename='shj-police.png') }}">
+    <img src="{{ url_for('static', filename='shj-gov.png') }}">
+    <div class="header-text"><h2>سجل المركبات</h2><p>إدارة وقاية وحماية المجتمع</p></div>
+    <img src="{{ url_for('static', filename='shj-police.png') }}">
 </header>
 
-<div class="container">
-  <div class="action-bar">
-    <div>
-      <a href="/" class="btn-main" style="background:#eee; color:#333">➜ الرئيسية</a>
-      <button class="btn-main" style="background:#333;" onclick="openCarModal()">🚘 إدارة أنواع المركبات</button>
-    </div>
-    
-    <button id="deleteBtn" class="btn-main" style="background:var(--danger); display:none" onclick="deleteSelected()">
-      🗑️ حذف المحدد
-    </button>
-  </div>
-
-  <div class="records-container">
-    <div class="table-header" style="grid-template-columns: 50px 2fr 1fr 1fr 2fr;">
-      <div><input type="checkbox" id="selectAll" onclick="toggleAll(this)"></div> <div>الاسم الكامل</div>
-      <div>الرقم العسكري</div>
-      <div>نوع المركبة</div>
-      <div>وقت الدخول</div>
+<div class="container" style="padding: 20px 5%;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <div style="display: flex; gap: 10px;">
+            <button class="btn-main" style="background:#333;" onclick="openCarModal()">🚘 أنواع المركبات</button>
+            <button class="btn-main" id="toggleAdminBtn" style="background:var(--accent);" onclick="enableAdminMode()">📑 إدارة السجلات</button>
+        </div>
+        <div id="adminControls" class="admin-only-controls">
+            <button class="btn-main" style="background:#666;" onclick="selectAllRecords()">✅ تحديد الكل</button>
+            <button class="btn-main" style="background:var(--danger);" onclick="deleteSelected()">🗑️ حذف المحدد</button>
+        </div>
+        <a href="/" class="btn-main" style="background:#eee; color:#333">➜ الرئيسية</a>
     </div>
 
-    <div id="recordsList">
-    {% for r in records %}
-      <div class="table-row" style="grid-template-columns: 50px 2fr 1fr 1fr 2fr;">
-        <div><input type="checkbox" class="record-check" value="{{ r.id }}" onclick="checkSelection()"></div>
-        <div style="font-weight:bold">{{ r.name }}</div>
-        <div><span class="tag">{{ r.military_id }}</span></div>
-        <div class="car-name">{{ r.car_type }}</div>
-        <div style="font-size:0.85rem; color:#666" dir="ltr">{{ r.time }}</div>
-      </div>
-    {% else %}
-      <div style="padding:40px; text-align:center; color:#999">لا توجد مركبات مسجلة حالياً</div>
-    {% endfor %}
+    <div style="background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+        <div style="display: grid; grid-template-columns: 50px 2fr 1fr 1fr 2fr; background: var(--accent); color: white; padding: 15px; font-weight: bold; text-align: center;">
+            <div></div><div>الاسم</div><div>الرقم العسكري</div><div>النوع</div><div>وقت الدخول</div>
+        </div>
+        {% for r in records %}
+        <div style="display: grid; grid-template-columns: 50px 2fr 1fr 1fr 2fr; padding: 15px; border-bottom: 1px solid #eee; text-align: center; align-items: center;">
+            <div><input type="checkbox" class="record-check" value="{{ r.id }}"></div>
+            <div style="font-weight: bold;">{{ r.name }}</div>
+            <div class="tag">{{ r.military_id }}</div>
+            <div style="color: #007bff;">{{ r.car_type }}</div>
+            <div style="font-size: 0.8rem; color: #666;">{{ r.time }}</div>
+        </div>
+        {% endfor %}
     </div>
-  </div>
 </div>
 
-<button class="floating-qr" onclick="openQR('{{ region }}')">
-  📷 عرض QR للمنطقة
-</button>
+<button class="floating-qr" onclick="openQR('{{ region }}')">📷 عرض QR المنطقة</button>
 
-<div id="qrModal" class="modal" onclick="closeQR(event)">
-  <div class="qr-content">
-    <h3>Scan QR Code</h3>
-    <iframe id="qrFrame"></iframe>
-    <button class="btn-cancel" style="margin-top:15px; width:100%" onclick="document.getElementById('qrModal').style.display='none'">إغلاق</button>
-  </div>
+<div id="qrModal" class="modal">
+    <div class="qr-content" id="printableQR">
+        <h3 style="margin:0">رمز الدخول</h3>
+        <h4 style="color:var(--accent); margin: 5px 0 15px 0;">منطقة: {{ region }}</h4>
+        <iframe id="qrFrame" style="width:200px; height:200px; border:none;"></iframe>
+        <div class="qr-link-box" id="qrUrlText"></div>
+        <div style="display:flex; gap:10px;">
+            <button class="btn-main" style="background:#444; flex:1" onclick="copyQRLink()">📋 نسخ الرابط</button>
+            <button class="btn-main" style="background:#28a745; flex:1" onclick="printQR()">🖨️ طباعة</button>
+        </div>
+        <p onclick="document.getElementById('qrModal').style.display='none'" style="cursor:pointer; color:red; margin-top:15px; font-weight:bold;">إغلاق</p>
+    </div>
 </div>
 
 <div id="carModal" class="modal">
-  <div class="car-content">
-    <div class="modal-header">
-      <h3>قائمة سيارات: {{ region }}</h3>
-      <span onclick="document.getElementById('carModal').style.display='none'" style="cursor:pointer; font-size:1.5rem">&times;</span>
-    </div>
-    
-    <div class="car-list">
-      {% for car in car_types %}
-      <div class="car-item">
-        <span>🚗 {{ car }}</span>
-        <span class="trash-icon" onclick="manageCar('delete', '{{ car }}')">🗑️</span>
-      </div>
-      {% endfor %}
-    </div>
-
-    <div class="add-car-section">
-      <label>إضافة نوع جديد:</label>
-      <div style="display:flex; gap:10px; margin-top:10px;">
-        <input id="newCarInput" placeholder="مثلاً: نيسان">
-        <button class="plus-btn" onclick="addCar()">+</button>
-      </div>
-    </div>
-    
-    <button class="btn-save-gold" onclick="location.reload()">حفظ التغييرات</button>
-  </div>
-</div>
-
-<div class="action-bar">
-    <button class="btn-main" id="toggleAdminBtn" style="background:var(--accent);" onclick="enableAdminMode()">📑 إدارة السجلات</button>
-    <div id="adminControls" class="admin-only-controls">
-        <button class="btn-main" style="background:#666;" onclick="selectAllRecords()">✅ تحديد الكل</button>
-        <button class="btn-main" style="background:var(--danger);" onclick="deleteSelected()">🗑️ حذف المحدد</button>
+    <div class="qr-content" style="max-width:400px; width:90%">
+        <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
+            <h3>قائمة المركبات</h3>
+            <span onclick="document.getElementById('carModal').style.display='none'" style="cursor:pointer; font-size:1.5rem">&times;</span>
+        </div>
+        <div id="carList" style="max-height:200px; overflow-y:auto; margin-bottom:15px; border:1px solid #eee; border-radius:10px;">
+            {% for car in car_types %}
+            <div style="display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid #eee;">
+                <span>🚗 {{ car }}</span>
+                <span style="color:red; cursor:pointer" onclick="manageCar('delete', '{{ car }}')">🗑️</span>
+            </div>
+            {% endfor %}
+        </div>
+        <div style="display:flex; gap:5px;">
+            <input id="newCarInput" style="flex:1; padding:10px; border:1px solid #ddd; border-radius:8px; font-family:'Cairo'" placeholder="نوع جديد...">
+            <button class="btn-main" style="background:var(--primary)" onclick="addCar()">+</button>
+        </div>
     </div>
 </div>
 
-<div id="qrModal" class="modal">
-  <div class="qr-content" id="printableQR">
-    <h3>رمز QR</h3>
-    <h4 style="color:var(--accent);">منطقة: {{ region }}</h4>
-    <iframe id="qrFrame"></iframe>
-    <div class="qr-link-box" id="qrUrlText"></div>
-    <div style="display:flex; gap:10px;">
-        <button onclick="copyQRLink()">📋 نسخ الرابط</button>
-        <button onclick="printQR()" style="background:green; color:white;">🖨️ طباعة</button>
-    </div>
-    <p onclick="document.getElementById('qrModal').style.display='none'" style="color:red; cursor:pointer; margin-top:15px;">إغلاق</p>
-  </div>
-</div>
-
-<script>
-  const CURRENT_REGION = "{{ region }}";
-</script>
+<script>const CURRENT_REGION = "{{ region }}";</script>
 <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
