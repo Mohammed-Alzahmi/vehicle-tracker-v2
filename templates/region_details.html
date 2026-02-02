@@ -2,35 +2,56 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <title>{{ region }} | السجلات</title>
+  <title>السجلات | {{ region }}</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 
 <header>
   <img src="{{ url_for('static', filename='shj-gov.png') }}">
-  <h2>سجلات منطقة: {{ region }}</h2>
+  <div class="header-text">
+    <h2>سجل حركة المركبات</h2>
+    <p>المنطقة: {{ region }}</p>
+  </div>
   <img src="{{ url_for('static', filename='shj-police.png') }}">
 </header>
 
-<div style="text-align: center; margin: 30px;">
-  <button class="main-btn" onclick="openQR('{{ region }}')">📷 عرض رمز QR</button>
-  <a href="/" class="main-btn" style="background: #eee; color: #333; margin-right: 10px;">رجوع</a>
+<div class="container">
+  <div class="action-bar">
+    <button class="btn-main btn-qr" onclick="openQR('{{ region }}')">
+       ⸬ عرض رمز QR للمنطقة
+    </button>
+    <a href="/" class="btn-main" style="background:#eee; color:#333">➜ الرئيسية</a>
+  </div>
+
+  <div class="records-container">
+    <div class="table-header">
+      <div>الاسم الكامل</div>
+      <div>الرقم العسكري</div>
+      <div>نوع المركبة</div>
+      <div>وقت الدخول</div>
+    </div>
+
+    {% for r in records %}
+      <div class="table-row">
+        <div>{{ r }}</div> <div><span class="tag">996</span></div>
+        <div class="car-name">نيسان باترول</div>
+        <div style="font-size:0.9rem; color:#666">
+          09:05 | 2026-01-08<br>AM
+        </div>
+      </div>
+    {% else %}
+      <div style="padding:40px; text-align:center; color:#999">لا توجد مركبات مسجلة حالياً</div>
+    {% endfor %}
+  </div>
 </div>
 
-<ul class="records">
-  {% for r in records %}
-    <li>
-        <span>{{ r }}</span>
-        <span style="font-size:0.8em; color:#666;">سجل مركبة</span>
-    </li>
-  {% else %}
-    <li style="justify-content: center; color: #999;">لا توجد سجلات حالياً</li>
-  {% endfor %}
-</ul>
-
-<div id="qrModal" class="modal" onclick="this.style.display='none'">
-  <iframe id="qrFrame"></iframe>
+<div id="qrModal" class="modal" onclick="closeQR(event)">
+  <div class="qr-content">
+    <h3>Scan QR Code</h3>
+    <iframe id="qrFrame"></iframe>
+    <button class="btn-cancel" style="margin-top:15px; width:100%" onclick="document.getElementById('qrModal').style.display='none'">إغلاق</button>
+  </div>
 </div>
 
 <script src="{{ url_for('static', filename='script.js') }}"></script>
