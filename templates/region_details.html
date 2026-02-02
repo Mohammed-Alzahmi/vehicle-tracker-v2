@@ -1,42 +1,36 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html>
 <head>
-<meta charset="UTF-8">
-<title>السجلات</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-<script src="{{ url_for('static', filename='script.js') }}"></script>
+<link rel="stylesheet" href="/static/style.css">
+<script src="/script.js"></script>
 </head>
 <body>
 
-<header class="header">
-  <img src="{{ url_for('static', filename='shj-gov.png') }}">
-  <img src="{{ url_for('static', filename='shj-police.png') }}">
+<header>
+<img src="/static/shj-police.png" height="50">
+<img src="/static/shj-gov.png" height="50">
 </header>
 
 <div class="container">
-<h2>{{ region_name }}</h2>
+<h2>{{ region.name }}</h2>
 
-<button class="qr-btn" onclick="showQR('{{ request.host_url }}register/{{ region_id }}')">
-عرض QR
-</button>
+<button onclick="showQR()">عرض QR</button>
 
-<table>
-<tr><th>المركبة</th><th>الموظف</th><th>الوقت</th></tr>
-{% for r in records %}
-<tr>
-<td>{{ r.vehicle }}</td>
-<td>{{ r.employee }}</td>
-<td>{{ r.time }}</td>
-</tr>
+{% for r in region.records %}
+<div class="card">
+🚗 {{ r.vehicle }}<br>
+👤 {{ r.employee }}<br>
+🕒 {{ r.time }}
+</div>
 {% endfor %}
-</table>
 </div>
 
 <div id="qrModal" class="modal">
   <div class="modal-content">
-    <span onclick="closeQR()">✖</span>
-    <img id="qrImage">
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data={{ request.url_root }}register/{{ region_id }}">
+    <p id="qrLink">{{ request.url_root }}register/{{ region_id }}</p>
     <button onclick="copyLink()">نسخ الرابط</button>
+    <button onclick="closeQR()">إغلاق</button>
   </div>
 </div>
 
