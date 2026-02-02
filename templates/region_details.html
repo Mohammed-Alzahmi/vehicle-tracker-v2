@@ -1,31 +1,38 @@
 <!DOCTYPE html>
-<html>
+<html lang="ar" dir="rtl">
 <head>
-  <title>{{ region }}</title>
-  <link rel="stylesheet" href="/static/style.css">
+  <meta charset="UTF-8">
+  <title>{{ region }} | السجلات</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 
 <header>
-  <img src="/static/shj-police.png">
-  <h2>{{ region }} Records</h2>
-  <img src="/static/shj-gov.png">
+  <img src="{{ url_for('static', filename='shj-gov.png') }}">
+  <h2>سجلات منطقة: {{ region }}</h2>
+  <img src="{{ url_for('static', filename='shj-police.png') }}">
 </header>
 
-<button class="qr-btn" onclick="openQR('{{ region }}')">QR Code</button>
+<div style="text-align: center; margin: 30px;">
+  <button class="main-btn" onclick="openQR('{{ region }}')">📷 عرض رمز QR</button>
+  <a href="/" class="main-btn" style="background: #eee; color: #333; margin-right: 10px;">رجوع</a>
+</div>
 
 <ul class="records">
   {% for r in records %}
-    <li>{{ r }}</li>
+    <li>
+        <span>{{ r }}</span>
+        <span style="font-size:0.8em; color:#666;">سجل مركبة</span>
+    </li>
   {% else %}
-    <li>No records yet</li>
+    <li style="justify-content: center; color: #999;">لا توجد سجلات حالياً</li>
   {% endfor %}
 </ul>
 
-<div id="qrModal" class="modal">
+<div id="qrModal" class="modal" onclick="this.style.display='none'">
   <iframe id="qrFrame"></iframe>
 </div>
 
-<script src="/script.js"></script>
+<script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
