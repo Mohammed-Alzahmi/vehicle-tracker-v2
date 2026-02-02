@@ -1,30 +1,81 @@
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap');
-:root { --primary: #0a2a4a; --accent: #c5a059; --bg: #f4f6f9; --danger: #dc3545; }
-body { font-family: 'Cairo', sans-serif; background: var(--bg); direction: rtl; margin: 0; }
-header { background: white; padding: 15px 5%; display: flex; align-items: center; justify-content: space-between; border-bottom: 4px solid var(--accent); }
+
+:root {
+  --primary: #0a2a4a;
+  --accent: #c5a059;
+  --bg: #f4f6f9;
+  --white: #ffffff;
+  --danger: #dc3545;
+}
+
+* { box-sizing: border-box; }
+body { font-family: 'Cairo', sans-serif; background: var(--bg); margin: 0; color: #333; direction: rtl; }
+
+/* Header & Basics same as before... */
+header { background: var(--white); padding: 10px 5%; display: flex; align-items: center; justify-content: space-between; border-bottom: 4px solid var(--accent); }
 header img { height: 50px; }
+.header-text { text-align: center; }
 .header-text h2 { margin: 0; color: var(--primary); font-size: 1.4rem; }
-.header-text p { margin: 0; color: var(--accent); font-size: 0.8rem; }
+.header-text p { margin: 0; color: var(--accent); font-size: 0.9rem; }
 
-/* الصفحة الرئيسية */
-.region-card { background: white; padding: 20px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-.dots-container { padding: 5px 10px; border-radius: 50%; transition: 0.3s; cursor: pointer; position: relative; }
-.dots-container:hover { background: rgba(0,0,0,0.08); }
-.menu { display: none; position: absolute; left: 0; top: 35px; background: white; border: 1px solid #eee; box-shadow: 0 5px 15px rgba(0,0,0,0.1); z-index: 100; border-radius: 8px; }
-.menu.show { display: block; }
-.menu button { display: block; width: 100px; padding: 10px; border: none; background: none; font-family: 'Cairo'; cursor: pointer; text-align: center; }
+.container { padding: 20px 5%; }
 
-/* السجلات */
-.admin-only-controls { display: none; gap: 10px; margin-bottom: 15px; }
-.record-check { display: none; transform: scale(1.3); }
-.tag { color: #000 !important; font-weight: bold; }
-.btn-main { padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer; color: white; font-family: 'Cairo'; }
-.floating-qr { position: fixed; bottom: 30px; left: 30px; background: #222; color: var(--accent); border: 2px solid var(--accent); padding: 12px 25px; border-radius: 50px; cursor: pointer; font-weight: bold; }
+/* Buttons */
+.btn-main { padding: 10px 15px; border-radius: 8px; border: none; cursor: pointer; color: white; text-decoration: none; font-size: 0.9rem; margin-left: 5px; display: inline-block; }
+.btn-save-gold { background: var(--accent); color: white; border: none; width: 100%; padding: 15px; border-radius: 10px; font-weight: bold; font-size: 1.1rem; cursor: pointer; }
 
-/* QR Modal */
-.qr-content { background: white; padding: 25px; border-radius: 20px; text-align: center; max-width: 350px; }
-.qr-link-box { background: #f0f0f0; padding: 10px; border-radius: 8px; font-size: 0.7rem; margin: 15px 0; word-break: break-all; border: 1px dashed #ccc; }
+/* Table */
+.records-container { background: white; border-radius: 15px; overflow: hidden; margin-top: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+.table-header { background: var(--accent); color: white; display: grid; padding: 15px; font-weight: bold; text-align: center; align-items: center; }
+.table-row { display: grid; padding: 15px; border-bottom: 1px solid #eee; text-align: center; align-items: center; color: var(--primary); transition: 0.2s; }
+.table-row:hover { background: #fcfcfc; }
+.tag { background: var(--primary); color: white; padding: 3px 8px; border-radius: 4px; font-size: 0.8rem; }
 
-/* Car Modal */
-.car-item { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #eee; }
-.modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); align-items: center; justify-content: center; z-index: 1000; }
+/* Floating QR Button */
+.floating-qr {
+  position: fixed;
+  bottom: 30px;
+  left: 30px;
+  background: #222;
+  color: var(--accent);
+  border: 2px solid var(--accent);
+  padding: 12px 25px;
+  border-radius: 50px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+  z-index: 90;
+  transition: transform 0.2s;
+}
+.floating-qr:hover { transform: scale(1.05); }
+
+/* Car Modal (Styled like Image) */
+.modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 100; align-items: center; justify-content: center; backdrop-filter: blur(3px); }
+.car-content { background: white; width: 400px; border-radius: 20px; padding: 25px; position: relative; }
+.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; color: var(--accent); }
+
+.car-list { max-height: 200px; overflow-y: auto; margin-bottom: 20px; border: 1px solid #eee; border-radius: 10px; padding: 10px; }
+.car-item { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #f9f9f9; }
+.trash-icon { color: var(--danger); cursor: pointer; }
+
+.add-car-section { background: #f9f9f9; padding: 15px; border-radius: 10px; margin-bottom: 20px; }
+.add-car-section input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-family: 'Cairo'; }
+.plus-btn { background: var(--primary); color: white; border: none; width: 40px; border-radius: 8px; cursor: pointer; font-size: 1.2rem; }
+
+/* Register Form */
+.register-form label { display: block; margin-top: 15px; font-weight: bold; color: var(--primary); margin-bottom: 5px; }
+.register-form input, .register-form select { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-family: 'Cairo'; background: #fdfdfd; font-size: 1rem; }
+
+/* QR Modal Specific */
+.qr-content { background: white; padding: 20px; border-radius: 15px; text-align: center; }
+.qr-content iframe { width: 250px; height: 250px; border: none; }
+
+/* Regions Grid (Home) */
+.regions { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; margin-top: 20px; }
+.region-card { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; }
+.region-card a { font-weight: bold; font-size: 1.2rem; text-decoration: none; color: var(--primary); }
+
+/* Add Box */
+.add-box { display: flex; gap: 10px; justify-content: center; margin-top: 40px; }
+.add-box input { padding: 10px 20px; border-radius: 20px; border: 1px solid #ddd; width: 300px; font-family: 'Cairo'; }
+.add-box button { background: var(--primary); color: white; border: none; padding: 10px 30px; border-radius: 20px; cursor: pointer; }
