@@ -8,23 +8,24 @@
 <body>
 <header>
     <img src="{{ url_for('static', filename='shj-gov.png') }}">
-    <div class="header-text"><h2>سجل المركبات</h2><p>إدارة وقاية وحماية المجتمع</p></div>
+    <div class="header-text">
+        <h2 style="margin:0;">سجل حركة المركبات</h2>
+        <h3 style="margin:0; color:var(--accent);">منطقة: {{ region }}</h3>
+    </div>
     <img src="{{ url_for('static', filename='shj-police.png') }}">
 </header>
-
 <div class="container" style="padding: 20px 5%;">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
         <div style="display: flex; gap: 10px;">
-            <button class="btn-main" style="background:#333;" onclick="openCarModal()">🚘 أنواع المركبات</button>
-            <button class="btn-main" id="toggleAdminBtn" style="background:var(--accent);" onclick="enableAdminMode()">📑 إدارة السجلات</button>
+            <button class="btn-main" style="background:#333; color:white; padding:10px; border-radius:8px; border:none; cursor:pointer;" onclick="openCarModal()">🚘 أنواع المركبات</button>
+            <button class="btn-main" id="toggleAdminBtn" style="background:var(--accent); color:white; padding:10px; border-radius:8px; border:none; cursor:pointer;" onclick="enableAdminMode()">📑 إدارة السجلات</button>
         </div>
         <div id="adminControls" class="admin-only-controls">
-            <button class="btn-main" style="background:#666;" onclick="selectAllRecords()">✅ تحديد الكل</button>
-            <button class="btn-main" style="background:var(--danger);" onclick="deleteSelected()">🗑️ حذف المحدد</button>
+            <button class="btn-main" style="background:#666; color:white; padding:10px; border-radius:8px; border:none;" onclick="selectAllRecords()">✅ تحديد الكل</button>
+            <button class="btn-main" style="background:var(--danger); color:white; padding:10px; border-radius:8px; border:none;" onclick="deleteSelected()">🗑️ حذف المحدد</button>
         </div>
-        <a href="/" class="btn-main" style="background:#eee; color:#333">➜ الرئيسية</a>
+        <a href="/" style="text-decoration:none; color:#333; font-weight:bold;">➜ الرئيسية</a>
     </div>
-
     <div style="background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
         <div style="display: grid; grid-template-columns: 50px 2fr 1fr 1fr 2fr; background: var(--accent); color: white; padding: 15px; font-weight: bold; text-align: center;">
             <div></div><div>الاسم</div><div>الرقم العسكري</div><div>النوع</div><div>وقت الدخول</div>
@@ -40,9 +41,7 @@
         {% endfor %}
     </div>
 </div>
-
 <button class="floating-qr" onclick="openQR('{{ region }}')">📷 عرض QR المنطقة</button>
-
 <div id="qrModal" class="modal">
     <div class="qr-content" id="printableQR">
         <h3 style="margin:0">رمز الدخول</h3>
@@ -50,34 +49,23 @@
         <iframe id="qrFrame" style="width:200px; height:200px; border:none;"></iframe>
         <div class="qr-link-box" id="qrUrlText"></div>
         <div style="display:flex; gap:10px;">
-            <button class="btn-main" style="background:#444; flex:1" onclick="copyQRLink()">📋 نسخ الرابط</button>
-            <button class="btn-main" style="background:#28a745; flex:1" onclick="printQR()">🖨️ طباعة</button>
+            <button onclick="copyQRLink()" style="flex:1; padding:10px; border-radius:5px; border:none; background:#444; color:white; cursor:pointer;">📋 نسخ</button>
+            <button onclick="printQR()" style="flex:1; padding:10px; border-radius:5px; border:none; background:#28a745; color:white; cursor:pointer;">🖨️ طباعة</button>
         </div>
         <p onclick="document.getElementById('qrModal').style.display='none'" style="cursor:pointer; color:red; margin-top:15px; font-weight:bold;">إغلاق</p>
     </div>
 </div>
-
 <div id="carModal" class="modal">
-    <div class="qr-content" style="max-width:400px; width:90%">
-        <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
-            <h3>قائمة المركبات</h3>
-            <span onclick="document.getElementById('carModal').style.display='none'" style="cursor:pointer; font-size:1.5rem">&times;</span>
-        </div>
+    <div class="qr-content" style="width:90%; max-width:400px;">
+        <div style="display:flex; justify-content:space-between; margin-bottom:15px;"><h3>قائمة المركبات</h3><span onclick="document.getElementById('carModal').style.display='none'" style="cursor:pointer; font-size:1.5rem">&times;</span></div>
         <div id="carList" style="max-height:200px; overflow-y:auto; margin-bottom:15px; border:1px solid #eee; border-radius:10px;">
             {% for car in car_types %}
-            <div style="display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid #eee;">
-                <span>🚗 {{ car }}</span>
-                <span style="color:red; cursor:pointer" onclick="manageCar('delete', '{{ car }}')">🗑️</span>
-            </div>
+            <div style="display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid #eee;"><span>🚗 {{ car }}</span><span style="color:red; cursor:pointer" onclick="manageCar('delete', '{{ car }}')">🗑️</span></div>
             {% endfor %}
         </div>
-        <div style="display:flex; gap:5px;">
-            <input id="newCarInput" style="flex:1; padding:10px; border:1px solid #ddd; border-radius:8px; font-family:'Cairo'" placeholder="نوع جديد...">
-            <button class="btn-main" style="background:var(--primary)" onclick="addCar()">+</button>
-        </div>
+        <div style="display:flex; gap:5px;"><input id="newCarInput" style="flex:1; padding:10px; border:1px solid #ddd; border-radius:8px;" placeholder="نوع جديد..."><button onclick="addCar()" style="background:var(--primary); color:white; border:none; padding:10px; border-radius:8px;">+</button></div>
     </div>
 </div>
-
 <script>const CURRENT_REGION = "{{ region }}";</script>
 <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>

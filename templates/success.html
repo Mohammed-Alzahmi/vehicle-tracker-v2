@@ -1,12 +1,22 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <title>تم التسجيل</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-  <meta http-equiv="refresh" content="3;url=/register/{{ region }}" /> </head>
-<body style="text-align:center; padding-top:100px;">
-  <div style="font-size:4rem;">✅</div>
-  <h2 style="color:var(--primary)">تم تسجيل الدخول بنجاح</h2>
-  <p>سيتم تحويلك للصفحة الرئيسية...</p>
+    <meta charset="UTF-8">
+    <title>تم التسجيل بنجاح</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .success-box { text-align: center; margin-top: 100px; padding: 20px; }
+        .icon { font-size: 80px; color: #28a745; }
+        .btn-back { display: inline-block; margin-top: 20px; padding: 10px 20px; background: var(--primary); color: white; text-decoration: none; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <div class="success-box">
+        <div class="icon">✅</div>
+        <h1>تم تسجيل بياناتك بنجاح</h1>
+        <p>منطقة: {{ region }}</p>
+        <p>شكراً لك، نتمنى لك يوماً سعيداً.</p>
+        <a href="/register/{{ region }}" class="btn-back">تسجيل دخول جديد</a>
+    </div>
 </body>
 </html>

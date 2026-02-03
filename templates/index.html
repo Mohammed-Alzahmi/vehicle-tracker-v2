@@ -1,60 +1,36 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>نظام إدارة السجلات</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام إدارة السجلات</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-
 <header>
-  <img src="{{ url_for('static', filename='shj-gov.png') }}" alt="Gov">
-  <div class="header-text">
-    <h2>نظام إدارة السجلات الرقمي</h2>
-    <p>إدارة وقاية وحماية المجتمع</p>
-  </div>
-  <img src="{{ url_for('static', filename='shj-police.png') }}" alt="Police">
+    <img src="{{ url_for('static', filename='shj-gov.png') }}">
+    <div class="header-text"><h2>نظام إدارة السجلات الرقمي</h2><p>إدارة وقاية وحماية المجتمع</p></div>
+    <img src="{{ url_for('static', filename='shj-police.png') }}">
 </header>
-
 <div class="container">
-  <h3 class="section-title">المناطق والوحدات المسجلة</h3>
-
-  <div class="regions">
-    {% for region in regions %}
-    <div class="region-card">
-      <a href="/region/{{ region }}">{{ region }}</a>
-      <div style="position:relative">
-        <span class="dots" onclick="toggleMenu('{{ region }}')">⋮</span>
-        <div class="menu" id="menu-{{ region }}">
-          <button onclick="openEditModal('{{ region }}')">✏️ تعديل</button>
-          <button onclick="deleteRegion('{{ region }}')" style="color:red">🗑️ حذف</button>
-        </div>
-      </div>
-    </div>
-    {% endfor %}
-  </div>
-
-  <div class="add-box-container">
-    <p style="margin-bottom:10px; font-weight:bold; color:#666;">إضافة منطقة جديدة</p>
-    <form method="POST" action="/add-region" class="add-box">
-      <button type="submit">+ إضافة</button>
-      <input name="region" placeholder="اكتب اسم المنطقة هنا (مثال: خورفكان)" required>
+    <form method="POST" action="/add-region" class="add-region-container">
+        <input type="text" name="region" placeholder="أدخل اسم المنطقة هنا..." required>
+        <button type="submit">إضافة منطقة جديدة +</button>
     </form>
-  </div>
-</div>
-
-<div id="editModal" class="modal">
-  <div class="edit-content">
-    <h3 style="color:var(--primary)">تعديل اسم المنطقة</h3>
-    <input type="text" id="editInput" placeholder="الاسم الجديد...">
-    <div class="modal-btns">
-      <button class="btn-save" onclick="submitEdit()">حفظ التغييرات</button>
-      <button class="btn-cancel" onclick="closeEditModal()">إلغاء</button>
+    <div class="regions-grid">
+        {% for region in regions %}
+        <div class="region-card">
+            <div class="dots-container" onclick="toggleMenu('{{ region }}', event)"><span>⋮</span></div>
+            <div class="menu" id="menu-{{ region }}">
+                <button onclick="editRegion('{{ region }}')">📝 تعديل</button>
+                <button onclick="deleteRegion('{{ region }}')" style="color:red;">🗑️ حذف</button>
+            </div>
+            <a href="/region/{{ region }}" class="region-title">{{ region }}</a>
+            <p style="margin-top:20px; color:#666; font-size:0.8rem;">عرض السجلات ➜</p>
+        </div>
+        {% endfor %}
     </div>
-  </div>
 </div>
-
 <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
