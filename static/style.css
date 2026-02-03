@@ -1,60 +1,148 @@
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap');
-:root { --primary: #0a2a4a; --accent: #c5a059; --bg: #f4f6f9; --danger: #dc3545; }
-body { font-family: 'Cairo', sans-serif; background: var(--bg); direction: rtl; margin: 0; }
-header { background: white; padding: 15px 5%; display: flex; align-items: center; justify-content: space-between; border-bottom: 4px solid var(--accent); }
+
+:root {
+    --primary: #0a2a4a;
+    --accent: #c5a059;
+    --bg: #f8f9fa;
+}
+
+body {
+    font-family: 'Cairo', sans-serif;
+    background: var(--bg);
+    margin: 0;
+    direction: rtl;
+}
+
+/* الهيدر */
+header {
+    background: white;
+    padding: 15px 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 3px solid var(--accent);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
 header img { height: 50px; }
-.header-text h2 { margin: 0; color: var(--primary); font-size: 1.4rem; }
-.header-text p { margin: 0; color: var(--accent); font-size: 0.8rem; }
+.header-text { text-align: center; }
+.header-text h2 { margin: 0; color: var(--primary); font-size: 1.2rem; }
 
-/* الصفحة الرئيسية والظل */
-.region-card { background: white; padding: 20px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-.dots-container { padding: 5px 10px; border-radius: 50%; transition: 0.3s; cursor: pointer; position: relative; }
-.dots-container:hover { background: rgba(0,0,0,0.08); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-.menu { display: none; position: absolute; left: 0; top: 35px; background: white; border: 1px solid #eee; box-shadow: 0 5px 15px rgba(0,0,0,0.1); z-index: 100; border-radius: 8px; }
-.menu.show { display: block; }
-.menu button { display: block; width: 100px; padding: 10px; border: none; background: none; font-family: 'Cairo'; cursor: pointer; }
-
-/* السجلات والرقم العسكري */
-.admin-only-controls { display: none; gap: 10px; margin-bottom: 15px; }
-.record-check { display: none; transform: scale(1.2); }
-.tag { color: #000 !important; font-weight: bold; background: none !important; }
-.btn-main { padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer; color: white; font-family: 'Cairo'; }
-.floating-qr { position: fixed; bottom: 30px; left: 30px; background: #222; color: var(--accent); border: 2px solid var(--accent); padding: 12px 25px; border-radius: 50px; cursor: pointer; font-weight: bold; }
-
-/* مودالات */
-.modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); align-items: center; justify-content: center; z-index: 1000; }
-.qr-content { background: white; padding: 25px; border-radius: 20px; text-align: center; max-width: 350px; }
-.qr-link-box { background: #f0f0f0; padding: 10px; border-radius: 8px; font-size: 0.7rem; margin: 15px 0; word-break: break-all; border: 1px dashed #ccc; }
-
-
-/* الصفحة الرئيسية - المربعات القديمة */
-.regions {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 20px;
-  padding: 20px;
+/* حقل الإضافة - نفس الصورة الثانية */
+.add-region-container {
+    max-width: 600px;
+    margin: 30px auto;
+    display: flex;
+    gap: 0;
+    padding: 0 20px;
 }
 
+.add-region-container input {
+    flex: 1;
+    padding: 15px;
+    border: 2px solid #ddd;
+    border-radius: 0 10px 10px 0;
+    outline: none;
+    font-family: 'Cairo';
+}
+
+.add-region-container button {
+    padding: 15px 25px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 10px 0 0 10px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+/* شبكة المناطق */
+.regions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    padding: 20px 5%;
+}
+
+/* كرت المنطقة - رسبونزف */
 .region-card {
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
-  text-align: center;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  position: relative;
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    transition: 0.3s;
+    position: relative;
+    border: 1px solid #eee;
 }
 
-/* ظل الثلاث نقاط */
-.dots-container {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  padding: 5px;
-  border-radius: 50%;
-  cursor: pointer;
-  transition: 0.3s;
+.region-card:hover { transform: translateY(-5px); }
+
+.region-header {
+    padding: 25px;
+    text-align: center;
+    background: linear-gradient(135deg, #fff 0%, #f9f9f9 100%);
 }
-.dots-container:hover {
-  background: #f0f0f0;
-  box-shadow: 0 0 8px rgba(0,0,0,0.1);
+
+/* شكل اسم المنطقة (نفس صورة خورفكان) */
+.region-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary);
+    text-decoration: none;
+    display: block;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--accent);
+    width: fit-content;
+    margin: 0 auto;
+}
+
+.dots-container {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+}
+
+.dots-container:hover { background: #eee; }
+
+.menu {
+    display: none;
+    position: absolute;
+    top: 45px;
+    left: 15px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+    z-index: 10;
+}
+
+.menu.show { display: block; }
+
+.menu button {
+    display: block;
+    width: 100%;
+    padding: 10px 20px;
+    border: none;
+    background: none;
+    font-family: 'Cairo';
+    text-align: right;
+    cursor: pointer;
+}
+
+.menu button:hover { background: #f5f5f5; }
+
+.region-footer {
+    background: var(--primary);
+    color: white;
+    padding: 10px;
+    text-align: center;
+    font-size: 0.9rem;
 }
