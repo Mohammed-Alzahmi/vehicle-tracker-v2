@@ -1,21 +1,46 @@
+let currentOldName = "";
+
 function toggleMenu(region, event) {
-    event.stopPropagation();
+    event.stopPropagation(); // يمنع دخول الصفحة عند الضغط على النقاط
     document.querySelectorAll('.menu').forEach(m => { if(m.id !== 'menu-'+region) m.classList.remove('show'); });
     document.getElementById('menu-' + region).classList.toggle('show');
 }
+
 window.onclick = () => document.querySelectorAll('.menu').forEach(m => m.classList.remove('show'));
 
-function deleteRegion(name) {
+function deleteRegion(name, event) {
+    event.stopPropagation();
     if (confirm("حذف منطقة " + name + "؟")) {
         fetch("/delete-region", { method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({name: name}) }).then(() => location.reload());
     }
 }
-function editRegion(oldName) {
-    let newName = prompt("الاسم الجديد:", oldName);
-    if (newName && newName !== oldName) {
-        fetch("/edit-region", { method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({old: oldName, new: newName}) }).then(() => location.reload());
+
+// وظائف التعديل الجديدة
+function openEditModal(oldName, event) {
+    event.stopPropagation();
+    currentOldName = oldName;
+    document.getElementById('editRegionInput').value = oldName;
+    document.getElementById('customEditModal').style.display = 'flex';
+}
+
+function closeEditModal() {
+    document.getElementById('customEditModal').style.display = 'none';
+}
+
+function saveRegionEdit() {
+    let newName = document.getElementById('editRegionInput').value;
+    if (newName && newName !== currentOldName) {
+        fetch("/edit-region", { 
+            method: "POST", 
+            headers: {"Content-Type": "application/json"}, 
+            body: JSON.stringify({old: currentOldName, new: newName}) 
+        }).then(() => location.reload());
+    } else {
+        closeEditModal();
     }
 }
+
+// باقي الوظائف (إدارة السجلات والباركود)
 function enableAdminMode() {
     const checks = document.querySelectorAll('.record-check');
     const controls = document.getElementById('adminControls');
