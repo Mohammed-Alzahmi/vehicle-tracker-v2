@@ -4,15 +4,16 @@
 
 body { font-family: 'Cairo', sans-serif; background: var(--bg); margin: 0; direction: rtl; overflow-x: hidden; }
 
-/* هيدر تكيّفي ذكي */
+/* هيدر تكييفي بالكامل - يحل مشكلة التداخل في التلفون */
 header { 
     background: white; 
     padding: 10px 4%; 
     display: flex; 
     justify-content: space-between; 
     align-items: center; 
-    border-bottom: 3px solid var(--accent);
+    border-bottom: 3px solid var(--accent); 
     gap: 10px;
+    min-height: 80px;
 }
 header img { height: clamp(40px, 10vw, 75px); width: auto; }
 
@@ -20,56 +21,55 @@ header img { height: clamp(40px, 10vw, 75px); width: auto; }
 .header-text h2 { 
     margin: 0; 
     color: var(--primary); 
-    font-size: clamp(0.9rem, 4.5vw, 1.8rem); /* بيصغر مع الشاشة تلقائياً */
-    white-space: nowrap; 
+    font-size: clamp(0.85rem, 4vw, 1.6rem); /* يصغر ويصغر لين يناسب الشاشة */
+    white-space: nowrap;
 }
 .header-text p { 
     margin: 2px 0 0 0; 
     color: var(--accent); 
-    font-size: clamp(0.6rem, 2.8vw, 1rem); 
-    font-weight: 700; 
+    font-size: clamp(0.65rem, 2.5vw, 0.95rem); 
+    font-weight: bold;
 }
 
-/* جدول السجلات - بدون فراغ جانبي */
+/* حل مشكلة اللنك اللي طالع برا المودال */
+.qr-link-box { 
+    background: #f0f0f0; 
+    padding: 10px; 
+    border-radius: 8px; 
+    font-size: 0.7rem; 
+    margin: 15px 0; 
+    word-break: break-all; /* يخلي اللنك ينكسر وينزل سطر جديد */
+    color: #666;
+    border: 1px solid #ddd;
+}
+
+/* جدول السجلات - إزالة الفراغ */
 .records-table-row { 
     display: grid; 
-    grid-template-columns: 2fr 1.5fr 1.5fr 2fr; /* أربع خانات بس بدون فراغ */
+    grid-template-columns: 2fr 1fr 1fr 2fr; /* الحالة العادية: الاسم يبدأ من الطرف */
     align-items: center;
     text-align: center;
-    padding: 12px 5px;
+    padding: 15px 5px;
     border-bottom: 1px solid #eee;
     transition: 0.3s ease;
 }
 
-/* يظهر الفراغ فقط وقت "إدارة السجلات" */
+/* وضع الإدارة - يظهر الفراغ فقط هنا للتشيك بوكس */
 .admin-mode .records-table-row { 
-    grid-template-columns: 40px 2fr 1.5fr 1.5fr 2fr; 
+    grid-template-columns: 45px 2fr 1fr 1fr 2fr; 
 }
 
-.record-check { display: none; margin: 0 auto; }
-.type-text { color: black !important; font-weight: 600; text-decoration: none; }
+.record-check { display: none; }
+.admin-mode .record-check { display: block; margin: 0 auto; }
 
-/* صندوق اللنك - يمنع الخروج عن الصفحة */
-.qr-link-box { 
-    background: #f1f1f1; 
-    padding: 10px; 
-    border-radius: 8px; 
-    font-size: 0.7rem; 
-    margin: 10px 0; 
-    word-break: break-all; /* يكسر اللنك الطويل */
-    color: #555;
-    border: 1px solid #ddd;
-}
+/* لون النوع (المركبة) أسود */
+.type-link { color: black !important; text-decoration: none; font-weight: 600; }
 
-/* تعديل الطباعة - لإظهار الباركود والاسم فقط */
-@media print {
-    body * { visibility: hidden; }
-    #printableQR, #printableQR * { visibility: visible; }
-    #printableQR { position: absolute; left: 0; top: 0; width: 100%; text-align: center; }
-}
-
-/* باقي التصاميم الأساسية */
-.container { padding: 15px 4%; }
-.modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); align-items: center; justify-content: center; z-index: 1000; }
-.qr-content { background: white; padding: 25px; border-radius: 20px; width: 85%; max-width: 320px; text-align: center; }
-.floating-qr { position: fixed; bottom: 20px; left: 20px; background: #222; color: var(--accent); border: 2px solid var(--accent); padding: 12px 20px; border-radius: 50px; cursor: pointer; }
+/* باقي التنسيقات ثابتة */
+.container { padding: 20px 5%; }
+.regions-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+.region-card { background: white; border-radius: 15px; padding: 40px 20px; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: center; cursor: pointer; border: 1px solid #eee; }
+.region-title { font-size: 1.6rem; font-weight: 700; color: var(--primary); border-bottom: 3px solid var(--accent); display: inline-block; }
+.floating-qr { position: fixed; bottom: 20px; left: 20px; background: #222; color: var(--accent); border: 2px solid var(--accent); padding: 12px 20px; border-radius: 50px; cursor: pointer; z-index: 999; }
+.modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
+.qr-content { background: white; padding: 25px; border-radius: 20px; width: 100%; max-width: 350px; text-align: center; }
