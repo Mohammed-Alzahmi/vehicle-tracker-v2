@@ -1,49 +1,22 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام إدارة السجلات</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
-
-<header>
-    <img src="{{ url_for('static', filename='shj-gov.png') }}">
-    <div class="header-text">
-        <h2>نظام إدارة السجلات الرقمي</h2>
-        <p>إدارة وقاية وحماية المجتمع</p>
-    </div>
-    <img src="{{ url_for('static', filename='shj-police.png') }}">
-</header>
-
 <div class="container">
     <form method="POST" action="/add-region" class="add-region-container">
-        <input type="text" name="region" placeholder="أدخل اسم المنطقة هنا..." required>
+        <input type="text" name="region" placeholder="أدخل اسم المنطقة..." required>
         <button type="submit">إضافة منطقة جديدة +</button>
     </form>
 
     <div class="regions-grid">
         {% for region in regions %}
         <div class="region-card">
-            <div class="region-header">
-                <a href="/region/{{ region }}" class="region-title">{{ region }}</a>
-                <div class="dots-container" onclick="toggleMenu('{{ region }}', event)">
-                    <span>⋮</span>
-                </div>
-                <div class="menu" id="menu-{{ region }}">
-                    <button onclick="editRegion('{{ region }}')">📝 تعديل</button>
-                    <button onclick="deleteRegion('{{ region }}')" style="color:red;">🗑️ حذف</button>
-                </div>
+            <div class="dots-container" onclick="toggleMenu('{{ region }}', event)">
+                <span>⋮</span>
             </div>
-            <div class="region-footer">
-                <span>عرض السجلات ➜</span>
+            <div class="menu" id="menu-{{ region }}">
+                <button onclick="editRegion('{{ region }}')">📝 تعديل</button>
+                <button onclick="deleteRegion('{{ region }}')" style="color:red;">🗑️ حذف</button>
             </div>
+            <a href="/region/{{ region }}" class="region-title">{{ region }}</a>
+            <p style="margin-top:20px; color:#666; font-size:0.9rem;">اضغط لعرض السجلات ➜</p>
         </div>
         {% endfor %}
     </div>
 </div>
-
-<script src="{{ url_for('static', filename='script.js') }}"></script>
-</body>
-</html>
