@@ -25,3 +25,36 @@ header img { height: 50px; }
 .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); align-items: center; justify-content: center; z-index: 1000; }
 .qr-content { background: white; padding: 25px; border-radius: 20px; text-align: center; max-width: 350px; }
 .qr-link-box { background: #f0f0f0; padding: 10px; border-radius: 8px; font-size: 0.7rem; margin: 15px 0; word-break: break-all; border: 1px dashed #ccc; }
+
+
+/* الصفحة الرئيسية - المربعات القديمة */
+.regions {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
+
+.region-card {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  position: relative;
+}
+
+/* ظل الثلاث نقاط */
+.dots-container {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  padding: 5px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.dots-container:hover {
+  background: #f0f0f0;
+  box-shadow: 0 0 8px rgba(0,0,0,0.1);
+}

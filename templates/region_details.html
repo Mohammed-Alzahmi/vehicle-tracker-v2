@@ -8,7 +8,9 @@
 <body>
 <header>
     <img src="{{ url_for('static', filename='shj-gov.png') }}">
-    <div class="header-text"><h2>سجل المركبات</h2><p>إدارة وقاية وحماية المجتمع</p></div>
+    <div class="header-text">
+        <h2 style="margin:0;">سجل حركة المركبات</h2>
+        <h3 style="margin:0; color:var(--accent);">منطقة: {{ region }}</h3> </div>
     <img src="{{ url_for('static', filename='shj-police.png') }}">
 </header>
 
@@ -57,26 +59,28 @@
     </div>
 </div>
 
+
 <div id="carModal" class="modal">
-    <div class="qr-content" style="max-width:400px; width:90%">
-        <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
-            <h3>قائمة المركبات</h3>
-            <span onclick="document.getElementById('carModal').style.display='none'" style="cursor:pointer; font-size:1.5rem">&times;</span>
-        </div>
-        <div id="carList" style="max-height:200px; overflow-y:auto; margin-bottom:15px; border:1px solid #eee; border-radius:10px;">
+    <div class="qr-content">
+        <h3>إدارة أنواع السيارات</h3>
+        <div id="carList" style="text-align:right; margin-bottom:15px;">
             {% for car in car_types %}
-            <div style="display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid #eee;">
+            <div style="display:flex; justify-content:space-between; padding:5px; border-bottom:1px solid #eee;">
                 <span>🚗 {{ car }}</span>
-                <span style="color:red; cursor:pointer" onclick="manageCar('delete', '{{ car }}')">🗑️</span>
+                <button onclick="manageCar('delete', '{{ car }}')" style="color:red; border:none; background:none; cursor:pointer;">🗑️</button>
             </div>
             {% endfor %}
         </div>
         <div style="display:flex; gap:5px;">
-            <input id="newCarInput" style="flex:1; padding:10px; border:1px solid #ddd; border-radius:8px; font-family:'Cairo'" placeholder="نوع جديد...">
-            <button class="btn-main" style="background:var(--primary)" onclick="addCar()">+</button>
+            <input id="newCarInput" placeholder="أدخل النوع..." style="flex:1; padding:8px;">
+            <button onclick="addCar()" style="background:var(--primary); color:white; border:none; padding:0 15px; border-radius:5px;">إضافة</button>
         </div>
+        <button onclick="document.getElementById('carModal').style.display='none'" style="margin-top:15px; width:100%;">إغلاق</button>
     </div>
 </div>
+
+
+
 
 <script>const CURRENT_REGION = "{{ region }}";</script>
 <script src="{{ url_for('static', filename='script.js') }}"></script>

@@ -66,3 +66,35 @@ function toggleMenu(region) {
     });
     document.getElementById("menu-" + region).classList.toggle("show");
 }
+
+
+
+function addCar() {
+    const input = document.getElementById('newCarInput');
+    const val = input.value.trim();
+    if(val) {
+        manageCar('add', val);
+        input.value = ''; // يصفر الخانة بعد الاضافة
+    } else {
+        alert("يرجى كتابة نوع السيارة");
+    }
+}
+
+function manageCar(action, value) {
+    fetch("/manage-cars", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({action: action, value: value})
+    }).then(res => res.json())
+      .then(data => {
+          if(data.success) location.reload(); 
+      });
+}
+
+// دالة الـ QR عشان تفتح صفحة التسجيل
+function openQR(region) {
+    const url = window.location.origin + "/register/" + encodeURIComponent(region);
+    document.getElementById("qrFrame").src = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=" + url;
+    document.getElementById("qrUrlText").innerText = url;
+    document.getElementById("qrModal").style.display = "flex";
+}
