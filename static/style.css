@@ -2,81 +2,73 @@
 
 :root { --primary: #0a2a4a; --accent: #c5a059; --bg: #f8f9fa; --danger: #dc3545; }
 
-body { font-family: 'Cairo', sans-serif; background: var(--bg); margin: 0; direction: rtl; }
+body { font-family: 'Cairo', sans-serif; background: var(--bg); margin: 0; direction: rtl; overflow-x: hidden; }
 
-/* هيدر تكيّفي بالكامل */
+/* هيدر ذكي يغير ترتيبه في التلفون */
 header { 
     background: white; 
-    padding: 10px 3%; 
+    padding: 10px 5%; 
     display: flex; 
     justify-content: space-between; 
     align-items: center; 
     border-bottom: 3px solid var(--accent); 
     gap: 10px;
 }
-header img { 
-    height: clamp(40px, 8vw, 80px); /* يصغر أكثر في الشاشات الصغيرة */
-    width: auto; 
-}
-.header-text { flex: 1; text-align: center; min-width: 0; }
-.header-text h2 { 
-    margin: 0; 
-    color: var(--primary); 
-    font-size: clamp(0.9rem, 4vw, 1.7rem); /* يصغر العنوان مع الشاشة */
-    white-space: nowrap;
-}
-.header-text p { 
-    margin: 2px 0 0 0; 
-    color: var(--accent); 
-    font-size: clamp(0.6rem, 2.5vw, 0.95rem); 
-    font-weight: 600;
+
+header img { height: 70px; width: auto; transition: 0.3s; }
+
+.header-text { text-align: center; flex: 1; }
+.header-text h2 { color: var(--primary); margin: 0; font-size: 1.5rem; line-height: 1.2; }
+.header-text p { color: var(--accent); margin: 5px 0 0 0; font-size: 0.9rem; font-weight: bold; }
+
+/* تصغير الهيدر في التلفون عشان ما يتداخل */
+@media (max-width: 600px) {
+    header { padding: 8px 2%; }
+    header img { height: 45px; }
+    .header-text h2 { font-size: 1rem; }
+    .header-text p { font-size: 0.7rem; }
 }
 
-/* تعديل اللنك المزعج في الباركود */
-.qr-link-box { 
-    background: #f4f4f4; 
-    padding: 10px; 
-    border-radius: 5px; 
-    font-size: 0.7rem; 
-    margin: 10px 0; 
-    word-break: break-all; /* يخلي اللنك ينزل سطر وما يطلع برا */
-    max-width: 100%;
-    color: #666;
-}
-
-/* تعديل الفراغ في الجدول */
+/* جدول السجلات - إزالة الفراغ */
 .records-table-row { 
     display: grid; 
-    grid-template-columns: 0px 2fr 1fr 1fr 2fr; /* يبدأ بـ 0 عشان يخوز الفراغ */
-    transition: 0.3s;
+    grid-template-columns: 2fr 1fr 1fr 2fr; /* بدون فراغ في البداية */
     align-items: center;
     text-align: center;
     padding: 15px 5px;
     border-bottom: 1px solid #eee;
+    transition: 0.3s;
 }
-/* يوم نفتح الإدارة، يظهر الفراغ عشان التشيك بوكس */
+
+/* يظهر الفراغ "فقط" عند تفعيل وضع الإدارة */
 .admin-mode .records-table-row { 
-    grid-template-columns: 50px 2fr 1fr 1fr 2fr; 
+    grid-template-columns: 40px 2fr 1fr 1fr 2fr; 
 }
 
-.type-text { color: #000 !important; text-decoration: none; } /* النوع بالأسود */
+.record-check { display: none; margin: 0 auto; }
 
-/* باقي الستايليات الأساسية بدون تغيير */
-.add-region-container { max-width: 600px; margin: 20px auto; display: flex; padding: 0 20px; }
-.add-region-container input { flex: 1; padding: 12px; border: 2px solid #ddd; border-radius: 0 12px 12px 0; font-family: 'Cairo'; }
-.add-region-container button { padding: 12px 20px; background: var(--primary); color: white; border: none; border-radius: 12px 0 0 12px; cursor: pointer; font-weight: bold; }
-.regions-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px; padding: 20px 5%; }
-.region-card { background: white; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); position: relative; border: 1px solid #eee; text-align: center; padding: 40px 15px; cursor: pointer; }
-.region-title { font-size: 1.5rem; font-weight: 700; color: var(--primary); border-bottom: 3px solid var(--accent); }
-.dots-container { position: absolute; top: 10px; left: 10px; cursor: pointer; padding: 8px; z-index: 10; }
-.menu { display: none; position: absolute; top: 40px; left: 10px; background: white; border-radius: 8px; box-shadow: 0 5px 20px rgba(0,0,0,0.15); z-index: 100; }
-.menu.show { display: block; }
-.menu button { display: block; width: 100px; padding: 10px; border: none; background: none; font-family: 'Cairo'; text-align: right; cursor: pointer; }
+/* النوع بالأسود */
+.type-text { color: black !important; font-weight: 600; text-decoration: none; }
+
+/* صندوق اللنك في الباركود - حل مشكلة الخروج عن الصفحة */
+.qr-link-box { 
+    background: #f8f9fa; 
+    padding: 10px; 
+    border-radius: 8px; 
+    font-size: 0.75rem; 
+    margin: 15px 0; 
+    word-break: break-all; 
+    border: 1px solid #ddd;
+    max-width: 100%;
+    overflow-wrap: break-word;
+}
+
+/* كروت المناطق */
+.regions-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; padding: 20px 5%; }
+.region-card { background: white; border-radius: 15px; padding: 40px 20px; text-align: center; cursor: pointer; position: relative; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+.region-title { font-size: 1.6rem; color: var(--primary); border-bottom: 3px solid var(--accent); padding-bottom: 5px; }
+
+/* مودال التعديل */
 .edit-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); align-items: center; justify-content: center; z-index: 2000; }
 .edit-content { background: white; padding: 25px; border-radius: 20px; width: 85%; max-width: 350px; text-align: center; }
-.edit-content input { width: 100%; padding: 10px; margin: 15px 0; border: 1px solid #ddd; border-radius: 10px; font-family: 'Cairo'; text-align: center; }
-.record-check { display: none; transform: scale(1.2); }
-.admin-only-controls { display: none; gap: 8px; margin-bottom: 15px; justify-content: center; flex-wrap: wrap; }
-.modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); align-items: center; justify-content: center; z-index: 1000; }
-.qr-content { background: white; padding: 25px; border-radius: 20px; text-align: center; width: 85%; max-width: 320px; }
-.floating-qr { position: fixed; bottom: 20px; left: 20px; background: #222; color: var(--accent); border: 2px solid var(--accent); padding: 10px 20px; border-radius: 50px; cursor: pointer; font-size: 0.9rem; }
+.edit-content input { width: 100%; padding: 12px; margin: 15px 0; border: 1px solid #ddd; border-radius: 10px; font-family: 'Cairo'; text-align: center; box-sizing: border-box; }
