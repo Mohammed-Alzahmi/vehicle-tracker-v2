@@ -1,109 +1,62 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ region }}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ region }}</title><link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body id="pageBody">
 <header>
     <img src="{{ url_for('static', filename='shj-gov.png') }}">
-    <div class="header-text">
-        <h2>سجل حركة المركبات</h2>
-        <p>منطقة: {{ region }}</p>
-    </div>
+    <div class="header-text"><h2>سجل حركة المركبات</h2><p>منطقة: {{ region }}</p></div>
     <img src="{{ url_for('static', filename='shj-police.png') }}">
 </header>
-
 <div class="container" style="padding: 20px 5%;">
-    <div style="display:flex; justify-content:space-between; margin-bottom:20px; flex-wrap:wrap; gap:10px;">
-        <div style="display:flex; gap:10px;">
-            <button onclick="openCarModal()" style="background:#333; color:white; border:none; padding:10px 15px; border-radius:8px; cursor:pointer; font-family:'Cairo';">🚘 المركبات</button>
-            <button onclick="toggleAdminMode()" style="background:var(--accent); color:white; border:none; padding:10px 15px; border-radius:8px; cursor:pointer; font-family:'Cairo';">📑 إدارة السجلات</button>
+    <div style="display:flex; justify-content:space-between; margin-bottom:20px; align-items:center;">
+        <div style="display:flex; gap:8px;">
+            <button onclick="document.getElementById('carModal').style.display='flex'" style="background:#333; color:white; border:none; padding:10px 15px; border-radius:8px; cursor:pointer;">🚘 المركبات</button>
+            <button onclick="toggleAdminMode()" style="background:var(--accent); color:white; border:none; padding:10px 15px; border-radius:8px; cursor:pointer;">📑 الإدارة</button>
         </div>
         <a href="/" style="text-decoration:none; color:var(--primary); font-weight:bold;">➜ الرئيسية</a>
     </div>
 
     <div id="adminControls" style="display:none; text-align:center; margin-bottom:15px;">
-        <button onclick="selectAll()" style="padding:8px 15px; border-radius:5px; border:1px solid #ccc; margin-left:10px;">تحديد الكل</button>
-        <button onclick="deleteSelected()" style="padding:8px 15px; border-radius:5px; border:none; background:var(--danger); color:white;">حذف</button>
+        <button onclick="selectAll()" style="padding:8px 15px; border-radius:5px; border:1px solid #ccc;">تحديد الكل</button>
+        <button onclick="deleteSelected()" style="padding:8px 15px; background:var(--danger); color:white; border:none; border-radius:5px; margin-right:10px;">حذف</button>
     </div>
 
     <div style="background:white; border-radius:15px; overflow:hidden; box-shadow:0 5px 15px rgba(0,0,0,0.05);">
-        <div class="records-table-row" id="tableHeader" style="background:var(--accent); color:white; font-weight:bold;">
-            <div class="check-col"></div> <div>الاسم</div>
-            <div>الرقم العسكري</div>
-            <div>المركبة</div>
-            <div>وقت الدخول</div>
+        <div class="records-table-row" style="background:var(--accent); color:white; font-weight:bold;">
+            <div class="record-check"></div><div>الاسم</div><div>الرقم العسكري</div><div>المركبة</div><div>وقت الدخول</div>
         </div>
-        <div id="recordsList">
-            {% for r in records %}
-            <div class="records-table-row">
-                <div class="check-col"><input type="checkbox" class="record-check" value="{{ r.id }}"></div>
-                <div style="font-weight:600;">{{ r.name }}</div>
-                <div>{{ r.military_id }}</div>
-                <div class="type-text">{{ r.car_type }}</div>
-                <div style="font-size:0.8rem; color:#777;">{{ r.time }}</div>
-            </div>
-            {% endfor %}
+        {% for r in records %}
+        <div class="records-table-row">
+            <div class="record-check"><input type="checkbox" class="record-check-input record-check" value="{{ r.id }}"></div>
+            <div style="font-weight:600;">{{ r.name }}</div>
+            <div>{{ r.military_id }}</div>
+            <div style="color:black; font-weight:bold;">{{ r.car_type }}</div>
+            <div style="font-size:0.8rem; color:#777;">{{ r.time }}</div>
         </div>
-    </div>
-</div>
-
-<button class="floating-qr" onclick="showQR()">📷 عرض QR المنطقة</button>
-
-<div id="qrModal" class="modal">
-    <div class="qr-content">
-        <span class="close-x" onclick="closeModal('qrModal')">✕</span>
-        <div id="printArea">
-            <h2 style="margin:0; color:var(--primary);">رمز دخول المركبات</h2>
-            <h3 style="color:var(--accent); margin:5px 0 15px 0;">منطقة: {{ region }}</h3>
-            <div id="qrContainer"></div>
-        </div>
-        <div class="qr-link-box" id="qrLinkText"></div>
-        <div style="display:flex; gap:10px;">
-            <button onclick="printQR()" style="flex:1; padding:10px; background:#28a745; color:white; border:none; border-radius:8px;">🖨️ طباعة</button>
-            <button onclick="copyLink()" style="flex:1; padding:10px; background:#666; color:white; border:none; border-radius:8px;">📋 نسخ</button>
-        </div>
+        {% endfor %}
     </div>
 </div>
 
 <div id="carModal" class="modal">
     <div class="car-modal-content">
         <span class="close-x" onclick="closeModal('carModal')">✕</span>
-        <h3 style="margin-bottom: 20px;">قائمة المركبات - {{ region }}</h3>
-        <div id="carList" style="max-height: 250px; overflow-y: auto; margin-bottom: 20px;">
+        <h3>قائمة المركبات - {{ region }}</h3>
+        <div id="carList" style="max-height: 200px; overflow-y: auto; margin-bottom: 15px;">
             {% for car in car_types %}
-            <div class="car-item">
-                <span style="font-weight: 600;">{{ car }}</span>
-                <button onclick="manageCar('delete', '{{ car }}')" style="background:none; border:none; color:red; cursor:pointer; font-size:1.2rem;">🗑️</button>
-            </div>
+            <div class="car-item"><span>{{ car }}</span><span onclick="manageCar('delete', '{{ car }}')" style="color:red; cursor:pointer;">🗑️</span></div>
             {% endfor %}
         </div>
         <div style="display: flex; gap: 5px;">
-            <input type="text" id="newCarInput" placeholder="إضافة مركبة جديدة..." style="flex: 1; padding: 10px; border-radius: 8px; border: 1px solid #ddd; font-family:'Cairo';">
-            <button onclick="addCar()" style="padding: 10px 20px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight:bold;">+</button>
+            <input type="text" id="newCarInput" placeholder="إضافة نوع..." style="flex:1; padding:10px; border:1px solid #ddd; border-radius:8px;">
+            <button onclick="addCar()" style="padding:10px 15px; background:var(--primary); color:white; border:none; border-radius:8px;">+</button>
         </div>
     </div>
 </div>
 
-<script>
-const REGION_NAME = "{{ region }}";
-function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-function openCarModal() { document.getElementById('carModal').style.display = 'flex'; }
-function addCar() {
-    const val = document.getElementById('newCarInput').value;
-    if(val) manageCar('add', val);
-}
-function manageCar(action, value) {
-    fetch("/manage-cars", { 
-        method: "POST", 
-        headers: {"Content-Type": "application/json"}, 
-        body: JSON.stringify({region: REGION_NAME, action: action, value: value}) 
-    }).then(() => location.reload());
-}
-</script>
+<script>const REGION_NAME = "{{ region }}";</script>
 <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
