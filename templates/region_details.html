@@ -40,6 +40,43 @@
         <input type="text" id="newCarInput" placeholder="إضافة نوع..." style="width:70%; padding:5px;"><button onclick="addCar()">+</button>
     </div>
 </div>
+
+
+<div id="carModal" class="modal">
+    <div class="car-modal-content">
+        <span class="close-x" onclick="closeModal('carModal')">✕</span>
+        <h3 style="margin-bottom: 20px;">قائمة المركبات - {{ region }}</h3>
+        
+        <div id="carList" style="max-height: 250px; overflow-y: auto; margin-bottom: 20px;">
+            {% for car in car_types %}
+            <div class="car-item">
+                <span style="font-weight: 600;">{{ car }}</span>
+                <button onclick="manageCar('delete', '{{ car }}')" style="background:none; border:none; color:red; cursor:pointer;">🗑️</button>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div style="display: flex; gap: 5px;">
+            <input type="text" id="newCarInput" placeholder="إضافة مركبة جديدة..." style="flex: 1; padding: 10px; border-radius: 8px; border: 1px solid #ddd;">
+            <button onclick="addCar()" style="padding: 10px 20px; background: var(--primary); color: white; border: none; border-radius: 8px;">+</button>
+        </div>
+    </div>
+</div>
+
+<script>
+function addCar() {
+    const val = document.getElementById('newCarInput').value;
+    if(val) manageCar('add', val);
+}
+
+function manageCar(action, value) {
+    fetch("/manage-cars", { 
+        method: "POST", 
+        headers: {"Content-Type": "application/json"}, 
+        body: JSON.stringify({region: "{{ region }}", action: action, value: value}) 
+    }).then(() => location.reload());
+}
+</script>
 <script>const REGION_NAME = "{{ region }}";</script>
 <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>

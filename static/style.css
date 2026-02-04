@@ -40,3 +40,34 @@ header img { height: clamp(40px, 10vw, 75px); width: auto; }
 .qr-content { background: white; padding: 25px; border-radius: 20px; width: 100%; max-width: 350px; text-align: center; }
 .qr-link-box { background: #f0f0f0; padding: 10px; border-radius: 8px; font-size: 0.7rem; margin: 15px 0; word-break: break-all; color: #666; }
 .floating-qr { position: fixed; bottom: 20px; left: 20px; background: #222; color: var(--accent); border: 2px solid var(--accent); padding: 12px 25px; border-radius: 50px; cursor: pointer; z-index: 999; font-weight: bold; }
+
+
+/* الهيدر المتكيف */
+header { 
+    background: white; padding: clamp(5px, 2vw, 15px) 4%; 
+    display: flex; justify-content: space-between; align-items: center; 
+    border-bottom: 3px solid var(--accent); gap: 10px; 
+}
+header img { height: clamp(35px, 8vw, 75px); width: auto; transition: 0.3s; }
+.header-text h2 { font-size: clamp(0.8rem, 4vw, 1.6rem); margin: 0; white-space: nowrap; }
+
+/* ثلاث نقاط - الزاوية يسار فوق */
+.dots-container {
+    position: absolute; top: 10px; left: 10px; /* يسار */
+    cursor: pointer; padding: 5px; font-size: 1.2rem; color: #888;
+}
+
+/* مودال المركبات الجديد */
+.car-modal-content {
+    background: white; padding: 25px; border-radius: 20px;
+    width: 90%; max-width: 400px; position: relative; text-align: center;
+}
+.close-x {
+    position: absolute; top: 15px; right: 15px;
+    font-size: 20px; cursor: pointer; color: #999; font-weight: bold;
+}
+.car-item {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 12px; border-bottom: 1px solid #eee; background: #fafafa;
+    margin-bottom: 5px; border-radius: 8px;
+}
