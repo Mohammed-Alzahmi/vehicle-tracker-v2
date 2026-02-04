@@ -2,42 +2,35 @@
 :root { --primary: #0a2a4a; --accent: #c5a059; --bg: #f8f9fa; --danger: #dc3545; }
 body { font-family: 'Cairo', sans-serif; background: var(--bg); margin: 0; direction: rtl; overflow-x: hidden; }
 
-/* هيدر متكيف - يمنع نزول العنوان تحت الشعار */
+/* هيدر ذكي - مستحيل يخترب */
 header { 
     background: white; padding: 10px 3%; display: flex; 
     justify-content: space-between; align-items: center; 
-    border-bottom: 3px solid var(--accent); gap: 5px; min-height: 80px;
+    border-bottom: 3px solid var(--accent); gap: 10px; min-height: 80px;
 }
-header img { height: clamp(35px, 8vw, 70px); width: auto; flex-shrink: 0; }
-.header-text { flex: 1; text-align: center; min-width: 0; padding: 0 5px; }
-.header-text h2 { margin: 0; color: var(--primary); font-size: clamp(0.75rem, 3.5vw, 1.5rem); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+header img { height: clamp(40px, 8vw, 75px); width: auto; flex-shrink: 0; }
+.header-text { flex: 1; text-align: center; min-width: 0; }
+.header-text h2 { margin: 0; color: var(--primary); font-size: clamp(0.8rem, 3.8vw, 1.6rem); white-space: nowrap; }
 .header-text p { margin: 2px 0 0 0; color: var(--accent); font-size: clamp(0.6rem, 2vw, 0.9rem); font-weight: bold; }
 
-/* الجدول المتساوي المسافات */
+/* الجدول - مسافات متساوية 100% */
 .records-table-row { 
     display: grid; 
-    grid-template-columns: 0px 1fr 1fr 1fr 1fr; /* مسافات متوازية تماماً */
-    align-items: center; text-align: center; padding: 15px 5px; border-bottom: 1px solid #eee; transition: 0.3s;
+    grid-template-columns: 0px 1fr 1fr 1fr 1fr; /* الاسم، الرقم، المركبة، الوقت */
+    align-items: center; text-align: center; padding: 15px 5px; border-bottom: 1px solid #eee; transition: 0.3s ease;
 }
+/* إزاحة الاسم عند الإدارة */
 .admin-mode .records-table-row { grid-template-columns: 45px 1fr 1fr 1fr 1fr; }
 .record-check { display: none; margin: 0 auto; }
 .admin-mode .record-check { display: block; }
 
-/* المودالات وزر الإغلاق */
-.modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); align-items: center; justify-content: center; z-index: 2000; }
-.car-modal-content, .qr-content { background: white; padding: 25px; border-radius: 20px; width: 90%; max-width: 400px; position: relative; text-align: center; }
-.close-x { position: absolute; top: 10px; right: 15px; font-size: 24px; cursor: pointer; color: #888; font-weight: bold; }
-.car-item { display: flex; justify-content: space-between; padding: 10px; background: #f9f9f9; margin-bottom: 5px; border-radius: 8px; border: 1px solid #eee; }
+/* المودالات وزر X */
+.modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); align-items: center; justify-content: center; z-index: 3000; padding: 15px; }
+.car-modal-content, .qr-content { background: white; padding: 30px; border-radius: 20px; width: 100%; max-width: 400px; position: relative; text-align: center; box-sizing: border-box; }
+.close-x { position: absolute; top: 10px; right: 15px; font-size: 28px; cursor: pointer; color: #999; line-height: 1; }
+.car-item { display: flex; justify-content: space-between; padding: 12px; background: #f9f9f9; margin-bottom: 8px; border-radius: 10px; border: 1px solid #eee; }
 
-/* القائمة (النقاط) */
-.dots-container { position: absolute; top: 10px; left: 10px; cursor: pointer; padding: 5px; font-size: 1.2rem; }
-.menu { position: absolute; top: 35px; left: 10px; background: white; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border-radius: 8px; z-index: 100; display: none; overflow: hidden; }
-.menu button { display: block; width: 100px; padding: 10px; border: none; background: none; font-family: 'Cairo'; cursor: pointer; text-align: center; }
-.menu button:hover { background: #f5f5f5; }
-
-/* الرئيسية */
-.add-region-container { max-width: 600px; margin: 20px auto; display: flex; padding: 0 20px; }
-.add-region-container input { flex: 1; padding: 12px; border: 2px solid #ddd; border-radius: 0 12px 12px 0; font-family: 'Cairo'; }
-.add-region-container button { padding: 12px 20px; background: var(--primary); color: white; border: none; border-radius: 12px 0 0 12px; cursor: pointer; font-weight: bold; }
-.regions-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px; padding: 20px 5%; }
-.region-card { background: white; border-radius: 15px; padding: 40px 10px; position: relative; box-shadow: 0 4px 10px rgba(0,0,0,0.05); text-align: center; cursor: pointer; border: 1px solid #eee; }
+/* الرئيسية والمنيو */
+.dots-container { position: absolute; top: 10px; left: 10px; cursor: pointer; padding: 5px; font-size: 1.3rem; color: #888; }
+.menu { position: absolute; top: 40px; left: 10px; background: white; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-radius: 8px; display: none; z-index: 100; border: 1px solid #eee; }
+.menu button { display: block; width: 110px; padding: 12px; border: none; background: none; cursor: pointer; font-family: 'Cairo'; text-align: center; }

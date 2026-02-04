@@ -1,70 +1,40 @@
-// دالة فتح وإغلاق المنيو في الرئيسية
+// دوال المنيو والحذف في الرئيسية
 function toggleMenu(id) {
-    document.querySelectorAll('.menu').forEach(m => { if(m.id !== 'menu-'+id) m.style.display = 'none'; });
+    document.querySelectorAll('.menu').forEach(m => { if(m.id !== 'menu-'+id) m.style.display='none'; });
     let m = document.getElementById('menu-' + id);
-    m.style.display = (m.style.display === 'none' || m.style.display === '') ? 'block' : 'none';
+    m.style.display = (m.style.display === 'block') ? 'none' : 'block';
 }
 
-// تعديل اسم المنطقة
-let currentEditOldName = "";
+function deleteRegion(name) {
+    if(confirm("حذف منطقة " + name + "؟")) {
+        fetch("/delete-region", { method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({name: name}) }).then(() => location.reload());
+    }
+}
+
+let oldNameForEdit = "";
 function openEditModal(name) {
-    currentEditOldName = name;
+    oldNameForEdit = name;
     document.getElementById('editInput').value = name;
     document.getElementById('editModal').style.display = 'flex';
 }
 function saveEdit() {
-    let newName = document.getElementById('editInput').value;
-    if(newName && newName !== currentEditOldName) {
-        fetch("/edit-region", { 
-            method: "POST", 
-            headers: {"Content-Type": "application/json"}, 
-            body: JSON.stringify({old: currentEditOldName, new: newName}) 
-        }).then(() => window.location.reload());
+    let newN = document.getElementById('editInput').value;
+    if(newN && newN !== oldNameForEdit) {
+        fetch("/edit-region", { method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({old: oldNameForEdit, new: newN}) }).then(() => location.reload());
     }
 }
 
-// حذف المنطقة
-function deleteRegion(name) {
-    if(confirm("هل أنت متأكد من حذف منطقة: " + name + "؟")) {
-        fetch("/delete-region", { 
-            method: "POST", 
-            headers: {"Content-Type": "application/json"}, 
-            body: JSON.stringify({name: name}) 
-        }).then(() => window.location.reload());
-    }
-}
-
-// إدارة المركبات (إضافة وحذف)
+// دوال الريجن والسيارات
 function manageCar(action, value) {
-    fetch("/manage-cars", { 
-        method: "POST", 
-        headers: {"Content-Type": "application/json"}, 
-        body: JSON.stringify({region: REGION_NAME, action: action, value: value}) 
-    }).then(res => res.json()).then(data => {
-        if(data.success) window.location.reload();
-    });
+    fetch("/manage-cars", { method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({region: REGION_NAME, action: action, value: value}) }).then(() => location.reload());
 }
-
 function addCar() {
-    const val = document.getElementById('newCarInput').value;
-    if(val) manageCar('add', val);
+    let v = document.getElementById('newCarInput').value;
+    if(v) manageCar('add', v);
 }
-
-// وظائف عامة
+function toggleAdminMode() {
+    let b = document.getElementById('pageBody');
+    b.classList.toggle('admin-mode');
+    document.getElementById('adminControls').style.display = b.classList.contains('admin-mode') ? 'block' : 'none';
+}
 function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-function toggleAdminMode() { 
-    const body = document.getElementById('pageBody');
-    body.classList.toggle('admin-mode');
-    document.getElementById('adminControls').style.display = body.classList.contains('admin-mode') ? 'block' : 'none';
-}
-function selectAll() { document.querySelectorAll('.record-check').forEach(c => c.checked = true); }
-function deleteSelected() {
-    const ids = Array.from(document.querySelectorAll('.record-check:checked')).map(c => c.value);
-    if(ids.length > 0 && confirm("حذف السجلات المختارة؟")) {
-        fetch("/delete-records", { 
-            method: "POST", 
-            headers: {"Content-Type": "application/json"}, 
-            body: JSON.stringify({region: REGION_NAME, ids: ids}) 
-        }).then(() => window.location.reload());
-    }
-}
