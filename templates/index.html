@@ -1,10 +1,8 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام إدارة السجلات</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الرئيسية</title><link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 <header>
@@ -14,25 +12,29 @@
 </header>
 <div class="container">
     <form method="POST" action="/add-region" class="add-region-container">
-        <input type="text" name="region" placeholder="أدخل اسم المنطقة هنا..." required>
-        <button type="submit">إضافة منطقة جديدة +</button>
+        <input type="text" name="region" placeholder="أدخل اسم المنطقة..." required>
+        <button type="submit">إضافة +</button>
     </form>
     <div class="regions-grid">
         {% for region in regions %}
-        <div class="region-card">
-            <div class="dots-container" onclick="toggleMenu('{{ region }}', event)"><span>⋮</span></div>
-            <div class="menu" id="menu-{{ region }}">
-                <button onclick="editRegion('{{ region }}')">📝 تعديل</button>
-                <button onclick="deleteRegion('{{ region }}')" style="color:red;">🗑️ حذف</button>
+        <div class="region-card" onclick="window.location.href='/region/{{ region }}'">
+            <div class="dots-container" onclick="event.stopPropagation(); toggleMenu('{{ region }}')"><span>⋮</span></div>
+            <div class="menu" id="menu-{{ region }}" style="display:none; position:absolute; top:40px; left:10px; background:white; box-shadow:0 2px 10px rgba(0,0,0,0.1); border-radius:8px; z-index:100;">
+                <button onclick="event.stopPropagation(); openEditModal('{{ region }}')" style="display:block; width:100px; padding:10px; border:none; background:none; cursor:pointer; font-family:'Cairo';">📝 تعديل</button>
+                <button onclick="event.stopPropagation(); deleteRegion('{{ region }}')" style="display:block; width:100px; padding:10px; border:none; background:none; cursor:pointer; font-family:'Cairo'; color:red;">🗑️ حذف</button>
             </div>
-            <a href="/region/{{ region }}" class="region-title">{{ region }}</a>
-            <p style="margin-top:20px; color:#666; font-size:0.8rem;">عرض السجلات ➜</p>
+            <span class="region-title">{{ region }}</span>
         </div>
         {% endfor %}
+    </div>
+</div>
+<div id="editModal" class="modal">
+    <div class="qr-content">
+        <h3>تعديل اسم المنطقة</h3>
+        <input type="text" id="editInput" style="width:90%; padding:10px; margin:15px 0; border-radius:8px; border:1px solid #ddd; font-family:'Cairo'; text-align:center;">
+        <div style="display:flex; gap:10px;"><button onclick="saveEdit()" style="flex:1; padding:10px; background:var(--primary); color:white; border:none; border-radius:8px;">حفظ</button><button onclick="closeModal('editModal')" style="flex:1; padding:10px; background:#eee; border:none; border-radius:8px;">إلغاء</button></div>
     </div>
 </div>
 <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
-
-

@@ -2,22 +2,23 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>تم التسجيل بنجاح</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تم التسجيل</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <style>
-        .success-box { text-align: center; margin-top: 100px; padding: 20px; }
-        .icon { font-size: 80px; color: #28a745; }
-        .btn-back { display: inline-block; margin-top: 20px; padding: 10px 20px; background: var(--primary); color: white; text-decoration: none; border-radius: 5px; }
+        .success-wrapper { text-align: center; margin-top: 15vh; padding: 20px; }
+        .check-icon { font-size: 100px; color: #28a745; margin-bottom: 20px; }
+        .msg-h1 { color: var(--primary); margin-bottom: 10px; }
+        .msg-p { color: #666; font-size: 1.1rem; margin-bottom: 30px; }
+        .back-btn { padding: 12px 30px; background: var(--accent); color: white; text-decoration: none; border-radius: 50px; font-weight: bold; }
     </style>
 </head>
 <body>
-    <div class="success-box">
-        <div class="icon">✅</div>
-        <h1>تم تسجيل بياناتك بنجاح</h1>
-        <p>منطقة: {{ region }}</p>
-        <p>شكراً لك، نتمنى لك يوماً سعيداً.</p>
-        <a href="/register/{{ region }}" class="btn-back">تسجيل دخول جديد</a>
+    <div class="success-wrapper">
+        <div class="check-icon">✓</div>
+        <h1 class="msg-h1">تم تسجيل دخولك بنجاح</h1>
+        <p class="msg-p">شكراً لك، البيانات وصلت لسجل منطقة {{ region }}.</p>
+        <a href="/register/{{ region }}" class="back-btn">تسجيل دخول آخر</a>
     </div>
 </body>
 </html>
-

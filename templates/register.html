@@ -3,40 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تسجيل دخول مركبة - {{ region }}</title>
+    <title>تسجيل دخول - {{ region }}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <style>
-        .form-container { max-width: 500px; margin: 50px auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
-        input, select { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; font-family: 'Cairo'; box-sizing: border-box; }
-        .submit-btn { width: 100%; padding: 15px; background: var(--primary); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1.1rem; }
+        .form-container { max-width: 450px; margin: 40px auto; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-top: 5px solid var(--accent); }
+        .form-group { margin-bottom: 20px; text-align: right; }
+        label { display: block; margin-bottom: 8px; font-weight: bold; color: var(--primary); }
+        input, select { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px; font-family: 'Cairo'; font-size: 1rem; box-sizing: border-box; }
+        .submit-btn { width: 100%; padding: 15px; background: var(--primary); color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 1.1rem; transition: 0.3s; }
+        .submit-btn:hover { background: #0e3a66; }
     </style>
 </head>
 <body>
 <header>
     <img src="{{ url_for('static', filename='shj-gov.png') }}">
-    <div class="header-text"><h2>تسجيل دخول مركبة</h2><p>منطقة: {{ region }}</p></div>
+    <div class="header-text">
+        <h2>تسجيل دخول مركبة</h2>
+        <p>منطقة: {{ region }}</p>
+    </div>
     <img src="{{ url_for('static', filename='shj-police.png') }}">
 </header>
 
 <div class="form-container">
     <form method="POST">
-        <label>الاسم الثلاثي:</label>
-        <input type="text" name="name" placeholder="أدخل اسمك الكامل" required>
-        
-        <label>الرقم العسكري:</label>
-        <input type="number" name="military_id" placeholder="أدخل الرقم العسكري" required>
-        
-        <label>نوع المركبة:</label>
-        <select name="car_type" required>
-            <option value="" disabled selected>اختر نوع المركبة</option>
-            {% for car in car_types %}
-            <option value="{{ car }}">{{ car }}</option>
-            {% endfor %}
-        </select>
-        
-        <button type="submit" class="submit-btn">تسجيل الدخول</button>
+        <div class="form-group">
+            <label>الاسم الثلاثي:</label>
+            <input type="text" name="name" placeholder="أدخل اسمك الكامل" required>
+        </div>
+        <div class="form-group">
+            <label>الرقم العسكري:</label>
+            <input type="number" name="military_id" placeholder="أدخل الرقم العسكري" required>
+        </div>
+        <div class="form-group">
+            <label>نوع المركبة:</label>
+            <select name="car_type" required>
+                <option value="" disabled selected>اختر النوع</option>
+                {% for car in car_types %}
+                <option value="{{ car }}">{{ car }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="submit-btn">إرسال البيانات</button>
     </form>
 </div>
 </body>
 </html>
-
