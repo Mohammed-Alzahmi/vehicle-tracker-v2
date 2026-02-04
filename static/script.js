@@ -52,3 +52,4 @@ function addCar() {
 function manageCar(action, value) {
     fetch("/manage-cars", { method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({action: action, value: value}) }).then(() => location.reload());
 }
+

@@ -33,3 +33,5 @@ header img { height: 50px; }
 .qr-content { background: white; padding: 25px; border-radius: 20px; text-align: center; width: 320px; }
 .qr-link-box { background: #eee; padding: 10px; border-radius: 5px; font-size: 0.7rem; margin: 10px 0; word-break: break-all; }
 .floating-qr { position: fixed; bottom: 30px; left: 30px; background: #222; color: var(--accent); border: 2px solid var(--accent); padding: 12px 25px; border-radius: 50px; cursor: pointer; font-weight: bold; }
+
+
