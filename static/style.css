@@ -1,73 +1,220 @@
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap');
-:root { --primary: #0a2a4a; --accent: #c5a059; --bg: #f8f9fa; --danger: #dc3545; }
-body { font-family: 'Cairo', sans-serif; background: var(--bg); margin: 0; direction: rtl; overflow-x: hidden; }
 
-/* هيدر تكييفي بالكامل */
-header { 
-    background: white; padding: 10px 4%; display: flex; justify-content: space-between; 
-    align-items: center; border-bottom: 3px solid var(--accent); gap: 10px; min-height: 80px; 
+:root { 
+    --primary: #0a2a4a; 
+    --accent: #c5a059; 
+    --bg: #f8f9fa; 
+    --danger: #dc3545; 
 }
-header img { height: clamp(40px, 10vw, 75px); width: auto; }
-.header-text { flex: 1; text-align: center; min-width: 0; }
-.header-text h2 { margin: 0; color: var(--primary); font-size: clamp(0.85rem, 4vw, 1.6rem); white-space: nowrap; }
-.header-text p { margin: 2px 0 0 0; color: var(--accent); font-size: clamp(0.65rem, 2.5vw, 0.95rem); font-weight: bold; }
 
-/* حقل الإضافة المدمج */
-.add-region-container { max-width: 600px; margin: 30px auto; display: flex; padding: 0 20px; }
-.add-region-container input { flex: 1; padding: 15px; border: 2px solid #ddd; border-radius: 0 12px 12px 0; outline: none; font-family: 'Cairo'; }
-.add-region-container button { padding: 15px 25px; background: var(--primary); color: white; border: none; border-radius: 12px 0 0 12px; cursor: pointer; font-weight: bold; }
+body { 
+    font-family: 'Cairo', sans-serif; 
+    background: var(--bg); 
+    margin: 0; 
+    direction: rtl; 
+    overflow-x: hidden; 
+}
 
-/* كروت المناطق */
-.regions-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; padding: 20px 5%; }
+/* --- الهيدر (رسبونسف وما يختفي) --- */
+header { 
+    background: white; 
+    padding: clamp(8px, 2vw, 15px) 4%; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    border-bottom: 3px solid var(--accent); 
+    gap: 10px; 
+    min-height: 70px;
+}
+
+header img { 
+    height: clamp(40px, 9vw, 75px); 
+    width: auto; 
+    transition: 0.3s; 
+    object-fit: contain;
+}
+
+.header-text { 
+    flex: 1; 
+    text-align: center; 
+    min-width: 0; 
+}
+
+.header-text h2 { 
+    margin: 0; 
+    color: var(--primary); 
+    font-size: clamp(0.85rem, 4vw, 1.6rem); 
+    white-space: nowrap; 
+}
+
+.header-text p { 
+    margin: 2px 0 0 0; 
+    color: var(--accent); 
+    font-size: clamp(0.65rem, 2.5vw, 0.95rem); 
+    font-weight: bold; 
+}
+
+/* --- الصفحة الرئيسية (الإضافة والكروت) --- */
+.add-region-container { 
+    max-width: 600px; 
+    margin: 30px auto; 
+    display: flex; 
+    padding: 0 20px; 
+}
+
+.add-region-container input { 
+    flex: 1; padding: 15px; 
+    border: 2px solid #ddd; 
+    border-radius: 0 12px 12px 0; 
+    outline: none; 
+    font-family: 'Cairo'; 
+}
+
+.add-region-container button { 
+    padding: 15px 25px; 
+    background: var(--primary); 
+    color: white; 
+    border: none; 
+    border-radius: 12px 0 0 12px; 
+    cursor: pointer; 
+    font-weight: bold; 
+}
+
+.regions-grid { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+    gap: 20px; 
+    padding: 20px 5%; 
+}
+
 .region-card { 
-    background: white; border-radius: 15px; padding: 50px 20px; position: relative; 
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: center; cursor: pointer; border: 1px solid #eee; 
+    background: white; 
+    border-radius: 15px; 
+    padding: 50px 20px; 
+    position: relative; 
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
+    text-align: center; 
+    cursor: pointer; 
+    border: 1px solid #eee; 
 }
-.region-title { font-size: 1.8rem; font-weight: 700; color: var(--primary); border-bottom: 3px solid var(--accent); display: inline-block; }
 
-/* جدول السجلات ورسمة الإدارة */
-.records-table-row { 
-    display: grid; grid-template-columns: 2.5fr 1fr 1fr 2fr; align-items: center; 
-    text-align: center; padding: 15px 5px; border-bottom: 1px solid #eee; transition: 0.3s;
+.region-title { 
+    font-size: 1.8rem; 
+    font-weight: 700; 
+    color: var(--primary); 
+    border-bottom: 3px solid var(--accent); 
+    display: inline-block; 
 }
-.admin-mode .records-table-row { grid-template-columns: 45px 2.5fr 1fr 1fr 2fr; }
-.record-check { display: none; margin: 0 auto; }
-.admin-mode .record-check { display: block; }
-.type-text { color: black !important; font-weight: 600; text-decoration: none; }
 
-/* المودالات */
-.modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
-.qr-content { background: white; padding: 25px; border-radius: 20px; width: 100%; max-width: 350px; text-align: center; }
-.qr-link-box { background: #f0f0f0; padding: 10px; border-radius: 8px; font-size: 0.7rem; margin: 15px 0; word-break: break-all; color: #666; }
-.floating-qr { position: fixed; bottom: 20px; left: 20px; background: #222; color: var(--accent); border: 2px solid var(--accent); padding: 12px 25px; border-radius: 50px; cursor: pointer; z-index: 999; font-weight: bold; }
-
-
-/* الهيدر المتكيف */
-header { 
-    background: white; padding: clamp(5px, 2vw, 15px) 4%; 
-    display: flex; justify-content: space-between; align-items: center; 
-    border-bottom: 3px solid var(--accent); gap: 10px; 
-}
-header img { height: clamp(35px, 8vw, 75px); width: auto; transition: 0.3s; }
-.header-text h2 { font-size: clamp(0.8rem, 4vw, 1.6rem); margin: 0; white-space: nowrap; }
-
-/* ثلاث نقاط - الزاوية يسار فوق */
+/* النقاط - الزاوية يسار فوق */
 .dots-container {
-    position: absolute; top: 10px; left: 10px; /* يسار */
-    cursor: pointer; padding: 5px; font-size: 1.2rem; color: #888;
+    position: absolute; 
+    top: 10px; 
+    left: 10px; 
+    cursor: pointer; 
+    padding: 8px; 
+    font-size: 1.2rem; 
+    color: #888;
+    line-height: 1;
 }
 
-/* مودال المركبات الجديد */
-.car-modal-content {
-    background: white; padding: 25px; border-radius: 20px;
-    width: 90%; max-width: 400px; position: relative; text-align: center;
+/* --- جدول السجلات (حل مشكلة السبيس) --- */
+.records-table-row { 
+    display: grid; 
+    /* الفراغ الأول 0 عشان الاسم يكون لاصق */
+    grid-template-columns: 0px 2.5fr 1fr 1fr 2fr; 
+    align-items: center; 
+    text-align: center; 
+    padding: 15px 5px; 
+    border-bottom: 1px solid #eee; 
+    transition: 0.3s ease;
 }
+
+/* يوم نضغط إدارة السجلات، يفتح الفراغ للتشيك بوكس */
+.admin-mode .records-table-row { 
+    grid-template-columns: 45px 2.5fr 1fr 1fr 2fr; 
+}
+
+.record-check { 
+    display: none; 
+    margin: 0 auto; 
+}
+
+.admin-mode .record-check { 
+    display: block; 
+}
+
+.type-text { 
+    color: black !important; 
+    font-weight: 600; 
+    text-decoration: none; 
+}
+
+/* --- المودالات (المركبات والباركود) --- */
+.modal { 
+    display: none; 
+    position: fixed; 
+    inset: 0; 
+    background: rgba(0,0,0,0.6); 
+    align-items: center; 
+    justify-content: center; 
+    z-index: 2000; 
+    padding: 20px; 
+}
+
+.car-modal-content, .qr-content { 
+    background: white; 
+    padding: 30px; 
+    border-radius: 20px; 
+    width: 100%; 
+    max-width: 400px; 
+    position: relative; 
+    text-align: center; 
+    box-sizing: border-box;
+}
+
 .close-x {
-    position: absolute; top: 15px; right: 15px;
-    font-size: 20px; cursor: pointer; color: #999; font-weight: bold;
+    position: absolute; 
+    top: 15px; 
+    right: 15px;
+    font-size: 24px; 
+    cursor: pointer; 
+    color: #999; 
+    font-weight: bold;
+    line-height: 1;
 }
+
 .car-item {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 12px; border-bottom: 1px solid #eee; background: #fafafa;
-    margin-bottom: 5px; border-radius: 8px;
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+    padding: 12px; 
+    border-bottom: 1px solid #eee; 
+    background: #fafafa;
+    margin-bottom: 8px; 
+    border-radius: 10px;
+}
+
+.qr-link-box { 
+    background: #f0f0f0; 
+    padding: 10px; 
+    border-radius: 8px; 
+    font-size: 0.75rem; 
+    margin: 15px 0; 
+    word-break: break-all; 
+    color: #666; 
+}
+
+.floating-qr { 
+    position: fixed; 
+    bottom: 20px; 
+    left: 20px; 
+    background: #222; 
+    color: var(--accent); 
+    border: 2px solid var(--accent); 
+    padding: 12px 25px; 
+    border-radius: 50px; 
+    cursor: pointer; 
+    z-index: 999; 
+    font-weight: bold; 
 }
