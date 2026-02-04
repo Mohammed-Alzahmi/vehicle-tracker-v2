@@ -9,46 +9,28 @@
 <body>
 <header>
     <img src="{{ url_for('static', filename='shj-gov.png') }}">
-    <div class="header-text">
-        <h2>نظام إدارة السجلات الرقمي</h2>
-        <p>إدارة وقاية وحماية المجتمع</p>
-    </div>
+    <div class="header-text"><h2>نظام إدارة السجلات الرقمي</h2><p>إدارة وقاية وحماية المجتمع</p></div>
     <img src="{{ url_for('static', filename='shj-police.png') }}">
 </header>
-
 <div class="container">
     <form method="POST" action="/add-region" class="add-region-container">
         <input type="text" name="region" placeholder="أدخل اسم المنطقة هنا..." required>
         <button type="submit">إضافة منطقة جديدة +</button>
     </form>
-
     <div class="regions-grid">
         {% for region in regions %}
-        <div class="region-card" onclick="window.location.href='/region/{{ region }}'">
-            <div class="dots-container" onclick="toggleMenu('{{ region }}', event)">
-                <span>⋮</span>
-            </div>
+        <div class="region-card">
+            <div class="dots-container" onclick="toggleMenu('{{ region }}', event)"><span>⋮</span></div>
             <div class="menu" id="menu-{{ region }}">
-                <button onclick="openEditModal('{{ region }}', event)">📝 تعديل</button>
-                <button onclick="deleteRegion('{{ region }}', event)" style="color:red;">🗑️ حذف</button>
+                <button onclick="editRegion('{{ region }}')">📝 تعديل</button>
+                <button onclick="deleteRegion('{{ region }}')" style="color:red;">🗑️ حذف</button>
             </div>
-            <span class="region-title">{{ region }}</span>
+            <a href="/region/{{ region }}" class="region-title">{{ region }}</a>
+            <p style="margin-top:20px; color:#666; font-size:0.8rem;">عرض السجلات ➜</p>
         </div>
         {% endfor %}
     </div>
 </div>
-
-<div id="customEditModal" class="edit-modal">
-    <div class="edit-content">
-        <h3>تعديل اسم المنطقة</h3>
-        <input type="text" id="editRegionInput">
-        <div style="display: flex; gap: 10px;">
-            <button onclick="saveRegionEdit()" style="flex:1; padding:12px; border-radius:10px; border:none; background:var(--primary); color:white; cursor:pointer; font-weight:bold;">حفظ</button>
-            <button onclick="closeEditModal()" style="flex:1; padding:12px; border-radius:10px; border:none; background:#eee; cursor:pointer;">إلغاء</button>
-        </div>
-    </div>
-</div>
-
 <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>

@@ -3,68 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>سجلات {{ region }}</title>
+    <title>تسجيل دخول مركبة - {{ region }}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .form-container { max-width: 500px; margin: 50px auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
+        input, select { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; font-family: 'Cairo'; box-sizing: border-box; }
+        .submit-btn { width: 100%; padding: 15px; background: var(--primary); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1.1rem; }
+    </style>
 </head>
-<body id="pageBody">
+<body>
 <header>
     <img src="{{ url_for('static', filename='shj-gov.png') }}">
-    <div class="header-text">
-        <h2>سجل حركة المركبات</h2>
-        <p>منطقة: {{ region }}</p>
-    </div>
+    <div class="header-text"><h2>تسجيل دخول مركبة</h2><p>منطقة: {{ region }}</p></div>
     <img src="{{ url_for('static', filename='shj-police.png') }}">
 </header>
 
-<div class="container">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-        <div style="display: flex; gap: 10px;">
-            <button onclick="enableAdminMode()" style="background:var(--accent); color:white; border:none; padding:10px 15px; border-radius:10px; cursor:pointer; font-weight:bold;">📑 إدارة السجلات</button>
-        </div>
-        <a href="/" style="text-decoration:none; color:var(--primary); font-weight:bold;">➜ الرئيسية</a>
-    </div>
-
-    <div id="adminControls" style="display:none; gap:10px; margin-bottom:15px; justify-content:center;">
-        <button onclick="selectAllRecords()" style="padding:8px 15px; border-radius:8px; border:none; background:#444; color:white;">تحديد الكل</button>
-        <button onclick="deleteSelected()" style="padding:8px 15px; border-radius:8px; border:none; background:var(--danger); color:white;">حذف</button>
-    </div>
-
-    <div style="background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.05);">
-        <div class="records-table-row" style="background: var(--accent); color: white; font-weight: bold;">
-            <div class="record-check"></div>
-            <div>الاسم</div>
-            <div>الرقم العسكري</div>
-            <div>المركبة</div> <div>وقت الدخول</div>
-        </div>
-        {% for r in records %}
-        <div class="records-table-row">
-            <input type="checkbox" class="record-check" value="{{ r.id }}">
-            <div style="font-weight: bold;">{{ r.name }}</div>
-            <div>{{ r.military_id }}</div>
-            <div class="type-text">{{ r.car_type }}</div> <div style="font-size: 0.75rem; color: #777;">{{ r.time }}</div>
-        </div>
-        {% endfor %}
-    </div>
+<div class="form-container">
+    <form method="POST">
+        <label>الاسم الثلاثي:</label>
+        <input type="text" name="name" placeholder="أدخل اسمك الكامل" required>
+        
+        <label>الرقم العسكري:</label>
+        <input type="number" name="military_id" placeholder="أدخل الرقم العسكري" required>
+        
+        <label>نوع المركبة:</label>
+        <select name="car_type" required>
+            <option value="" disabled selected>اختر نوع المركبة</option>
+            {% for car in car_types %}
+            <option value="{{ car }}">{{ car }}</option>
+            {% endfor %}
+        </select>
+        
+        <button type="submit" class="submit-btn">تسجيل الدخول</button>
+    </form>
 </div>
-
-<button class="floating-qr" onclick="openQR('{{ region }}')">📷 عرض QR المنطقة</button>
-
-<div id="qrModal" class="modal">
-    <div class="qr-content">
-        <div id="printableQR">
-            <h2 style="margin:0; color:var(--primary);">رمز دخول المركبات</h2>
-            <h3 style="color:var(--accent); margin: 5px 0 15px 0;">منطقة: {{ region }}</h3>
-            <div id="qrPlaceholder" style="margin: 15px 0;"></div>
-        </div>
-        <div class="qr-link-box" id="qrUrlText"></div>
-        <div style="display:flex; gap:10px;">
-            <button onclick="printQR()" style="flex:1; padding:12px; border-radius:10px; border:none; background:#28a745; color:white; font-weight:bold; cursor:pointer;">🖨️ طباعة</button>
-            <button onclick="document.getElementById('qrModal').style.display='none'" style="flex:1; padding:12px; border-radius:10px; border:none; background:#eee; color:#333; cursor:pointer;">إغلاق</button>
-        </div>
-    </div>
-</div>
-
-<script>const CURRENT_REGION = "{{ region }}";</script>
-<script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
