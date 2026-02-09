@@ -50,12 +50,15 @@
 </div>
 
 <div id="qrModal" class="modal">
-    <div class="modal-content" id="printableArea">
+    <div class="modal-content">
         <span class="close-x" onclick="closeModal('qrModal')">✕</span>
-        <h3 style="margin-bottom:5px;">مسح رمز QR كود</h3>
+        <h3>مسح رمز QR كود</h3>
         <h4 style="color:var(--accent); margin-top:0;">لمنطقة: {{ region }}</h4>
-        <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data={{ request.host_url }}register/{{ region }}" style="margin:15px 0; border:1px solid #eee; padding:5px;">
-        <p style="font-size:0.9rem; color:#666;">امسح الكود لتسجيل الدخول</p>
+        
+        <div id="printableArea">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data={{ request.host_url }}register/{{ region }}" style="margin:15px 0; border:1px solid #eee; padding:5px;">
+        </div>
+
         <div class="break-text" id="urlText">{{ request.host_url }}register/{{ region }}</div>
         
         <div class="modal-btns">
