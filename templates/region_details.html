@@ -10,9 +10,10 @@
     <div class="header-text"><h2>سجل حركة المركبات</h2><p>منطقة: {{ region }}</p></div>
     <img src="{{ url_for('static', filename='shj-police.png') }}">
 </header>
+
 <div class="container" style="padding: 20px 5%;">
     <div style="display:flex; justify-content:space-between; margin-bottom:20px; align-items:center;">
-        <div style="display:flex; gap:8px;">
+        <div style="display:flex; gap:10px;">
             <button onclick="document.getElementById('carModal').style.display='flex'" style="background:#333; color:white; border:none; padding:10px 15px; border-radius:8px; cursor:pointer;">🚘 المركبات</button>
             <button onclick="toggleAdminMode()" style="background:var(--accent); color:white; border:none; padding:10px 15px; border-radius:8px; cursor:pointer;">📑 الإدارة</button>
         </div>
@@ -28,35 +29,68 @@
         <div class="records-table-row" style="background:var(--accent); color:white; font-weight:bold;">
             <div class="record-check"></div><div>الاسم</div><div>الرقم العسكري</div><div>المركبة</div><div>وقت الدخول</div>
         </div>
-        {% for r in records %}
-        <div class="records-table-row">
-            <div class="record-check"><input type="checkbox" class="record-check-input record-check" value="{{ r.id }}"></div>
-            <div style="font-weight:600;">{{ r.name }}</div>
-            <div>{{ r.military_id }}</div>
-            <div style="color:black; font-weight:bold;">{{ r.car_type }}</div>
-            <div style="font-size:0.8rem; color:#777;">{{ r.time }}</div>
+        <div id="recordsList">
+            {% for r in records %}
+            <div class="records-table-row">
+                <div class="record-check"><input type="checkbox" class="record-check" value="{{ r.id }}"></div>
+                <div style="font-weight:600;">{{ r.name }}</div>
+                <div>{{ r.military_id }}</div>
+                <div style="color:black; font-weight:bold;">{{ r.car_type }}</div>
+                <div style="font-size:0.8rem; color:#777;">{{ r.time }}</div>
+            </div>
+            {% endfor %}
         </div>
-        {% endfor %}
     </div>
 </div>
 
 <div id="carModal" class="modal">
-    <div class="car-modal-content">
+    <div class="modal-content">
         <span class="close-x" onclick="closeModal('carModal')">✕</span>
         <h3>قائمة المركبات - {{ region }}</h3>
-        <div id="carList" style="max-height: 200px; overflow-y: auto; margin-bottom: 15px;">
+        <div id="carList" style="max-height: 250px; overflow-y: auto; margin-bottom: 20px;">
+            {% if not car_types %}
+                <p id="emptyMsg" style="color:#999;">لا توجد مركبات، أضف الآن..</p>
+            {% endif %}
             {% for car in car_types %}
-            <div class="car-item"><span>{{ car }}</span><span onclick="manageCar('delete', '{{ car }}')" style="color:red; cursor:pointer;">🗑️</span></div>
+            <div class="car-item">
+                <span style="font-weight:600;">{{ car }}</span>
+                <span onclick="manageCar('delete', '{{ car }}')" style="color:red; cursor:pointer; font-size:1.2rem;">🗑️</span>
+            </div>
             {% endfor %}
         </div>
         <div style="display: flex; gap: 5px;">
-            <input type="text" id="newCarInput" placeholder="إضافة نوع..." style="flex:1; padding:10px; border:1px solid #ddd; border-radius:8px;">
-            <button onclick="addCar()" style="padding:10px 15px; background:var(--primary); color:white; border:none; border-radius:8px;">+</button>
+            <input type="text" id="newCarInput" placeholder="اسم المركبة..." style="flex:1; padding:10px; border:1px solid #ddd; border-radius:8px;">
+            <button onclick="addCar()" style="padding:10px 20px; background:var(--primary); color:white; border:none; border-radius:8px; font-weight:bold;">+</button>
         </div>
     </div>
 </div>
 
-<script>const REGION_NAME = "{{ region }}";</script>
-<script src="{{ url_for('static', filename='script.js') }}"></script>
+<script>
+const REGION_NAME = "{{ region }}";
+function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+function addCar() {
+    const val = document.getElementById('newCarInput').value;
+    if(val) manageCar('add', val);
+}
+function manageCar(action, value) {
+    fetch("/manage-cars", { 
+        method: "POST", 
+        headers: {"Content-Type": "application/json"}, 
+        body: JSON.stringify({region: REGION_NAME, action: action, value: value}) 
+    }).then(() => window.location.reload());
+}
+function toggleAdminMode() {
+    const body = document.getElementById('pageBody');
+    body.classList.toggle('admin-mode');
+    document.getElementById('adminControls').style.display = body.classList.contains('admin-mode') ? 'block' : 'none';
+}
+function selectAll() { document.querySelectorAll('.record-check input').forEach(c => c.checked = true); }
+function deleteSelected() {
+    const ids = Array.from(document.querySelectorAll('.record-check input:checked')).map(c => c.value);
+    if(ids.length > 0 && confirm("حذف؟")) {
+        fetch("/delete-records", { method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({region: REGION_NAME, ids: ids}) }).then(() => location.reload());
+    }
+}
+</script>
 </body>
 </html>
