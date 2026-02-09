@@ -1,3 +1,4 @@
+// دوال المنيو والحذف في الرئيسية
 function toggleMenu(id) {
     document.querySelectorAll('.menu').forEach(m => { if(m.id !== 'menu-'+id) m.style.display='none'; });
     let m = document.getElementById('menu-' + id);
@@ -30,10 +31,12 @@ function saveEdit() {
     }
 }
 
+// إضافة وحذف المركبات بدون تحديث الصفحة
 function addCarDirect() {
     let input = document.getElementById('newCarInput');
     let value = input.value;
     if(!value) return;
+
     fetch("/manage-cars", { 
         method: "POST", headers: {"Content-Type": "application/json"}, 
         body: JSON.stringify({region: REGION_NAME, action: "add", value: value}) 
@@ -56,10 +59,13 @@ function deleteCarDirect(carName, elementId) {
         method: "POST", headers: {"Content-Type": "application/json"}, 
         body: JSON.stringify({region: REGION_NAME, action: "delete", value: carName}) 
     }).then(res => res.json()).then(data => {
-        if(data.success) { document.getElementById(elementId).remove(); }
+        if(data.success) {
+            document.getElementById(elementId).remove();
+        }
     });
 }
 
+// إدارة السجلات
 function toggleAdminMode() {
     let b = document.getElementById('pageBody');
     let controls = document.getElementById('adminControls');
@@ -67,12 +73,13 @@ function toggleAdminMode() {
     controls.style.display = b.classList.contains('admin-mode') ? 'block' : 'none';
 }
 
+function selectAll() { document.querySelectorAll('.record-check input').forEach(c => c.checked = true); }
+
+// زر الإلغاء الجديد
 function cancelSelection() {
     document.querySelectorAll('.record-check input').forEach(c => c.checked = false);
     toggleAdminMode();
 }
-
-function selectAll() { document.querySelectorAll('.record-check input').forEach(c => c.checked = true); }
 
 function deleteSelected() {
     const ids = Array.from(document.querySelectorAll('.record-check input:checked')).map(c => c.value);
@@ -84,9 +91,12 @@ function deleteSelected() {
     }
 }
 
+// وظائف الـ QR (نسخ وطباعة)
 function copyURL() {
     const urlText = document.getElementById('urlText').innerText;
-    navigator.clipboard.writeText(urlText).then(() => { alert("تم نسخ الرابط ✅"); });
+    navigator.clipboard.writeText(urlText).then(() => {
+        alert("تم نسخ الرابط بنجاح ✅");
+    });
 }
 
 function closeModal(id) { document.getElementById(id).style.display = 'none'; }
