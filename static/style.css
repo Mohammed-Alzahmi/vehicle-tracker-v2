@@ -1,5 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap');
-:root { --primary: #0a2a4a; --accent: #c5a059; --bg: #f8f9fa; --danger: #dc3545; }
+:root { --primary: #0a2a4a; --accent: #6D6249; --bg: #f8f9fa; --danger: #dc3545; }
 body { font-family: 'Cairo', sans-serif; background: var(--bg); margin: 0; direction: rtl; overflow-x: hidden; }
 
 /* ========================================= */
