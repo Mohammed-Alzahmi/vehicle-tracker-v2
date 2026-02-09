@@ -12,10 +12,10 @@
 </header>
 
 <div class="container" style="padding: 20px 5%;">
-    <div style="display:flex; justify-content:space-between; margin-bottom:20px; align-items:center;">
+    <div style="display:flex; justify-content:space-between; margin-bottom:15px; flex-wrap:wrap; gap:10px;">
         <div style="display:flex; gap:10px;">
             <button onclick="document.getElementById('carModal').style.display='flex'" style="background:#333; color:white; border:none; padding:10px 15px; border-radius:8px; cursor:pointer;">🚘 المركبات</button>
-            <button onclick="toggleAdminMode()" style="background:var(--accent); color:white; border:none; padding:10px 15px; border-radius:8px; cursor:pointer;">📑 الإدارة</button>
+            <button onclick="toggleAdminMode()" style="background:var(--accent); color:white; border:none; padding:10px 15px; border-radius:8px; cursor:pointer;">📑 إدارة السجلات</button>
         </div>
         <a href="/" style="text-decoration:none; color:var(--primary); font-weight:bold;">➜ الرئيسية</a>
     </div>
@@ -34,7 +34,7 @@
             <div class="record-check"><input type="checkbox" value="{{ r.id }}"></div>
             <div style="font-weight:600;">{{ r.name }}</div>
             <div>{{ r.military_id }}</div>
-            <div style="color:black; font-weight:bold;">{{ r.car_type }}</div>
+            <div class="type-text">{{ r.car_type }}</div>
             <div style="font-size:0.8rem; color:#777;">{{ r.time }}</div>
         </div>
         {% endfor %}
@@ -44,8 +44,8 @@
 <div id="carModal" class="modal">
     <div class="modal-content">
         <span class="close-x" onclick="closeModal('carModal')">✕</span>
-        <h3>قائمة المركبات - {{ region }}</h3>
-        <div id="carList" style="max-height: 250px; overflow-y: auto; margin-bottom: 15px;">
+        <h3>قائمة المركبات ({{ region }})</h3>
+        <div id="carList" style="max-height: 200px; overflow-y: auto; margin-bottom: 15px;">
             {% for car in car_types %}
             <div class="car-item">
                 <span>{{ car }}</span>
@@ -53,8 +53,8 @@
             </div>
             {% endfor %}
         </div>
-        <div style="display: flex; gap: 5px;">
-            <input type="text" id="newCarInput" placeholder="أضف نوع..." style="flex:1; padding:10px; border:1px solid #ddd; border-radius:8px;">
+        <div style="display:flex; gap:5px;">
+            <input type="text" id="newCarInput" placeholder="أضف مركبة..." style="flex:1; padding:10px; border:1px solid #ddd; border-radius:8px;">
             <button onclick="addCar()" style="padding:10px 15px; background:var(--primary); color:white; border:none; border-radius:8px;">+</button>
         </div>
     </div>
