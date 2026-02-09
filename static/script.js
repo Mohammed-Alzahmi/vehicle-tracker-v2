@@ -1,3 +1,4 @@
+// دوال المنيو والحذف والتعديل في الرئيسية
 function toggleMenu(id) {
     document.querySelectorAll('.menu').forEach(m => { if(m.id !== 'menu-'+id) m.style.display='none'; });
     let m = document.getElementById('menu-' + id);
@@ -5,25 +6,40 @@ function toggleMenu(id) {
 }
 
 function deleteRegion(name) {
-    if(confirm("حذف منطقة " + name + "؟")) {
-        fetch("/delete-region", { method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({name: name}) }).then(() => location.reload());
+    if(confirm("هل أنت متأكد من حذف منطقة " + name + "؟")) {
+        fetch("/delete-region", { 
+            method: "POST", 
+            headers: {"Content-Type": "application/json"}, 
+            body: JSON.stringify({name: name}) 
+        }).then(() => location.reload());
     }
 }
 
-let oldN = "";
+let oldNameForEdit = "";
 function openEditModal(name) {
-    oldN = name;
+    oldNameForEdit = name;
     document.getElementById('editInput').value = name;
     document.getElementById('editModal').style.display = 'flex';
 }
 
 function saveEdit() {
     let newN = document.getElementById('editInput').value;
-    fetch("/edit-region", { method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({old: oldN, new: newN}) }).then(() => location.reload());
+    if(newN && newN !== oldNameForEdit) {
+        fetch("/edit-region", { 
+            method: "POST", 
+            headers: {"Content-Type": "application/json"}, 
+            body: JSON.stringify({old: oldNameForEdit, new: newN}) 
+        }).then(() => location.reload());
+    }
 }
 
+// دوال إدارة المركبات والسجلات
 function manageCar(action, value) {
-    fetch("/manage-cars", { method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({region: REGION_NAME, action: action, value: value}) }).then(() => location.reload());
+    fetch("/manage-cars", { 
+        method: "POST", 
+        headers: {"Content-Type": "application/json"}, 
+        body: JSON.stringify({region: REGION_NAME, action: action, value: value}) 
+    }).then(() => location.reload());
 }
 
 function addCar() {
@@ -32,8 +48,22 @@ function addCar() {
 }
 
 function toggleAdminMode() {
-    document.getElementById('pageBody').classList.toggle('admin-mode');
-    document.getElementById('adminControls').style.display = (document.getElementById('adminControls').style.display === 'block') ? 'none' : 'block';
+    let b = document.getElementById('pageBody');
+    b.classList.toggle('admin-mode');
+    document.getElementById('adminControls').style.display = b.classList.contains('admin-mode') ? 'block' : 'none';
 }
 
 function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+function selectAll() { document.querySelectorAll('.record-check input').forEach(c => c.checked = true); }
+
+function deleteSelected() {
+    const ids = Array.from(document.querySelectorAll('.record-check input:checked')).map(c => c.value);
+    if(ids.length > 0 && confirm("حذف السجلات المختارة؟")) {
+        fetch("/delete-records", { 
+            method: "POST", 
+            headers: {"Content-Type": "application/json"}, 
+            body: JSON.stringify({region: REGION_NAME, ids: ids}) 
+        }).then(() => location.reload());
+    }
+}
