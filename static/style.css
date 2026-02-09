@@ -28,21 +28,35 @@ header img { height: clamp(30px, 8vw, 75px); width: auto; flex-shrink: 0; }
 .modal-content { background: white; padding: 30px; border-radius: 20px; width: 100%; max-width: 400px; position: relative; text-align: center; box-shadow: 0 5px 20px rgba(0,0,0,0.2); }
 .close-x { position: absolute; top: 15px; right: 15px; font-size: 24px; cursor: pointer; color: #888; font-weight: bold; line-height: 1; }
 
-/* الزر العائم (QR Code) - التعديل اليديد */
-.fab-btn {
+/* زر الـ QR العائم الجديد - مستطيل وأنيق */
+.fab-qr-btn {
     position: fixed; bottom: 30px; left: 30px;
-    width: 60px; height: 60px;
     background: var(--primary); color: white;
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-    cursor: pointer; z-index: 1000; transition: transform 0.2s;
+    padding: 12px 20px; border-radius: 50px;
+    display: flex; align-items: center; gap: 8px;
+    font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    cursor: pointer; z-index: 1000; transition: 0.3s;
+    border: 2px solid var(--accent);
 }
-.fab-btn:active { transform: scale(0.9); }
-/* عشان اللينك ما يطلع برا الفريم */
-.break-text { word-break: break-all; color: var(--accent); font-size: 0.9rem; margin-top: 10px; direction: ltr; }
+.fab-qr-btn:hover { transform: translateY(-5px); }
 
-/* بقية الستايلات */
+/* أزرار النسخ والطباعة */
+.modal-btns { display: flex; gap: 10px; justify-content: center; margin-top: 15px; }
+.btn-copy { background: #28a745; color: white; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-family: 'Cairo'; }
+.btn-print { background: #6c757d; color: white; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-family: 'Cairo'; }
+
+/* لمنع خروج الرابط عن الإطار */
+.break-text { word-break: break-all; color: var(--accent); font-size: 0.8rem; margin-top: 10px; direction: ltr; background: #f0f0f0; padding: 10px; border-radius: 5px; }
+
+/* تنسيق الطباعة */
+@media print {
+    body * { visibility: hidden; }
+    #printableArea, #printableArea * { visibility: visible; }
+    #printableArea { position: absolute; left: 0; top: 0; width: 100%; }
+    .modal-btns, .close-x { display: none; }
+}
+
+/* بقية التنسيقات */
 .car-item { display: flex; justify-content: space-between; padding: 12px; background: #f9f9f9; margin-bottom: 8px; border-radius: 10px; border: 1px solid #eee; align-items: center; }
 .add-region-container { max-width: 600px; margin: 20px auto; display: flex; padding: 0 20px; }
 .add-region-container input { flex: 1; padding: 12px; border: 2px solid #ddd; border-radius: 0 12px 12px 0; font-family: 'Cairo'; }

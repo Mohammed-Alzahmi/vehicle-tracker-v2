@@ -20,9 +20,10 @@
         <a href="/" style="text-decoration:none; color:var(--primary); font-weight:bold;">➜ الرئيسية</a>
     </div>
 
-    <div id="adminControls" style="display:none; text-align:center; margin-bottom:15px;">
-        <button onclick="selectAll()" style="padding:8px 15px; border-radius:5px; border:1px solid #ccc;">تحديد الكل</button>
-        <button onclick="deleteSelected()" style="padding:8px 15px; background:var(--danger); color:white; border:none; border-radius:5px; margin-right:10px;">حذف</button>
+    <div id="adminControls" style="display:none; text-align:center; margin-bottom:15px; background:#f9f9f9; padding:10px; border-radius:10px; border:1px dashed #ccc;">
+        <button onclick="selectAll()" style="padding:8px 15px; border-radius:5px; border:1px solid #ccc; background:white; cursor:pointer;">تحديد الكل</button>
+        <button onclick="cancelSelection()" style="padding:8px 15px; border-radius:5px; border:1px solid #ccc; background:white; cursor:pointer; margin-right:5px;">إلغاء</button>
+        <button onclick="deleteSelected()" style="padding:8px 15px; background:var(--danger); color:white; border:none; border-radius:5px; margin-right:10px; cursor:pointer;">حذف</button>
     </div>
 
     <div style="background:white; border-radius:15px; overflow:hidden; box-shadow:0 5px 15px rgba(0,0,0,0.05);">
@@ -44,17 +45,23 @@
     </div>
 </div>
 
-<div class="fab-btn" onclick="document.getElementById('qrModal').style.display='flex'">
-    📱
+<div class="fab-qr-btn" onclick="document.getElementById('qrModal').style.display='flex'">
+    <span>رمز QR للمنطقة</span> 📱
 </div>
 
 <div id="qrModal" class="modal">
-    <div class="modal-content">
+    <div class="modal-content" id="printableArea">
         <span class="close-x" onclick="closeModal('qrModal')">✕</span>
-        <h3>مسح الرمز (QR)</h3>
-        <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data={{ request.host_url }}register/{{ region }}" style="margin-bottom:10px;">
-        <p>امسح الكود لتسجيل الدخول</p>
-        <div class="break-text">{{ request.host_url }}register/{{ region }}</div>
+        <h3 style="margin-bottom:5px;">مسح رمز QR كود</h3>
+        <h4 style="color:var(--accent); margin-top:0;">لمنطقة: {{ region }}</h4>
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data={{ request.host_url }}register/{{ region }}" style="margin:15px 0; border:1px solid #eee; padding:5px;">
+        <p style="font-size:0.9rem; color:#666;">امسح الكود لتسجيل الدخول</p>
+        <div class="break-text" id="urlText">{{ request.host_url }}register/{{ region }}</div>
+        
+        <div class="modal-btns">
+            <button onclick="copyURL()" class="btn-copy">📋 نسخ الرابط</button>
+            <button onclick="window.print()" class="btn-print">🖨️ طباعة</button>
+        </div>
     </div>
 </div>
 
@@ -72,7 +79,7 @@
         </div>
         <div style="display:flex; gap:5px;">
             <input type="text" id="newCarInput" placeholder="أضف مركبة..." style="flex:1; padding:10px; border:1px solid #ddd; border-radius:8px;">
-            <button onclick="addCarDirect()" style="padding:10px 15px; background:var(--primary); color:white; border:none; border-radius:8px;">+</button>
+            <button onclick="addCarDirect()" style="padding:10px 15px; background:var(--primary); color:white; border:none; border-radius:8px; cursor:pointer;">+</button>
         </div>
     </div>
 </div>

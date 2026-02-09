@@ -1,4 +1,4 @@
-// دوال الرئيسية
+// دوال المنيو والحذف في الرئيسية
 function toggleMenu(id) {
     document.querySelectorAll('.menu').forEach(m => { if(m.id !== 'menu-'+id) m.style.display='none'; });
     let m = document.getElementById('menu-' + id);
@@ -31,7 +31,7 @@ function saveEdit() {
     }
 }
 
-// المركبات بدون ريفريش
+// إضافة وحذف المركبات بدون تحديث الصفحة
 function addCarDirect() {
     let input = document.getElementById('newCarInput');
     let value = input.value;
@@ -65,11 +65,20 @@ function deleteCarDirect(carName, elementId) {
     });
 }
 
-// الإدارة
+// إدارة السجلات
 function toggleAdminMode() {
     let b = document.getElementById('pageBody');
+    let controls = document.getElementById('adminControls');
     b.classList.toggle('admin-mode');
-    document.getElementById('adminControls').style.display = b.classList.contains('admin-mode') ? 'block' : 'none';
+    controls.style.display = b.classList.contains('admin-mode') ? 'block' : 'none';
+}
+
+function selectAll() { document.querySelectorAll('.record-check input').forEach(c => c.checked = true); }
+
+// زر الإلغاء الجديد
+function cancelSelection() {
+    document.querySelectorAll('.record-check input').forEach(c => c.checked = false);
+    toggleAdminMode();
 }
 
 function deleteSelected() {
@@ -82,5 +91,12 @@ function deleteSelected() {
     }
 }
 
-function selectAll() { document.querySelectorAll('.record-check input').forEach(c => c.checked = true); }
+// وظائف الـ QR (نسخ وطباعة)
+function copyURL() {
+    const urlText = document.getElementById('urlText').innerText;
+    navigator.clipboard.writeText(urlText).then(() => {
+        alert("تم نسخ الرابط بنجاح ✅");
+    });
+}
+
 function closeModal(id) { document.getElementById(id).style.display = 'none'; }
