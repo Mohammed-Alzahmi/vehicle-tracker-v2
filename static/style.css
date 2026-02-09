@@ -2,7 +2,7 @@
 :root { --primary: #0a2a4a; --accent: #c5a059; --bg: #f8f9fa; --danger: #dc3545; }
 body { font-family: 'Cairo', sans-serif; background: var(--bg); margin: 0; direction: rtl; overflow-x: hidden; }
 
-/* الهيدر المتكيف - يمنع نزول العنوان */
+/* الهيدر */
 header { 
     background: white; padding: 10px 2%; display: flex; 
     justify-content: space-between; align-items: center; 
@@ -13,33 +13,29 @@ header img { height: clamp(30px, 8vw, 75px); width: auto; flex-shrink: 0; }
 .header-text h2 { margin: 0; color: var(--primary); font-size: clamp(0.7rem, 3.5vw, 1.6rem); white-space: nowrap; }
 .header-text p { margin: 0; color: var(--accent); font-size: clamp(0.6rem, 2vw, 0.9rem); font-weight: bold; }
 
-/* الجدول - تقسيم متساوي 100% */
+/* الجدول - التعديل المهم هنا */
 .records-table-row { 
     display: grid; 
-    /* 0px للتشيك بوكس عشان يختفي، والباقي 4 أجزاء متساوية */
-    grid-template-columns: 0px 1fr 1fr 1fr 1fr; 
+    /* الوضع العادي: 4 أعمدة متساوية */
+    grid-template-columns: 1fr 1fr 1fr 1fr; 
     align-items: center; text-align: center; padding: 15px 5px; border-bottom: 1px solid #eee; transition: 0.3s;
 }
-/* وضع الإدارة - يظهر التشيك بوكس ويزيح الباقي */
+.record-check { display: none; } /* إخفاء المربع في الوضع العادي */
+
+/* وضع الإدارة: 5 أعمدة (المربع + 4 أعمدة) */
 .admin-mode .records-table-row { grid-template-columns: 40px 1fr 1fr 1fr 1fr; }
+.admin-mode .record-check { display: block; margin: 0 auto; }
 
-.record-check { display: none; margin: 0 auto; }
-.admin-mode .record-check { display: block; }
-.type-text { color: black !important; font-weight: bold; }
-
-/* المودالات وزر X */
+/* تنسيقات المودال والقوائم */
 .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); align-items: center; justify-content: center; z-index: 9999; padding: 15px; }
 .modal-content { background: white; padding: 30px; border-radius: 20px; width: 100%; max-width: 400px; position: relative; text-align: center; box-shadow: 0 5px 20px rgba(0,0,0,0.2); }
 .close-x { position: absolute; top: 15px; right: 15px; font-size: 24px; cursor: pointer; color: #888; font-weight: bold; line-height: 1; }
-
-/* قائمة المركبات */
 .car-item { display: flex; justify-content: space-between; padding: 12px; background: #f9f9f9; margin-bottom: 8px; border-radius: 10px; border: 1px solid #eee; align-items: center; }
 
 /* الرئيسية */
 .add-region-container { max-width: 600px; margin: 20px auto; display: flex; padding: 0 20px; }
 .add-region-container input { flex: 1; padding: 12px; border: 2px solid #ddd; border-radius: 0 12px 12px 0; font-family: 'Cairo'; }
 .add-region-container button { padding: 12px 20px; background: var(--primary); color: white; border: none; border-radius: 12px 0 0 12px; cursor: pointer; font-weight: bold; }
-
 .regions-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px; padding: 20px 5%; }
 .region-card { background: white; border-radius: 15px; padding: 40px 10px; position: relative; box-shadow: 0 4px 10px rgba(0,0,0,0.05); text-align: center; cursor: pointer; border: 1px solid #eee; }
 .dots-container { position: absolute; top: 10px; left: 10px; cursor: pointer; padding: 5px; font-size: 1.3rem; color: #777; }

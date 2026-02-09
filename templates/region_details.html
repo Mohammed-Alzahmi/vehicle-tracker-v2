@@ -16,6 +16,7 @@
         <div style="display:flex; gap:10px;">
             <button onclick="document.getElementById('carModal').style.display='flex'" style="background:#333; color:white; border:none; padding:10px 15px; border-radius:8px; cursor:pointer;">🚘 المركبات</button>
             <button onclick="toggleAdminMode()" style="background:var(--accent); color:white; border:none; padding:10px 15px; border-radius:8px; cursor:pointer;">📑 إدارة السجلات</button>
+            <a href="/qr/{{ region }}" target="_blank" style="background:#28a745; color:white; text-decoration:none; padding:10px 15px; border-radius:8px; display:inline-block;">📱 QR كود</a>
         </div>
         <a href="/" style="text-decoration:none; color:var(--primary); font-weight:bold;">➜ الرئيسية</a>
     </div>
@@ -27,17 +28,19 @@
 
     <div style="background:white; border-radius:15px; overflow:hidden; box-shadow:0 5px 15px rgba(0,0,0,0.05);">
         <div class="records-table-row" style="background:var(--accent); color:white; font-weight:bold;">
-            <div class="record-check"></div><div>الاسم</div><div>الرقم العسكري</div><div>المركبة</div><div>وقت الدخول</div>
+            <div class="record-check"></div> <div>الاسم</div><div>الرقم العسكري</div><div>المركبة</div><div>وقت الدخول</div>
         </div>
-        {% for r in records %}
-        <div class="records-table-row">
-            <div class="record-check"><input type="checkbox" value="{{ r.id }}"></div>
-            <div style="font-weight:600;">{{ r.name }}</div>
-            <div>{{ r.military_id }}</div>
-            <div class="type-text">{{ r.car_type }}</div>
-            <div style="font-size:0.8rem; color:#777;">{{ r.time }}</div>
+        <div id="recordsList">
+            {% for r in records %}
+            <div class="records-table-row" id="row-{{ r.id }}">
+                <div class="record-check"><input type="checkbox" value="{{ r.id }}"></div>
+                <div style="font-weight:600;">{{ r.name }}</div>
+                <div>{{ r.military_id }}</div>
+                <div style="color:black; font-weight:bold;">{{ r.car_type }}</div>
+                <div style="font-size:0.8rem; color:#777;">{{ r.time }}</div>
+            </div>
+            {% endfor %}
         </div>
-        {% endfor %}
     </div>
 </div>
 
@@ -47,15 +50,15 @@
         <h3>قائمة المركبات ({{ region }})</h3>
         <div id="carList" style="max-height: 200px; overflow-y: auto; margin-bottom: 15px;">
             {% for car in car_types %}
-            <div class="car-item">
+            <div class="car-item" id="car-item-{{ loop.index }}">
                 <span>{{ car }}</span>
-                <span onclick="manageCar('delete', '{{ car }}')" style="color:red; cursor:pointer; font-weight:bold;">🗑️</span>
+                <span onclick="deleteCarDirect('{{ car }}', 'car-item-{{ loop.index }}')" style="color:red; cursor:pointer; font-weight:bold;">🗑️</span>
             </div>
             {% endfor %}
         </div>
         <div style="display:flex; gap:5px;">
             <input type="text" id="newCarInput" placeholder="أضف مركبة..." style="flex:1; padding:10px; border:1px solid #ddd; border-radius:8px;">
-            <button onclick="addCar()" style="padding:10px 15px; background:var(--primary); color:white; border:none; border-radius:8px;">+</button>
+            <button onclick="addCarDirect()" style="padding:10px 15px; background:var(--primary); color:white; border:none; border-radius:8px;">+</button>
         </div>
     </div>
 </div>

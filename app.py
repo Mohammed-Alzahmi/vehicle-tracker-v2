@@ -22,9 +22,12 @@ def index():
 @app.route("/region/<name>")
 def region_details(name):
     data = load_data()
-    # التأكد من وجود البيانات، وإذا مب موجودة نرسل ليست فاضية
     region_data = data["regions"].get(name, {"records": [], "car_types": []})
     return render_template("region_details.html", region=name, records=region_data.get("records", []), car_types=region_data.get("car_types", []))
+
+@app.route("/qr/<region>")
+def view_qr(region):
+    return render_template("qr_view.html", region_id=region)
 
 @app.route("/add-region", methods=["POST"])
 def add_region():
@@ -58,14 +61,9 @@ def manage_cars():
     data = load_data()
     region, action, value = request.json["region"], request.json["action"], request.json["value"]
     if region in data["regions"]:
-        # إذا القائمة مب موجودة ننشئها
-        if "car_types" not in data["regions"][region]: 
-            data["regions"][region]["car_types"] = []
-            
-        if action == "add" and value: 
-            data["regions"][region]["car_types"].append(value)
-        elif action == "delete" and value in data["regions"][region]["car_types"]: 
-            data["regions"][region]["car_types"].remove(value)
+        if "car_types" not in data["regions"][region]: data["regions"][region]["car_types"] = []
+        if action == "add" and value: data["regions"][region]["car_types"].append(value)
+        elif action == "delete" and value in data["regions"][region]["car_types"]: data["regions"][region]["car_types"].remove(value)
         save_data(data)
     return jsonify(success=True)
 
@@ -82,25 +80,19 @@ def delete_records():
 def register_entry(region):
     data = load_data()
     if request.method == "POST":
-        try:
-            uae_tz = pytz.timezone('Asia/Dubai')
-            now = datetime.now(uae_tz)
-            new_record = {
-                "name": request.form["name"],
-                "military_id": request.form["military_id"],
-                "car_type": request.form["car_type"],
-                "time": now.strftime("%Y-%m-%d | %I:%M %p"),
-                "id": str(now.timestamp())
-            }
-            # التأكد من وجود سجلات
-            if "records" not in data["regions"][region]:
-                data["regions"][region]["records"] = []
-            data["regions"][region]["records"].insert(0, new_record)
-            save_data(data)
-            return render_template("success.html", region=region)
-        except Exception as e:
-            return f"Error: {e}"
-            
+        uae_tz = pytz.timezone('Asia/Dubai')
+        now = datetime.now(uae_tz)
+        new_record = {
+            "name": request.form["name"],
+            "military_id": request.form["military_id"],
+            "car_type": request.form["car_type"],
+            "time": now.strftime("%Y-%m-%d | %I:%M %p"),
+            "id": str(now.timestamp())
+        }
+        if "records" not in data["regions"][region]: data["regions"][region]["records"] = []
+        data["regions"][region]["records"].insert(0, new_record)
+        save_data(data)
+        return render_template("success.html", region=region)
     car_types = data["regions"].get(region, {}).get("car_types", [])
     return render_template("register.html", region=region, car_types=car_types)
 

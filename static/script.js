@@ -1,4 +1,4 @@
-// دوال الرئيسية (إظهار القائمة، حذف، تعديل)
+// دوال الرئيسية
 function toggleMenu(id) {
     document.querySelectorAll('.menu').forEach(m => { if(m.id !== 'menu-'+id) m.style.display='none'; });
     let m = document.getElementById('menu-' + id);
@@ -31,24 +31,48 @@ function saveEdit() {
     }
 }
 
-// دوال صفحة التفاصيل (المركبات، الإدارة)
+// === التعديل الجديد للمركبات (بدون ريفريش) ===
+function addCarDirect() {
+    let input = document.getElementById('newCarInput');
+    let value = input.value;
+    if(!value) return;
+
+    fetch("/manage-cars", { 
+        method: "POST", headers: {"Content-Type": "application/json"}, 
+        body: JSON.stringify({region: REGION_NAME, action: "add", value: value}) 
+    }).then(res => res.json()).then(data => {
+        if(data.success) {
+            // إضافة العنصر للقائمة فوراً بدون تحديث الصفحة
+            let list = document.getElementById('carList');
+            let newItem = document.createElement('div');
+            let randomId = 'new-' + Date.now();
+            newItem.className = 'car-item';
+            newItem.id = randomId;
+            newItem.innerHTML = `<span>${value}</span><span onclick="deleteCarDirect('${value}', '${randomId}')" style="color:red; cursor:pointer; font-weight:bold;">🗑️</span>`;
+            list.appendChild(newItem);
+            input.value = ""; // تفريغ الخانة
+        }
+    });
+}
+
+function deleteCarDirect(carName, elementId) {
+    fetch("/manage-cars", { 
+        method: "POST", headers: {"Content-Type": "application/json"}, 
+        body: JSON.stringify({region: REGION_NAME, action: "delete", value: carName}) 
+    }).then(res => res.json()).then(data => {
+        if(data.success) {
+            // حذف العنصر من الشاشة فوراً
+            document.getElementById(elementId).remove();
+        }
+    });
+}
+
+// دوال إدارة السجلات
 function toggleAdminMode() {
     let b = document.getElementById('pageBody');
     b.classList.toggle('admin-mode');
     let controls = document.getElementById('adminControls');
     controls.style.display = b.classList.contains('admin-mode') ? 'block' : 'none';
-}
-
-function manageCar(action, value) {
-    fetch("/manage-cars", { 
-        method: "POST", headers: {"Content-Type": "application/json"}, 
-        body: JSON.stringify({region: REGION_NAME, action: action, value: value}) 
-    }).then(() => location.reload());
-}
-
-function addCar() {
-    let v = document.getElementById('newCarInput').value;
-    if(v) manageCar('add', v);
 }
 
 function deleteSelected() {
