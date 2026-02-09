@@ -16,7 +16,6 @@
         <div style="display:flex; gap:10px;">
             <button onclick="document.getElementById('carModal').style.display='flex'" style="background:#333; color:white; border:none; padding:10px 15px; border-radius:8px; cursor:pointer;">🚘 المركبات</button>
             <button onclick="toggleAdminMode()" style="background:var(--accent); color:white; border:none; padding:10px 15px; border-radius:8px; cursor:pointer;">📑 إدارة السجلات</button>
-            <a href="/qr/{{ region }}" target="_blank" style="background:#28a745; color:white; text-decoration:none; padding:10px 15px; border-radius:8px; display:inline-block;">📱 QR كود</a>
         </div>
         <a href="/" style="text-decoration:none; color:var(--primary); font-weight:bold;">➜ الرئيسية</a>
     </div>
@@ -28,7 +27,8 @@
 
     <div style="background:white; border-radius:15px; overflow:hidden; box-shadow:0 5px 15px rgba(0,0,0,0.05);">
         <div class="records-table-row" style="background:var(--accent); color:white; font-weight:bold;">
-            <div class="record-check"></div> <div>الاسم</div><div>الرقم العسكري</div><div>المركبة</div><div>وقت الدخول</div>
+            <div class="record-check"></div>
+            <div>الاسم</div><div>الرقم العسكري</div><div>المركبة</div><div>وقت الدخول</div>
         </div>
         <div id="recordsList">
             {% for r in records %}
@@ -41,6 +41,20 @@
             </div>
             {% endfor %}
         </div>
+    </div>
+</div>
+
+<div class="fab-btn" onclick="document.getElementById('qrModal').style.display='flex'">
+    📱
+</div>
+
+<div id="qrModal" class="modal">
+    <div class="modal-content">
+        <span class="close-x" onclick="closeModal('qrModal')">✕</span>
+        <h3>مسح الرمز (QR)</h3>
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data={{ request.host_url }}register/{{ region }}" style="margin-bottom:10px;">
+        <p>امسح الكود لتسجيل الدخول</p>
+        <div class="break-text">{{ request.host_url }}register/{{ region }}</div>
     </div>
 </div>
 

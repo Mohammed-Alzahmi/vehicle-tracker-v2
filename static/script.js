@@ -31,7 +31,7 @@ function saveEdit() {
     }
 }
 
-// === التعديل الجديد للمركبات (بدون ريفريش) ===
+// المركبات بدون ريفريش
 function addCarDirect() {
     let input = document.getElementById('newCarInput');
     let value = input.value;
@@ -42,7 +42,6 @@ function addCarDirect() {
         body: JSON.stringify({region: REGION_NAME, action: "add", value: value}) 
     }).then(res => res.json()).then(data => {
         if(data.success) {
-            // إضافة العنصر للقائمة فوراً بدون تحديث الصفحة
             let list = document.getElementById('carList');
             let newItem = document.createElement('div');
             let randomId = 'new-' + Date.now();
@@ -50,7 +49,7 @@ function addCarDirect() {
             newItem.id = randomId;
             newItem.innerHTML = `<span>${value}</span><span onclick="deleteCarDirect('${value}', '${randomId}')" style="color:red; cursor:pointer; font-weight:bold;">🗑️</span>`;
             list.appendChild(newItem);
-            input.value = ""; // تفريغ الخانة
+            input.value = "";
         }
     });
 }
@@ -61,18 +60,16 @@ function deleteCarDirect(carName, elementId) {
         body: JSON.stringify({region: REGION_NAME, action: "delete", value: carName}) 
     }).then(res => res.json()).then(data => {
         if(data.success) {
-            // حذف العنصر من الشاشة فوراً
             document.getElementById(elementId).remove();
         }
     });
 }
 
-// دوال إدارة السجلات
+// الإدارة
 function toggleAdminMode() {
     let b = document.getElementById('pageBody');
     b.classList.toggle('admin-mode');
-    let controls = document.getElementById('adminControls');
-    controls.style.display = b.classList.contains('admin-mode') ? 'block' : 'none';
+    document.getElementById('adminControls').style.display = b.classList.contains('admin-mode') ? 'block' : 'none';
 }
 
 function deleteSelected() {
