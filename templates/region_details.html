@@ -12,7 +12,7 @@
 </header>
 
 <div class="container" style="padding: 20px 5%;">
-    <div style="display:flex; justify-content:space-between; margin-bottom:15px; flex-wrap:wrap; gap:10px;">
+    <div style="display:flex; justify-content:space-between; margin-bottom:20px; align-items:center;">
         <div style="display:flex; gap:10px;">
             <button onclick="document.getElementById('carModal').style.display='flex'" style="background:#333; color:white; border:none; padding:10px 15px; border-radius:8px; cursor:pointer;">🚘 المركبات</button>
             <button onclick="toggleAdminMode()" style="background:var(--accent); color:white; border:none; padding:10px 15px; border-radius:8px; cursor:pointer;">📑 إدارة السجلات</button>
@@ -45,22 +45,15 @@
     </div>
 </div>
 
-<div class="fab-qr-btn" onclick="document.getElementById('qrModal').style.display='flex'">
-    <span>رمز QR للمنطقة</span> 📱
-</div>
-
 <div id="qrModal" class="modal">
     <div class="modal-content">
         <span class="close-x" onclick="closeModal('qrModal')">✕</span>
-        
         <div id="printableArea">
             <h3>مسح رمز QR كود</h3>
             <h4>لمنطقة: {{ region }}</h4>
             <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data={{ request.host_url }}register/{{ region }}" style="border:1px solid #eee; padding:5px;">
         </div>
-
         <div class="break-text" id="urlText">{{ request.host_url }}register/{{ region }}</div>
-        
         <div class="modal-btns">
             <button onclick="copyURL()" class="btn-copy">📋 نسخ الرابط</button>
             <button onclick="window.print()" class="btn-print">🖨️ طباعة</button>
@@ -71,7 +64,7 @@
 <div id="carModal" class="modal">
     <div class="modal-content">
         <span class="close-x" onclick="closeModal('carModal')">✕</span>
-        <h3>قائمة المركبات ({{ region }})</h3>
+        <h3>قائمة المركبات</h3>
         <div id="carList" style="max-height: 200px; overflow-y: auto; margin-bottom: 15px;">
             {% for car in car_types %}
             <div class="car-item" id="car-item-{{ loop.index }}">
@@ -85,6 +78,10 @@
             <button onclick="addCarDirect()" style="padding:10px 15px; background:var(--primary); color:white; border:none; border-radius:8px; cursor:pointer;">+</button>
         </div>
     </div>
+</div>
+
+<div class="fab-qr-btn" onclick="document.getElementById('qrModal').style.display='flex'">
+    <span>رمز QR للمنطقة</span> 📱
 </div>
 
 <script>const REGION_NAME = "{{ region }}";</script>
