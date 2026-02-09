@@ -28,7 +28,7 @@ header img { height: clamp(30px, 8vw, 75px); width: auto; flex-shrink: 0; }
 .modal-content { 
     background: white; padding: 30px; border-radius: 20px; 
     width: 90%; max-width: 400px; 
-    max-height: 80vh; overflow-y: auto; /* يمنع الالتصاق فوق وتحت */
+    max-height: 85vh; overflow-y: auto; 
     position: relative; text-align: center; box-shadow: 0 5px 20px rgba(0,0,0,0.2); 
 }
 .close-x { position: absolute; top: 15px; right: 15px; font-size: 24px; cursor: pointer; color: #888; font-weight: bold; line-height: 1; }
@@ -51,12 +51,20 @@ header img { height: clamp(30px, 8vw, 75px); width: auto; flex-shrink: 0; }
 
 .break-text { word-break: break-all; color: var(--accent); font-size: 0.8rem; margin-top: 10px; direction: ltr; background: #f0f0f0; padding: 10px; border-radius: 5px; }
 
-/* تنسيق الطباعة النظيف جداً */
+/* تنسيق الطباعة النهائي - يظهر العنوان والكود فقط */
 @media print {
     body * { visibility: hidden; }
     #printableArea, #printableArea * { visibility: visible; }
-    #printableArea { position: absolute; left: 0; top: 50px; width: 100%; text-align: center; }
-    .modal-btns, .close-x, .break-text, h3, h4, p { display: none !important; } /* يخفي كل شي إلا الصورة */
+    #printableArea { 
+        position: absolute; 
+        left: 0; 
+        top: 20px; 
+        width: 100%; 
+        text-align: center; 
+    }
+    .modal-btns, .close-x, .break-text, p { display: none !important; }
+    h3 { font-size: 24px; margin-bottom: 5px; color: black; }
+    h4 { font-size: 20px; color: black !important; margin-top: 0; }
 }
 
 /* بقية التنسيقات */
