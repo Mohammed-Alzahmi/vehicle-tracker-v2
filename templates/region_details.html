@@ -54,9 +54,9 @@
         <span class="close-x" onclick="closeModal('qrModal')">✕</span>
         
         <div id="printableArea">
-            <h3 style="margin-top:0;">مسح رمز QR كود</h3>
-            <h4 style="color:var(--accent);">لمنطقة: {{ region }}</h4>
-            <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data={{ request.host_url }}register/{{ region }}" style="margin:15px 0; border:1px solid #eee; padding:5px;">
+            <h3>مسح رمز QR كود</h3>
+            <h4>لمنطقة: {{ region }}</h4>
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data={{ request.host_url }}register/{{ region }}" style="border:1px solid #eee; padding:5px;">
         </div>
 
         <div class="break-text" id="urlText">{{ request.host_url }}register/{{ region }}</div>
