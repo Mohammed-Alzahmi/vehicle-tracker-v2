@@ -1,37 +1,31 @@
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap');
-:root { --primary: #0a2a4a; --accent: #c5a059; --bg: #f8f9fa; --danger: #dc3545; }
-body { font-family: 'Cairo', sans-serif; background: var(--bg); margin: 0; direction: rtl; overflow-x: hidden; }
+:root { --primary: #0a2a4a; --accent: #c5a059; --bg: #f8f9fa; }
+body { font-family: 'Cairo', sans-serif; background: var(--bg); margin: 0; direction: rtl; }
 
-/* الهيدر المتكيف - صور وعنوان في سطر واحد ما يتداخلون */
+/* الهيدر: يمنع تداخل الصور مع العنوان */
 header { 
-    background: white; padding: 10px 3%; display: flex; 
-    justify-content: space-between; align-items: center; 
-    border-bottom: 3px solid var(--accent); gap: 10px; min-height: 80px;
+    background: white; padding: 10px 4%; display: flex; justify-content: space-between; align-items: center; 
+    border-bottom: 3px solid var(--accent); min-height: 80px; gap: 10px;
 }
-header img { height: clamp(35px, 8vw, 75px); width: auto; flex-shrink: 0; }
+header img { height: clamp(40px, 8vw, 75px); width: auto; flex-shrink: 0; }
 .header-text { flex: 1; text-align: center; min-width: 0; }
-.header-text h2 { margin: 0; color: var(--primary); font-size: clamp(0.8rem, 3.8vw, 1.6rem); white-space: nowrap; }
-.header-text p { margin: 2px 0 0 0; color: var(--accent); font-size: clamp(0.6rem, 2vw, 0.9rem); font-weight: bold; }
+.header-text h2 { margin: 0; font-size: clamp(0.8rem, 3.5vw, 1.6rem); white-space: nowrap; color: var(--primary); }
 
-/* الجدول - مسافات متساوية 25% لكل عمود */
+/* الجدول: مسافات متساوية 100% */
 .records-table-row { 
-    display: grid; 
-    grid-template-columns: 0px 1fr 1fr 1fr 1fr; /* الاسم، الرقم، المركبة، الوقت */
-    align-items: center; text-align: center; padding: 15px 5px; border-bottom: 1px solid #eee; transition: 0.3s;
+    display: grid; grid-template-columns: 0px 1fr 1fr 1fr 1fr; 
+    align-items: center; text-align: center; padding: 15px 5px; border-bottom: 1px solid #eee; 
 }
 .admin-mode .records-table-row { grid-template-columns: 45px 1fr 1fr 1fr 1fr; }
-.record-check { display: none; margin: 0 auto; }
+.record-check { display: none; }
 .admin-mode .record-check { display: block; }
 
-/* المودالات وزر X الإغلاق */
-.modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); align-items: center; justify-content: center; z-index: 9999; padding: 15px; }
-.modal-content { background: white; padding: 30px; border-radius: 20px; width: 100%; max-width: 400px; position: relative; text-align: center; }
-.close-x { position: absolute; top: 10px; right: 15px; font-size: 28px; cursor: pointer; color: #888; font-weight: bold; line-height: 1; }
+/* المودالات وزر X */
+.modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); align-items: center; justify-content: center; z-index: 9999; }
+.modal-content { background: white; padding: 30px; border-radius: 20px; width: 90%; max-width: 400px; position: relative; }
+.close-x { position: absolute; top: 10px; right: 15px; font-size: 28px; cursor: pointer; color: #888; font-weight: bold; }
 
-/* قائمة المركبات */
-.car-item { display: flex; justify-content: space-between; padding: 12px; background: #f9f9f9; margin-bottom: 8px; border-radius: 10px; border: 1px solid #eee; }
-
-/* الرئيسية والمنيو (النقاط يسار فوق) */
-.dots-container { position: absolute; top: 10px; left: 10px; cursor: pointer; padding: 5px; font-size: 1.3rem; }
-.menu { position: absolute; top: 40px; left: 10px; background: white; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-radius: 8px; display: none; z-index: 100; border: 1px solid #eee; }
-.menu button { display: block; width: 110px; padding: 12px; border: none; background: none; cursor: pointer; font-family: 'Cairo'; text-align: center; }
+/* النقاط يسار في الرئيسية */
+.dots-container { position: absolute; top: 10px; left: 10px; cursor: pointer; font-size: 1.2rem; color: #888; }
+.menu { position: absolute; top: 35px; left: 10px; background: white; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-radius: 8px; display: none; z-index: 100; border: 1px solid #eee; }
+.menu button { display: block; width: 100px; padding: 10px; border: none; background: none; cursor: pointer; font-family: 'Cairo'; }

@@ -8,14 +8,11 @@ app = Flask(__name__)
 DATA_FILE = "data.json"
 
 def load_data():
-    if not os.path.exists(DATA_FILE):
-        return {"regions": {}}
-    with open(DATA_FILE, "r", encoding='utf-8') as f:
-        return json.load(f)
+    if not os.path.exists(DATA_FILE): return {"regions": {}}
+    with open(DATA_FILE, "r", encoding='utf-8') as f: return json.load(f)
 
 def save_data(data):
-    with open(DATA_FILE, "w", encoding='utf-8') as f:
-        json.dump(data, f, indent=4, ensure_ascii=False)
+    with open(DATA_FILE, "w", encoding='utf-8') as f: json.dump(data, f, indent=4, ensure_ascii=False)
 
 @app.route("/")
 def index():
@@ -49,9 +46,8 @@ def edit_region():
 @app.route("/delete-region", methods=["POST"])
 def delete_region():
     data = load_data()
-    name = request.json["name"]
-    if name in data["regions"]:
-        del data["regions"][name]
+    if request.json["name"] in data["regions"]:
+        del data["regions"][request.json["name"]]
         save_data(data)
     return jsonify(success=True)
 
@@ -73,18 +69,3 @@ def delete_records():
     data["regions"][region]["records"] = [r for r in data["regions"][region]["records"] if r["id"] not in ids]
     save_data(data)
     return jsonify(success=True)
-
-@app.route("/register/<region>", methods=["GET", "POST"])
-def register_entry(region):
-    data = load_data()
-    if request.method == "POST":
-        uae_tz = pytz.timezone('Asia/Dubai')
-        now = datetime.now(uae_tz)
-        new_record = {"name": request.form["name"], "military_id": request.form["military_id"], "car_type": request.form["car_type"], "time": now.strftime("%Y-%m-%d | %I:%M %p"), "id": str(now.timestamp())}
-        data["regions"][region]["records"].insert(0, new_record)
-        save_data(data)
-        return render_template("success.html", region=region)
-    return render_template("register.html", region=region, car_types=data["regions"][region].get("car_types", []))
-
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
