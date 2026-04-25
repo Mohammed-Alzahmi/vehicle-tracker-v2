@@ -9,6 +9,15 @@ app = Flask(__name__)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:Moh317632m%40%40db.zsscaqtbfasrseodhwbt.supabase.co:5432/postgres'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+from flask_sqlalchemy import SQLAlchemy
+db = SQLAlchemy(app)
+
+# هذا السطر السحري اللي بيصنع الجداول في Supabase
+with app.app_context():
+    db.create_all()
+
+    
 DATA_FILE = "data.json"
 
 def load_data():
