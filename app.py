@@ -5,6 +5,10 @@ import os
 import pytz
 
 app = Flask(__name__)
+
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:Moh317632m%40%40db.zsscaqtbfasrseodhwbt.supabase.co:5432/postgres'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 DATA_FILE = "data.json"
 
 def load_data():
