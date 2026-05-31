@@ -6,7 +6,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 
-# رابط السوبابيس مالج
+# رابط السوبابيس الحقيقي مالج - مكتوب مرة وحدة بس عشان ما يستوي إيرور
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:Moh317632m%40%40db.zsscaqtbfasrseodhwbt.supabase.co:5432/postgres'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -40,7 +40,6 @@ with app.app_context():
 
 @app.route("/")
 def index():
-    # بنرجعها كـ Dictionary عشان الـ HTML القديم يقرأ الـ keys كـ أسامي مناطق
     regions = Region.query.all()
     regions_dict = {r.name: {} for r in regions}
     return render_template("index.html", regions=regions_dict)
