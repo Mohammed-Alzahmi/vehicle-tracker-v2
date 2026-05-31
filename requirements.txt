@@ -3,3 +3,5 @@ qrcode
 pillow
 gunicorn
 pytz
+Flask-SQLAlchemy
+psycopg2-binary
