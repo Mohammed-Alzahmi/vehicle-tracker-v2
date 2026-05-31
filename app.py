@@ -6,7 +6,12 @@ from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres.zsscaqtbfasrseodhwbt:Moh317632m%40%40db@aws-0-me-central-1.pooler.supabase.com:5432/postgres?sslmode=require'
+
+import urllib.parse
+password = urllib.parse.quote_plus("Moh317632m@@db")
+app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://postgres.zsscaqtbfasrseodhwbt:{password}@aws-0-me-central-1.pooler.supabase.com:5432/postgres?sslmode=require'
+
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
