@@ -9,10 +9,11 @@ import base64
 app = Flask(__name__)
 DATA_FILE = "data.json"
 
-# إعدادات الحفظ التلقائي في GitHub 
-GITHUB_TOKEN = "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"  # التوكن مالج هني جاهز ومثبت!
-REPO_OWNER = "Mohammed-Alzahmi"
-REPO_NAME = "vehicle-tracker-v2"  
+
+
+GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN")
+REPO_OWNER = os.environ.get("REPO_OWNER")
+REPO_NAME = os.environ.get("REPO_NAME")
 
 def load_data():
     try:
