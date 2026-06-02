@@ -2,7 +2,9 @@
     "regions": {
         "خورفكان": {
             "records": [],
-            "car_types": []
+            "car_types": [
+                "نة"
+            ]
         }
     },
     "records": {}
