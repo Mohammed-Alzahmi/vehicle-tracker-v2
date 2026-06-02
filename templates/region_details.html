@@ -4,18 +4,26 @@
     <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ region }}</title><link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <style>
-        /* هني ضبطنا تقسيمة السطر عشان تستوعب الـ 5 خانات بالتساوي وبدون أي تداخل */
+        /* هني السحر! ضبطنا الأعمدة عشان تكون متوازية ومتقسمة بالتساوي بالظبط */
         .records-table-row {
             display: grid !important;
-            grid-template-columns: 50px repeat(5, 1fr) !important;
+            grid-template-columns: 60px 1fr 1fr 1fr 1fr 1.2fr !important; /* الـ 60px حق مربع التحديد، والباقي متساوي */
             align-items: center;
             text-align: center;
             padding: 15px 10px;
+            border-bottom: 1px solid #eee;
         }
         .records-table-row div {
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
+            padding: 0 5px;
+        }
+        /* تنسيق إضافي عشان وقت الدخول ما ينقص لو كان طويل */
+        .time-col {
+            font-size: 0.9rem;
+            color: #555;
+            direction: ltr; /* عشان يترتب الوقت والتاريخ صح */
         }
     </style>
 </head>
@@ -43,8 +51,7 @@
 
     <div style="background:white; border-radius:15px; overflow:hidden; box-shadow:0 5px 15px rgba(0,0,0,0.05);">
         <div class="records-table-row" style="background:var(--accent); color:white; font-weight:bold;">
-            <div class="record-check"></div>
-            <div>الاسم</div>
+            <div class="record-check"></div> <div>الاسم</div>
             <div>الرقم العسكري</div>
             <div>نوع المركبة</div>
             <div>قراءة العداد (KM)</div>
@@ -53,12 +60,12 @@
         <div id="recordsList">
             {% for r in records %}
             <div class="records-table-row" id="row-{{ r.id }}">
-                <div class="record-check"><input type="checkbox" value="{{ r.id }}"></div>
+                <div class="record-check" style="display: flex; justify-content: center;"><input type="checkbox" value="{{ r.id }}"></div>
                 <div style="font-weight:600; color:black;">{{ r.name }}</div>
                 <div style="color:#333;">{{ r.military_id }}</div>
                 <div style="color:black; font-weight:bold;">{{ r.car_type }}</div>
                 <div style="font-weight:bold; color:var(--primary);">{{ r.km if r.km else '-' }} KM</div>
-                <div style="font-size:0.9rem; color:#555;">{{ r.time }}</div>
+                <div class="time-col">{{ r.time }}</div>
             </div>
             {% endfor %}
         </div>
