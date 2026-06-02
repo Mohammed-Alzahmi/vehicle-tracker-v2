@@ -3,6 +3,21 @@
 <head>
     <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ region }}</title><link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        /* هني ضبطنا تقسيمة السطر عشان تستوعب الـ 5 خانات بالتساوي وبدون أي تداخل */
+        .records-table-row {
+            display: grid !important;
+            grid-template-columns: 50px repeat(5, 1fr) !important;
+            align-items: center;
+            text-align: center;
+            padding: 15px 10px;
+        }
+        .records-table-row div {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    </style>
 </head>
 <body id="pageBody">
 <header>
@@ -27,21 +42,23 @@
     </div>
 
     <div style="background:white; border-radius:15px; overflow:hidden; box-shadow:0 5px 15px rgba(0,0,0,0.05);">
-        <!-- هني ضفنا عنوان العمود اليديد في الجدول (قراءة العداد KM) -->
         <div class="records-table-row" style="background:var(--accent); color:white; font-weight:bold;">
             <div class="record-check"></div>
-            <div>الاسم</div><div>الرقم العسكري</div><div>المركبة</div><div>قراءة العداد (KM)</div><div>وقت الدخول</div>
+            <div>الاسم</div>
+            <div>الرقم العسكري</div>
+            <div>نوع المركبة</div>
+            <div>قراءة العداد (KM)</div>
+            <div>وقت الدخول</div>
         </div>
         <div id="recordsList">
             {% for r in records %}
             <div class="records-table-row" id="row-{{ r.id }}">
                 <div class="record-check"><input type="checkbox" value="{{ r.id }}"></div>
-                <div style="font-weight:600;">{{ r.name }}</div>
-                <div>{{ r.military_id }}</div>
+                <div style="font-weight:600; color:black;">{{ r.name }}</div>
+                <div style="color:#333;">{{ r.military_id }}</div>
                 <div style="color:black; font-weight:bold;">{{ r.car_type }}</div>
-                <!-- هني ضفنا خانة عرض قراءة الكيلومتر اليديدة لكل سجل -->
                 <div style="font-weight:bold; color:var(--primary);">{{ r.km if r.km else '-' }} KM</div>
-                <div style="font-size:0.8rem; color:#777;">{{ r.time }}</div>
+                <div style="font-size:0.9rem; color:#555;">{{ r.time }}</div>
             </div>
             {% endfor %}
         </div>
