@@ -166,6 +166,10 @@
         "كلباء": {
             "records": [],
             "car_types": []
+        },
+        "المنطقه الوسطى ": {
+            "records": [],
+            "car_types": []
         }
     },
     "records": {}
