@@ -3,16 +3,51 @@ from datetime import datetime
 import json
 import os
 import pytz
+import requests
+import base64
 
 app = Flask(__name__)
 DATA_FILE = "data.json"
 
+# إعدادات الحفظ التلقائي في GitHub 
+GITHUB_TOKEN = "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"  # التوكن مالج هني جاهز ومثبت!
+REPO_OWNER = "MuznaMohamed"  # تأكدي إن هذا اسم حسابج في جيت هاب
+REPO_NAME = "vehicle-tracker"  # تأكدي إن هذا اسم المستودع (الريبوزتوري) مالج
+
 def load_data():
+    try:
+        url = f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/contents/{DATA_FILE}"
+        headers = {"Authorization": f"token {GITHUB_TOKEN}"}
+        res = requests.get(url, headers=headers)
+        if res.status_code == 200:
+            content = base64.b64decode(res.json()["content"]).decode('utf-8')
+            return json.loads(content)
+    except:
+        pass
+
     if not os.path.exists(DATA_FILE): return {"regions": {}}
     with open(DATA_FILE, "r", encoding='utf-8') as f: return json.load(f)
 
 def save_data(data):
-    with open(DATA_FILE, "w", encoding='utf-8') as f: json.dump(data, f, indent=4, ensure_ascii=False)
+    with open(DATA_FILE, "w", encoding='utf-8') as f: 
+        json.dump(data, f, indent=4, ensure_ascii=False)
+    
+    try:
+        url = f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/contents/{DATA_FILE}"
+        headers = {"Authorization": f"token {GITHUB_TOKEN}"}
+        
+        res = requests.get(url, headers=headers)
+        sha = res.json()["sha"] if res.status_code == 200 else None
+        
+        content_bytes = json.dumps(data, indent=4, ensure_ascii=False).encode('utf-8')
+        content_b64 = base64.b64encode(content_bytes).decode('utf-8')
+        
+        payload = {"message": "Update vehicle records", "content": content_b64}
+        if sha: payload["sha"] = sha
+            
+        requests.put(url, headers=headers, json=payload)
+    except:
+        print("GitHub sync failed, saved locally.")
 
 @app.route("/")
 def index():
@@ -98,4 +133,3 @@ def register_entry(region):
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
-
