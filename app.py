@@ -12,7 +12,7 @@ DATA_FILE = "data.json"
 # إعدادات الحفظ التلقائي في GitHub 
 GITHUB_TOKEN = "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"  # التوكن مالج هني جاهز ومثبت!
 REPO_OWNER = "Mohammed-Alzahmi"
-REPO_NAME = "vehicle-tracker"  
+REPO_NAME = "vehicle-tracker-v2"  
 
 def load_data():
     try:
