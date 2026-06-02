@@ -11,8 +11,8 @@ DATA_FILE = "data.json"
 
 # إعدادات الحفظ التلقائي في GitHub 
 GITHUB_TOKEN = "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"  # التوكن مالج هني جاهز ومثبت!
-REPO_OWNER = "MuznaMohamed"  # تأكدي إن هذا اسم حسابج في جيت هاب
-REPO_NAME = "vehicle-tracker"  # تأكدي إن هذا اسم المستودع (الريبوزتوري) مالج
+REPO_OWNER = "Mohammed-Alzahmi"
+REPO_NAME = "vehicle-tracker"  
 
 def load_data():
     try:

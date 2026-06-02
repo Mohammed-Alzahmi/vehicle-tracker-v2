@@ -3,6 +3,6 @@ qrcode
 pillow
 gunicorn
 pytz
+requests
 Flask-SQLAlchemy
 psycopg2-binary
-requests
