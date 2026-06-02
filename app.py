@@ -90,16 +90,28 @@ def delete_region():
         save_data(data)
     return jsonify(success=True)
 
+# الروت المطور والذكي لحل مشكلة اختفاء السيارات والمناطق اليديدة
 @app.route("/manage-cars", methods=["POST"])
 def manage_cars():
-    data = load_data()
-    region, action, value = request.json["region"], request.json["action"], request.json["value"]
+    data = load_data() # نسحب أحدث داتا من جيت هاب عشان ما نمسح أي ريكوردات أو سيارات نزلات بالخطأ
+    region = request.json["region"]
+    action = request.json["action"]
+    value = request.json["value"]
+    
     if region in data["regions"]:
-        if "car_types" not in data["regions"][region]: data["regions"][region]["car_types"] = []
-        if action == "add" and value: data["regions"][region]["car_types"].append(value)
-        elif action == "delete" and value in data["regions"][region]["car_types"]: data["regions"][region]["car_types"].remove(value)
-        save_data(data)
-    return jsonify(success=True)
+        if "car_types" not in data["regions"][region]: 
+            data["regions"][region]["car_types"] = []
+            
+        if action == "add" and value:
+            if value not in data["regions"][region]["car_types"]: # نمنع التكرار
+                data["regions"][region]["car_types"].append(value)
+        elif action == "delete" and value in data["regions"][region]["car_types"]: 
+            data["regions"][region]["car_types"].remove(value)
+            
+        save_data(data) # نحفظ ونرفع فوراً لجيت هاب
+        return jsonify(success=True)
+        
+    return jsonify(success=False, error="Region not found")
 
 @app.route("/delete-records", methods=["POST"])
 def delete_records():
@@ -120,7 +132,7 @@ def register_entry(region):
             "name": request.form["name"],
             "military_id": request.form["military_id"],
             "car_type": request.form["car_type"],
-            "km": request.form.get("km", ""),  # هني ضفنا استقبال قراءة العداد اليديدة بسلام!
+            "km": request.form.get("km", ""),
             "time": now.strftime("%Y-%m-%d | %I:%M %p"),
             "id": str(now.timestamp())
         }
