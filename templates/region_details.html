@@ -4,26 +4,37 @@
     <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ region }}</title><link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <style>
-        /* هني السحر! ضبطنا الأعمدة عشان تكون متوازية ومتقسمة بالتساوي بالظبط */
+        /* تقسيم الأعمدة الـ 5 بالتساوي بالظبط */
         .records-table-row {
             display: grid !important;
-            grid-template-columns: 60px 1fr 1fr 1fr 1fr 1.2fr !important; /* الـ 60px حق مربع التحديد، والباقي متساوي */
+            grid-template-columns: repeat(5, 1fr) !important;
             align-items: center;
             text-align: center;
             padding: 15px 10px;
             border-bottom: 1px solid #eee;
+            position: relative;
         }
         .records-table-row div {
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
-            padding: 0 5px;
         }
-        /* تنسيق إضافي عشان وقت الدخول ما ينقص لو كان طويل */
+        /* إخفاء التشيك بوكس بالكامل في الوضع العادي */
+        .record-check {
+            display: none; 
+            position: absolute;
+            right: 10px;
+        }
+        /* لما يشتغل وضع الإدارة، تظهر البوكسات وتزيح البيانات شوي لليسار تلقائياً */
+        .admin-mode .record-check {
+            display: block !important;
+        }
+        .admin-mode .records-table-row {
+            padding-right: 40px !important;
+        }
         .time-col {
             font-size: 0.9rem;
             color: #555;
-            direction: ltr; /* عشان يترتب الوقت والتاريخ صح */
         }
     </style>
 </head>
@@ -49,9 +60,9 @@
         <button onclick="deleteSelected()" style="padding:8px 15px; background:var(--danger); color:white; border:none; border-radius:5px; margin-right:10px; cursor:pointer;">حذف</button>
     </div>
 
-    <div style="background:white; border-radius:15px; overflow:hidden; box-shadow:0 5px 15px rgba(0,0,0,0.05);">
+    <div style="background:white; border-radius:15px; overflow:hidden; box-shadow:0 5px 15px rgba(0,0,0,0.05);" id="tableWrapper">
         <div class="records-table-row" style="background:var(--accent); color:white; font-weight:bold;">
-            <div class="record-check"></div> <div>الاسم</div>
+            <div>الاسم</div>
             <div>الرقم العسكري</div>
             <div>نوع المركبة</div>
             <div>قراءة العداد (KM)</div>
@@ -60,7 +71,7 @@
         <div id="recordsList">
             {% for r in records %}
             <div class="records-table-row" id="row-{{ r.id }}">
-                <div class="record-check" style="display: flex; justify-content: center;"><input type="checkbox" value="{{ r.id }}"></div>
+                <div class="record-check"><input type="checkbox" value="{{ r.id }}"></div>
                 <div style="font-weight:600; color:black;">{{ r.name }}</div>
                 <div style="color:#333;">{{ r.military_id }}</div>
                 <div style="color:black; font-weight:bold;">{{ r.car_type }}</div>
@@ -79,15 +90,12 @@
 <div id="qrModal" class="modal">
     <div class="modal-content">
         <span class="close-x" onclick="closeModal('qrModal')">✕</span>
-        
         <div id="printableArea">
             <h3>مسح رمز QR كود</h3>
             <h4>لمنطقة: {{ region }}</h4>
             <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data={{ request.host_url }}register/{{ region }}" style="border:1px solid #eee; padding:5px;">
         </div>
-
         <div class="break-text" id="urlText">{{ request.host_url }}register/{{ region }}</div>
-        
         <div class="modal-btns">
             <button onclick="copyURL()" class="btn-copy">📋 نسخ الرابط</button>
             <button onclick="window.print()" class="btn-print">🖨️ طباعة</button>
@@ -114,7 +122,22 @@
     </div>
 </div>
 
-<script>const REGION_NAME = "{{ region }}";</script>
+<script>
+    const REGION_NAME = "{{ region }}";
+    
+    // تعديل بسيط على الفانكشن مالتج عشان تضيف كلاس الإدارة للجدول وتظهر البوكسات وتخفيها ذكياً
+    function toggleAdminMode() {
+        var controls = document.getElementById('adminControls');
+        var tableWrapper = document.getElementById('tableWrapper');
+        if (controls.style.display === 'none') {
+            controls.style.display = 'block';
+            tableWrapper.classList.add('admin-mode');
+        } else {
+            controls.style.display = 'none';
+            tableWrapper.classList.remove('admin-mode');
+        }
+    }
+</script>
 <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
