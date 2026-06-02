@@ -40,7 +40,9 @@
         },
         "دبا الحصن": {
             "records": [],
-            "car_types": []
+            "car_types": [
+                "42553"
+            ]
         }
     },
     "records": {}
