@@ -13,40 +13,58 @@ GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN")
 REPO_OWNER = os.environ.get("REPO_OWNER")
 REPO_NAME = os.environ.get("REPO_NAME")
 
+# تأكيد وجود ملف البيانات محلياً أول ما يشتغل السستم
+if not os.path.exists(DATA_FILE):
+    with open(DATA_FILE, "w", encoding='utf-8') as f:
+        json.dump({"regions": {}}, f, indent=4, ensure_ascii=False)
+
 def load_data():
+    # تعديل ذكي: نقرأ دايماً من السيرفر مباشرة عشان السرعة وعدم البند، وإذا مش موجود نيب الكود من جيت هاب
+    if os.path.exists(DATA_FILE):
+        try:
+            with open(DATA_FILE, "r", encoding='utf-8') as f:
+                return json.load(f)
+        except Exception as e:
+            print(f"Error reading local file: {e}")
+            
+    # إذا السيرفر ريستارت والملف طار، نسحبه من جيت هاب كخطة بديلة
     try:
         url = f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/contents/{DATA_FILE}"
         headers = {"Authorization": f"token {GITHUB_TOKEN}"}
-        res = requests.get(url, headers=headers)
+        res = requests.get(url, headers=headers, timeout=5)
         if res.status_code == 200:
             content = base64.b64decode(res.json()["content"]).decode('utf-8')
             return json.loads(content)
     except:
         pass
 
-    if not os.path.exists(DATA_FILE): return {"regions": {}}
-    with open(DATA_FILE, "r", encoding='utf-8') as f: return json.load(f)
+    return {"regions": {}}
 
 def save_data(data):
-    with open(DATA_FILE, "w", encoding='utf-8') as f: 
-        json.dump(data, f, indent=4, ensure_ascii=False)
+    # 1. نحفظ فوراً في السيرفر المحلي عشان الإضافة تستوي في نفس اللحظة بدون تأخير
+    try:
+        with open(DATA_FILE, "w", encoding='utf-8') as f: 
+            json.dump(data, f, indent=4, ensure_ascii=False)
+    except Exception as e:
+        print(f"Local save failed: {e}")
     
+    # 2. نرفع نسخة احتياطية على جيت هاب في الخلفية، ولو جيت هاب مبند ما يهمنا، الشغل شغال محلياً!
     try:
         url = f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/contents/{DATA_FILE}"
         headers = {"Authorization": f"token {GITHUB_TOKEN}"}
         
-        res = requests.get(url, headers=headers)
+        res = requests.get(url, headers=headers, timeout=5)
         sha = res.json()["sha"] if res.status_code == 200 else None
         
         content_bytes = json.dumps(data, indent=4, ensure_ascii=False).encode('utf-8')
         content_b64 = base64.b64encode(content_bytes).decode('utf-8')
         
-        payload = {"message": "Update vehicle records", "content": content_b64}
+        payload = {"message": "Update vehicle records backup", "content": content_b64}
         if sha: payload["sha"] = sha
             
-        requests.put(url, headers=headers, json=payload)
-    except:
-        print("GitHub sync failed, saved locally.")
+        requests.put(url, headers=headers, json=payload, timeout=5)
+    except Exception as e:
+        print(f"GitHub backup sync failed: {e}")
 
 @app.route("/")
 def index():
@@ -65,7 +83,7 @@ def view_qr(region):
 
 @app.route("/add-region", methods=["POST"])
 def add_region():
-    region = request.form["region"]
+    region = request.form["region"].strip()
     data = load_data()
     if region and region not in data["regions"]:
         data["regions"][region] = {"records": [], "car_types": []}
@@ -75,7 +93,7 @@ def add_region():
 @app.route("/edit-region", methods=["POST"])
 def edit_region():
     data = load_data()
-    old_n, new_n = request.json["old"], request.json["new"]
+    old_n, new_n = request.json["old"].strip(), request.json["new"].strip()
     if old_n in data["regions"] and new_n not in data["regions"]:
         data["regions"][new_n] = data["regions"].pop(old_n)
         save_data(data)
@@ -90,25 +108,24 @@ def delete_region():
         save_data(data)
     return jsonify(success=True)
 
-# الروت المطور والذكي لحل مشكلة اختفاء السيارات والمناطق اليديدة
 @app.route("/manage-cars", methods=["POST"])
 def manage_cars():
-    data = load_data() # نسحب أحدث داتا من جيت هاب عشان ما نمسح أي ريكوردات أو سيارات نزلات بالخطأ
+    data = load_data()
     region = request.json["region"]
     action = request.json["action"]
-    value = request.json["value"]
+    value = request.json["value"].strip()
     
     if region in data["regions"]:
         if "car_types" not in data["regions"][region]: 
             data["regions"][region]["car_types"] = []
             
         if action == "add" and value:
-            if value not in data["regions"][region]["car_types"]: # نمنع التكرار
+            if value not in data["regions"][region]["car_types"]:
                 data["regions"][region]["car_types"].append(value)
         elif action == "delete" and value in data["regions"][region]["car_types"]: 
             data["regions"][region]["car_types"].remove(value)
             
-        save_data(data) # نحفظ ونرفع فوراً لجيت هاب
+        save_data(data)
         return jsonify(success=True)
         
     return jsonify(success=False, error="Region not found")
