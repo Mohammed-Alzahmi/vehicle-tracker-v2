@@ -1,4 +1,9 @@
 {
-    "regions": {},
+    "regions": {
+        "خورفكان": {
+            "records": [],
+            "car_types": []
+        }
+    },
     "records": {}
 }
