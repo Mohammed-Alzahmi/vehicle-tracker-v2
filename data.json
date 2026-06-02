@@ -56,6 +56,10 @@
             "car_types": [
                 "42553"
             ]
+        },
+        "قدفع": {
+            "records": [],
+            "car_types": []
         }
     },
     "records": {}
