@@ -9,8 +9,6 @@ import base64
 app = Flask(__name__)
 DATA_FILE = "data.json"
 
-
-
 GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN")
 REPO_OWNER = os.environ.get("REPO_OWNER")
 REPO_NAME = os.environ.get("REPO_NAME")
@@ -122,6 +120,7 @@ def register_entry(region):
             "name": request.form["name"],
             "military_id": request.form["military_id"],
             "car_type": request.form["car_type"],
+            "km": request.form.get("km", ""),  # هني ضفنا استقبال قراءة العداد اليديدة بسلام!
             "time": now.strftime("%Y-%m-%d | %I:%M %p"),
             "id": str(now.timestamp())
         }
