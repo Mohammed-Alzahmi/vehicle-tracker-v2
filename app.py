@@ -13,53 +13,60 @@ GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN")
 REPO_OWNER = os.environ.get("REPO_OWNER")
 REPO_NAME = os.environ.get("REPO_NAME")
 
-if not os.path.exists(DATA_FILE):
-    with open(DATA_FILE, "w", encoding='utf-8') as f:
-        json.dump({"regions": {}}, f, indent=4, ensure_ascii=False)
-
 def load_data():
+    # محاولة قراءة البيانات أولاً من GitHub لضمان الحصول على أحدث نسخة مستقرة
+    if GITHUB_TOKEN and REPO_OWNER and REPO_NAME:
+        try:
+            url = f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/contents/{DATA_FILE}"
+            headers = {"Authorization": f"token {GITHUB_TOKEN}"}
+            res = requests.get(url, headers=headers, timeout=5)
+            if res.status_code == 200:
+                content = base64.b64decode(res.json()["content"]).decode('utf-8')
+                data = json.loads(content)
+                # تحديث النسخة المحلية للنسخة الجديدة
+                with open(DATA_FILE, "w", encoding='utf-8') as f:
+                    json.dump(data, f, indent=4, ensure_ascii=False)
+                return data
+        except Exception as e:
+            print(f"Fetch from GitHub failed, fallback to local: {e}")
+
+    # إذا تعذر الاتصال بـ GitHub، يقرأ من الملف المحلي
     if os.path.exists(DATA_FILE):
         try:
             with open(DATA_FILE, "r", encoding='utf-8') as f:
                 return json.load(f)
         except Exception as e:
             print(f"Error reading local file: {e}")
-            
-    try:
-        url = f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/contents/{DATA_FILE}"
-        headers = {"Authorization": f"token {GITHUB_TOKEN}"}
-        res = requests.get(url, headers=headers, timeout=5)
-        if res.status_code == 200:
-            content = base64.b64decode(res.json()["content"]).decode('utf-8')
-            return json.loads(content)
-    except:
-        pass
 
     return {"regions": {}}
 
 def save_data(data):
+    # 1. حفظ التغيير محلياً أولاً
     try:
         with open(DATA_FILE, "w", encoding='utf-8') as f: 
             json.dump(data, f, indent=4, ensure_ascii=False)
     except Exception as e:
         print(f"Local save failed: {e}")
     
-    try:
-        url = f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/contents/{DATA_FILE}"
-        headers = {"Authorization": f"token {GITHUB_TOKEN}"}
-        
-        res = requests.get(url, headers=headers, timeout=5)
-        sha = res.json()["sha"] if res.status_code == 200 else None
-        
-        content_bytes = json.dumps(data, indent=4, ensure_ascii=False).encode('utf-8')
-        content_b64 = base64.b64encode(content_bytes).decode('utf-8')
-        
-        payload = {"message": "Update vehicle records backup", "content": content_b64}
-        if sha: payload["sha"] = sha
+    # 2. رفع التحديث والتغييرات (حذف/إضافة) فوراً لـ GitHub
+    if GITHUB_TOKEN and REPO_OWNER and REPO_NAME:
+        try:
+            url = f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/contents/{DATA_FILE}"
+            headers = {"Authorization": f"token {GITHUB_TOKEN}"}
             
-        requests.put(url, headers=headers, json=payload, timeout=5)
-    except Exception as e:
-        print(f"GitHub backup sync failed: {e}")
+            res = requests.get(url, headers=headers, timeout=5)
+            sha = res.json()["sha"] if res.status_code == 200 else None
+            
+            content_bytes = json.dumps(data, indent=4, ensure_ascii=False).encode('utf-8')
+            content_b64 = base64.b64encode(content_bytes).decode('utf-8')
+            
+            payload = {"message": "Auto-sync vehicle records & dynamic changes", "content": content_b64}
+            if sha: 
+                payload["sha"] = sha
+                
+            requests.put(url, headers=headers, json=payload, timeout=5)
+        except Exception as e:
+            print(f"GitHub backup sync failed: {e}")
 
 @app.route("/")
 def index():
@@ -145,11 +152,12 @@ def register_entry(region):
             "military_id": request.form["military_id"],
             "car_type": request.form["car_type"],
             "km": request.form.get("km", ""),
-            "status": request.form.get("status", "سليمة"), # تسجيل حالة المركبة
+            "status": request.form.get("status", "سليمة"),
             "time": now.strftime("%Y-%m-%d | %I:%M %p"),
             "id": str(now.timestamp())
         }
-        if "records" not in data["regions"][region]: data["regions"][region]["records"] = []
+        if "records" not in data["regions"][region]: 
+            data["regions"][region]["records"] = []
         data["regions"][region]["records"].insert(0, new_record)
         save_data(data)
         return render_template("success.html", region=region)
