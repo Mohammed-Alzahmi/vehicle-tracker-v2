@@ -13,13 +13,11 @@ GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN")
 REPO_OWNER = os.environ.get("REPO_OWNER")
 REPO_NAME = os.environ.get("REPO_NAME")
 
-# تأكيد وجود ملف البيانات محلياً أول ما يشتغل السستم
 if not os.path.exists(DATA_FILE):
     with open(DATA_FILE, "w", encoding='utf-8') as f:
         json.dump({"regions": {}}, f, indent=4, ensure_ascii=False)
 
 def load_data():
-    # تعديل ذكي: نقرأ دايماً من السيرفر مباشرة عشان السرعة وعدم البند، وإذا مش موجود نيب الكود من جيت هاب
     if os.path.exists(DATA_FILE):
         try:
             with open(DATA_FILE, "r", encoding='utf-8') as f:
@@ -27,7 +25,6 @@ def load_data():
         except Exception as e:
             print(f"Error reading local file: {e}")
             
-    # إذا السيرفر ريستارت والملف طار، نسحبه من جيت هاب كخطة بديلة
     try:
         url = f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/contents/{DATA_FILE}"
         headers = {"Authorization": f"token {GITHUB_TOKEN}"}
@@ -41,14 +38,12 @@ def load_data():
     return {"regions": {}}
 
 def save_data(data):
-    # 1. نحفظ فوراً في السيرفر المحلي عشان الإضافة تستوي في نفس اللحظة بدون تأخير
     try:
         with open(DATA_FILE, "w", encoding='utf-8') as f: 
             json.dump(data, f, indent=4, ensure_ascii=False)
     except Exception as e:
         print(f"Local save failed: {e}")
     
-    # 2. نرفع نسخة احتياطية على جيت هاب في الخلفية، ولو جيت هاب مبند ما يهمنا، الشغل شغال محلياً!
     try:
         url = f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/contents/{DATA_FILE}"
         headers = {"Authorization": f"token {GITHUB_TOKEN}"}
@@ -150,6 +145,7 @@ def register_entry(region):
             "military_id": request.form["military_id"],
             "car_type": request.form["car_type"],
             "km": request.form.get("km", ""),
+            "status": request.form.get("status", "سليمة"), # تسجيل حالة المركبة
             "time": now.strftime("%Y-%m-%d | %I:%M %p"),
             "id": str(now.timestamp())
         }

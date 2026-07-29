@@ -4,22 +4,20 @@
     <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ region }}</title><link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <style>
-        /* حاوية مرنة للجدول عشان تسمح بالتمرير على التلفونات بدون ما تخرب باقي الصفحة */
         .table-responsive-wrapper {
             width: 100%;
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
         }
         
-        /* تحديد عرض أدنى للجدول على التلفونات عشان ما تنعصر البيانات */
         .table-min-width {
-            min-width: 750px; /* يضمن إن الأعمدة الـ 5 ماكلين مساحتهم بالراحة على الشاشات الصغيرة */
+            min-width: 900px; /* توسيع العرض لاستيعاب 6 أعمدة بمرونة على الهاتف */
         }
 
-        /* تقسيم الأعمدة الـ 5 بالتساوي بالظبط */
+        /* تقسيم الأعمدة الـ 6 بالتساوي بالظبط */
         .records-table-row {
             display: grid !important;
-            grid-template-columns: repeat(5, 1fr) !important;
+            grid-template-columns: repeat(6, 1fr) !important;
             align-items: center;
             text-align: center;
             padding: 15px 10px;
@@ -32,13 +30,13 @@
             white-space: nowrap;
             padding: 0 5px;
         }
-        /* إخفاء التشيك بوكس بالكامل في الوضع العادي */
+        
         .record-check {
             display: none; 
             position: absolute;
             right: 10px;
         }
-        /* لما يشتغل وضع الإدارة، تظهر البوكسات وتزيح البيانات شوي لليسار تلقائياً */
+        
         .admin-mode .record-check {
             display: block !important;
         }
@@ -82,6 +80,7 @@
                     <div>الرقم العسكري</div>
                     <div>نوع المركبة</div>
                     <div>قراءة العداد (KM)</div>
+                    <div>حالة المركبة</div>
                     <div>وقت الدخول</div>
                 </div>
                 <div id="recordsList">
@@ -92,6 +91,7 @@
                         <div style="color:#333;">{{ r.military_id }}</div>
                         <div style="color:black; font-weight:bold;">{{ r.car_type }}</div>
                         <div style="font-weight:bold; color:var(--primary);">{{ r.km if r.km else '-' }} KM</div>
+                        <div style="color:#555;">{{ r.status if r.status else 'سليمة' }}</div>
                         <div class="time-col">{{ r.time }}</div>
                     </div>
                     {% endfor %}

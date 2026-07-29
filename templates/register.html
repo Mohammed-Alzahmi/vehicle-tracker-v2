@@ -3,53 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تسجيل دخول - {{ region }}</title>
+    <title>تسجيل دخول مركبة - {{ region }}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <style>
-        .form-container { max-width: 450px; margin: 40px auto; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-top: 5px solid var(--accent); }
-        .form-group { margin-bottom: 20px; text-align: right; }
-        label { display: block; margin-bottom: 8px; font-weight: bold; color: var(--primary); }
-        input, select { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px; font-family: 'Cairo'; font-size: 1rem; box-sizing: border-box; }
-        .submit-btn { width: 100%; padding: 15px; background: var(--primary); color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 1.1rem; transition: 0.3s; }
-        .submit-btn:hover { background: #0e3a66; }
-    </style>
 </head>
-<body>
-<header>
-    <img src="{{ url_for('static', filename='shj-gov.png') }}">
-    <div class="header-text">
-        <h2>تسجيل دخول مركبة</h2>
-        <p>منطقة: {{ region }}</p>
-    </div>
-    <img src="{{ url_for('static', filename='shj-police.png') }}">
-</header>
+<body style="background-color: #f7f7f7; font-family: sans-serif; margin: 0; padding: 0;">
 
-<div class="form-container">
-    <form method="POST">
-        <div class="form-group">
-            <label>الاسم الثلاثي:</label>
-            <input type="text" name="name" placeholder="أدخل اسمك الكامل" required>
+    <header style="display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; background: white; border-bottom: 3px solid #8b7d6b;">
+        <img src="{{ url_for('static', filename='shj-gov.png') }}" style="height: 50px;">
+        <div style="text-align: center;">
+            <h2 style="margin: 0; color: #0a2540;">تسجيل دخول مركبة</h2>
+            <p style="margin: 5px 0 0; color: #666; font-size: 0.9rem;">منطقة: {{ region }}</p>
         </div>
-        <div class="form-group">
-            <label>الرقم العسكري:</label>
-            <input type="number" name="military_id" placeholder="أدخل الرقم العسكري" required>
-        </div>
-        <div class="form-group">
-            <label>نوع المركبة:</label>
-            <select name="car_type" required>
-                <option value="" disabled selected>اختر النوع</option>
-                {% for car in car_types %}
-                <option value="{{ car }}">{{ car }}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <!-- هني ضفنا خانة قراءة العداد اليديدة بسلام ودون ما نخرب شي -->
-        <div class="form-group">
-            <label>قراءة العداد (KM):</label>
-            <input type="number" name="km" placeholder="أدخل قراءة الكيلومتر الحالية" required>
-        </div>
-        <button type="submit" class="submit-btn">إرسال البيانات</button>
-    </form>
-</div>
+        <img src="{{ url_for('static', filename='shj-police.png') }}" style="height: 50px;">
+    </header>
+
+    <div style="max-width: 500px; margin: 40px auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+        <form action="/register/{{ region }}" method="POST">
+            
+            <div style="margin-bottom: 20px; text-align: right;">
+                <label style="font-weight: bold; display: block; margin-bottom: 8px; color: #0a2540;">الاسم الثلاثي:</label>
+                <input type="text" name="name" required placeholder="أدخل اسمك الكامل" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 1rem;">
+            </div>
+
+            <div style="margin-bottom: 20px; text-align: right;">
+                <label style="font-weight: bold; display: block; margin-bottom: 8px; color: #0a2540;">الرقم العسكري:</label>
+                <input type="text" name="military_id" required placeholder="أدخل الرقم العسكري" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 1rem;">
+            </div>
+
+            <div style="margin-bottom: 20px; text-align: right;">
+                <label style="font-weight: bold; display: block; margin-bottom: 8px; color: #0a2540;">نوع المركبة:</label>
+                <select name="car_type" required style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 1rem; background: white;">
+                    <option value="" disabled selected>اختر النوع</option>
+                    {% for car in car_types %}
+                        <option value="{{ car }}">{{ car }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div style="margin-bottom: 20px; text-align: right;">
+                <label style="font-weight: bold; display: block; margin-bottom: 8px; color: #0a2540;">قراءة العداد (KM):</label>
+                <input type="number" name="km" placeholder="أدخل قراءة الكيلومتر الحالية" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 1rem;">
+            </div>
+
+            <!-- الخانة اليديدة: حالة المركبة -->
+            <div style="margin-bottom: 25px; text-align: right;">
+                <label style="font-weight: bold; display: block; margin-bottom: 8px; color: #0a2540;">حالة المركبة:</label>
+                <input type="text" name="status" placeholder="أدخل حالة المركبة (مثال: سليمة، خذش في الباب...)" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 1rem;">
+            </div>
+
+            <button type="submit" style="width: 100%; padding: 14px; background: #0a2540; color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 1.1rem; cursor: pointer;">إرسال البيانات</button>
+        </form>
+    </div>
+
 </body>
 </html>
