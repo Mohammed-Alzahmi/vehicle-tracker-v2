@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ region }}</title><link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ region }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <style>
         .table-responsive-wrapper {
             width: 100%;
@@ -112,9 +114,9 @@
         <div id="printableArea">
             <h3>مسح رمز QR كود</h3>
             <h4>لمنطقة: {{ region }}</h4>
-            <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data={{ request.host_url }}register/{{ region }}" style="border:1px solid #eee; padding:5px;">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data={{ request.host_url }}register/{{ region|urlencode }}" style="border:1px solid #eee; padding:5px;">
         </div>
-        <div class="break-text" id="urlText">{{ request.host_url }}register/{{ region }}</div>
+        <div class="break-text" id="urlText">{{ request.host_url }}register/{{ region|urlencode }}</div>
         <div class="modal-btns">
             <button onclick="copyURL()" class="btn-copy">📋 نسخ الرابط</button>
             <button onclick="window.print()" class="btn-print">🖨️ طباعة</button>

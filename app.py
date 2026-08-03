@@ -4,7 +4,9 @@ import json
 import os
 import pytz
 import requests
+import urllib.parse
 import base64
+
 
 app = Flask(__name__)
 DATA_FILE = "data.json"
